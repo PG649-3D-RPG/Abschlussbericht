@@ -1,46 +1,25 @@
-\documentclass{article}
+\documentclass{scrbook}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
 
 
 \begin{document}
 	
-	\section{Einleitung}
+	\include{chapters/01_Einleitung/01_Einleitung}
 	
-		\subsection{Motivation und Problemstellung}
-		
-		\subsection{Verwandte Arbeiten}
-		Falls zu groß/zu viel, auslagern in ein eigenes Kapitel nach Grundlagen. Beschreiben warum andere Quellen nicht ausreichend waren und weshalb der eigene Ansatz jene fehlende Themen ergänzt.
-		
-		\subsection{Zielsetzung und Vorgehensweise}
-		
-		\subsection{Übersicht}
+	\include{chapters/02_Grundlagen/02_Grundlagen}
 	
+	\include{chapters/03_Fachliches_Vorgehen/03_Fachliches_Vorgehen}
 	
-	\section{Grundlagen}
-	(Die benutzten) Vortragsthemen vom Anfang hier als eigene Unterkapitel beschreiben.
-		
-		
-	\section{Fachliches Vorgehen}
-	Keine technischen Details (wie z.B. Implementierung)
+	\include{chapters/04_Technische_Umsetzung/04_Technische_Umsetzung}
 	
-		\subsection{Projektorganisation}
-		Wie sind wir vorgegangen... auf alles bezogen. Wer hat an welchen Kapiteln mitgearbeitet.
+	\include{chapters/05_Vorlaeufige_Ergebnisse/05_Vorlaeufige_Ergebnisse}
 	
-		\subsection{Creature Generation}
-		
-		\subsection{Creature Animation}
-		
-		\subsection{Terraingeneration}
-		
-	\section{Technische Umsetzung}
-	Eingehen auf Status Quo.
-	
-	\section{Vorläufige Ergebnisse}
-	Unterkapitel nach Erkenntnissen. Metrik nach der bewertet wird erörtern. Objektiv ohne Wertung der Ergebnisse.
-	
-		\subsection{Diskussion}
-		Diskussion der Ergebnisse in Bezug auf die initiale Zielsetzung.
-	
-	\section{Ausblick}
+	\include{chapters/06_Ausblick/06_Ausblick}
 	
 	
 \end{document}
