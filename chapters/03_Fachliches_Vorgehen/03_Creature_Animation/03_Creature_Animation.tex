@@ -1,10 +1,19 @@
 \section{Creature Animation}
 
-\subsection{Trainingsarena}
-ML-Agent Walker -> zu Statisch -> Dynamischer gestalten
+\subsection{Trainingsumgebung}
+% Carsten
+ML-Agent Walker -> Eigene Umgebung, gleicher Walker -> 
+\begin{itemize}
+	\item zu Statisch  Umgebung -> Dynamischer gestalten/ Mehr feature
+	\item Kreatur austauschen -> L-System ging nicht -> Jona/Markus Methode nutzen
+\end{itemize}
 \subsubsection{Konfiguration}
-Statisch Problematisch
+% Nils
+Da die Trainingungebung auf den ML-Agent-Walker basiert, waren viele Konfiguration fest-codiert. Zuerst wurden diese über den Unity-Inspektor änderbar gemacht. Als mit dem aktiven Training auf LIDO begonnen wurde, stellte sich diese Methode als nicht flexible genug heraus. Die Trainingsumgebung musste für jede Änderung neu gebaut werden. Deshalb wurde ein neues System geschrieben, welches über Dateien die Konfiguration dynamisch lädt.
+\subsection{Generalisierung}
+% Dunno, Jan fragen
 \subsection{Training}
+% Nero Leute?
 \begin{itemize}
 	\item PPO
 	\item ML-Agents
