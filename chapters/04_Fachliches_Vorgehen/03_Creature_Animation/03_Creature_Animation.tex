@@ -10,6 +10,9 @@ ML-Agent Walker -> Eigene Umgebung, gleicher Walker ->
 
 \subsubsection{LiDO3}
 % Nils
+Das RL-Training benötigt viele Rechenressourcen. Die ersten Trainingstests mit der ML-Agents-Walker-Umgebung haben gezeigt, dass eine Trainingsdauer von über einen Tag auf aktueller Hardware zu erwarten ist. Deswegen muss das Training auf einen Server laufen. Als besondere Anforderungen benötigen die Server eine Nvidia Grafikkarte, um mit CUDA\footnote{https://developer.nvidia.com/cuda-zone} pytorch\footnote{https://pytorch.org/} zu beschleunigen.
+
+Aufgrund der Einschränkungen stand nur LiDO3\footnote{https://www.lido.tu-dortmund.de/cms/de/home/}, der HPC der TU Dortmund, da andere Rechenknoten wie z.\,B. Noctua 2\footnote{https://pc2.uni-paderborn.de/hpc-services/available-systems/noctua2} von der Universität Paderborn Grafikarten nur für Forschungsprojekte mit bestimmter Reichweite zur Verfügung stellen. Der Zugang zu LiDO3 wurde durch unsere PG-Betreuer gestellt.
 \subsubsection{Konfiguration}
 % Nils
 Da die Trainingungebung auf den ML-Agent-Walker basiert, waren viele Konfiguration fest-codiert. Zuerst wurden diese über den Unity-Inspektor änderbar gemacht. Als mit dem aktiven Training auf LIDO begonnen wurde, stellte sich diese Methode als nicht flexible genug heraus. Die Trainingsumgebung musste für jede Änderung neu gebaut werden. Deshalb wurde ein neues System geschrieben, welches über Dateien die Konfiguration dynamisch lädt.
