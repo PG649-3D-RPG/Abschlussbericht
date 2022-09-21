@@ -1,0 +1,32 @@
+\section{Introduction}
+\subsection{ml-Agents}
+Das Unity Machine Learning Agents Toolkit, kurz ml-Agents, ist ein von Unity entwickeltes open-source Projekt, dass Implementierungen von beliebten Reinforment Learning Algorithmen zur Verfügung stellt.
+Das Toolkit wurde am 19. September 2017 vorgestellt und wurde seitdem stetig weiterentwickelt. Die aktuellste Version ist Release 19, welcher am 14. Januar 2022 veröffentlicht wurde. Diese Version bietet neben Implementierungen für die Deep Reinforcement Learning Algorithmen PPO, SAC und MA-POCA auch Implementierungen für die Imitation Learning Algorithmen BC und GAIL.\\
+
+\noindent Neben den Implementierungen der Algorithmen stellt das Toolkit auch eine Python API zur Verfügung. Mit dieser API können eigene Agenten mit den zur Verfügung gestellten Algorithmen trainiert werden. Dabei unterstützt die API sowohl Diskrete als auch Kontinuierliche Aktions- und Beobachtungsräumne. Es unterstützt außerdem das Platzieren von mehreren Agenten in einer Umgebung. Diese können sowohl das selbe Verhalten lernen, um das Training zu beschleunigen, oder verschiedene Verhalten, zum Beispiel zum Trainieren der Charaktere in asymmetrischen Spielen. \\
+
+\noindent Neben der nach der Python API erstellten Umgebung benötigt ml-Agents zum Starten des Trainingsvorgangs noch eine Konfigurations Datei. Diese wird für ml-Agents als eine yaml Datei zur Verfügung gestellt. Diese Datei beinhaltet eine Liste von Verhalten und jeder Agent in der Umgebung muss einem der Verhalten entsprechen. Dies ermöglicht es für verschiedene Verhalten verschiedene Konfigurationen für den Ablauf des Trainings und den Aufbau des Netzwerks anzugeben. 
+Die Konfiguration definiert den zu verwendenden Algorithmus, die Anzahl der Schritte, die während des Trainings in der Umgebung ausgeführt werden sollen, und wie oft Checkpoints des Netzes gespeichert werden sollen. Zusätzlich beinhaltet es verschiedene Abschnitte, die Teilaspekte des Trainings beeinflussen. \\
+Der Hyperparameter Abschnitt der Datei beschreibt die Parameter des Trainings, wie die Batchgröße, die Buffergröße und die globalen Parameter des ausgewählten Algorithmus, wie zum Beispiel die Lernrate oder das beta und epsilon, bei PPO, oder das tau, bei SAC. \\
+Der Network Settings Abschnitt beschreibt die Größe und Anzahl der Schichten in dem Netzwerk. Zusätzlich kann hier angegeben werden, ob die Werte normalisiert werden sollen.\\
+
+\noindent Sowohl die Checkpoints als auch das finale Netzwerk werden als onnx Datei gespeichert, die dann, zum Beispiel mit Unity Barracuda, geladen werden kann, um das Netzwerk zu verwenden.\\
+Zum Analysieren und Bewerten des Trainings erhebt ml-Agents während des Trainings verschiedene Daten, wie den durchschnittlichen Reward und die Loss Werte der verschiedenen Netzwerke. Diese werden in einem Tensorboard gespeichert, welches in dem selben Ordner wie die onnx Datei gefunden werden kann. 
+
+\subsection{neroRL}
+
+NeroRL ist ein Reinforment Learning Framework, dass seinen Fokus auf verschiedene Varianten des Proximal Policy Optimization (PPO) Algorithmus legt. Es basiert auf dem Code von dem ml-Agents Toolkit und verwendet dessen Python API, um mit den Umgebungen zu kommunizieren. \\
+NeroRL stellt neben der regulären Variante von PPO auch eine Implementierung mit Rekkurenz zur Verfügung. Zusätzlich kann bei allen Implementierungen der Agent entweder mit geteilten oder mit getrennten Netzwerken und Gradienten für den Aktor und den Kritiker trainiert werden. \\
+Diese Implementierungen können verwendet werden, um in der bereits existierenden ObstacleTower Umgebung oder in beliebigen openAIGym Umgebungen zu trainieren. Durch das aufbauen auf dem ml-Agents Toolkit können zusätzlich auch Agenten in Umgebungen trainiert werden, die mit der Python API von ml-Agents erstellt wurden.\\
+Allerdings stellt NeroRL noch einige zusätzliche Anforderungen an diese Umgebungen. So dürfen die Observationsräume nur Vektor und Visuelle Beobachtungen enthalten. Außerdem werden nur Diskrete und Multidiskrete Aktionsräume unterstützt. NeroRL kann also nicht verwendet werden, um Agenten in einer Umgebung mit kontinuierlichen Aktionsräumen zu trainieren.
+Des weiteren unterstützt neroRL nur genau einen Agenten pro Umgebung. Es ist also nicht möglich das Training zu beschleunigen, indem mehrere Agenten in einer Umgebung das selbe Verhalten lernen. Zum Beschleunigen des Trainings kann bei neroRL stattdessen über ein Attribut in der Konfigurationsdatei angegeben werden, dass mit mehreren Instanzen der Umgebung gleichzeitig trainiert werden soll. So würden bei neroRL zum Beispiel anstelle von einer Umgebung mit zehn Agenten zehn Instanzen der Umgebung mit je einem Agenten ausgeführt.\\
+
+\noindent Zum Starten des Trainingsvorgangs muss dem Framework eine Konfigurationsdatei im yaml Format übergeben werden, welche alle relevanten Informationen für das Training enthält.\\
+Der erste Abschnitt enthält Informationen über die Umgebung. Wenn für das Training in Build verwendet werden soll, dann wird der Pfad dazu hier angegeben. Außerdem können in diesem Abschnitt die Reset Parameter angegeben werden.\\
+Der zweite Abschnitt enthält die Informationen über das Netzwerk. Dazu gehören neben der Anzahl der Ebenen und deren Größe
+auch die Aktivierungs und Kodierungsfunktionien. Der Pfad unter dem das Model gespeichert werden soll und der Abstand der Checkpoints wird ebenfalls in diesem Abschnitt festgelegt.\\
+Der dritte Abschnitt beinhaltet Informationen zur Evaluierung eines Modells. Dazu gehört mit wie vielen Instanzen evaluiert werden soll und mit welchen Seeds.\\
+Im vierten Abschnitt wird festgelegt wie viele parallele Instanzen der Umgebung zum trainieren verwendet werden sollen und wie viele Schritte jede Instanz pro Update machen soll. Das Produkt dieser beiden Werte ergibt die Batchgröße für das Training.\\
+Der letzte Abschnitt enthält die Informationen zum eigentlichen Training. In diesem Abschnitt werden der zu verwendende Algorithmus und die Werte für die Hyperparameter von diesem festgelegt. Die Anzahl an durchzuführenden Updates und die Anzahl an Epochs pro Update werden ebenfalls in diesem Abschnitt festgelegt.\\
+
+\noindent Zum Analysieren und Bewerten erhebt neroRL während des Trainings verschiedene Kenndaten, wie den durchschnittlichen Reward und die Loss Werte der verschiedenen Netzwerke. Diese werden in einem Tensorboard gespeichert, welches standardmäßig in einem summaries Ordner zu finden ist.
