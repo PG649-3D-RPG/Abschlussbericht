@@ -1,3 +1,38 @@
 \section{Zielsetzung und Vorgehensweise}
 
-Für die Umsetzung des prozedural generierten 3D Rollenspieles wurde motiviert die verschiedenen Bereiche des Rollenspiels aufzuteilen, sodass in Kleingruppen . ... Ein besonderer Schwerpunkt sollte dabei auf die Gruppen der \textbf{Generierung der Monster} und der \textbf{Fortbewegung der Monster} gelegt werden, da diese die Basis für die restlichen Aufgaben bilden sollten. Dabei wurde sich absichtlich dafür entschieden von Anfang an kein klares Design der späteren Spielwelt, Monster und des Spielercharakters zu definieren, sodass sich daraus keine Einschränkungen für die initiale Implementierungsphase ergeben sollten. 
+Für die Umsetzung des prozedural generierten 3D Rollenspieles wurde motiviert die verschiedenen Bereiche des Rollenspiels aufzuteilen, sodass in Kleingruppen parallel an diesen gearbeitet werden konnte. Diese Bereiche sollen folgende Themengebiete umfassen: die Generierung von Spielleveln, die Evaluation der generierten Level, Generierung der Monster, Fortbewegung der Monster und zuletzt die Strategie bzw. Verhaltensweise der Monster. Innerhalb jeder dieser Bereiche sollen bestimmte Vorgaben bzw. Anforderungen, welche an die Gruppe vorgegeben sind, erfüllt sein: \newline \newline
+\textbf{\textit{Die Generierung von Spielleveln}}\newline
+\begin{itemize}
+	\item Die Generierung der Spiellevel sollte prozedural durchgeführt werden: z.B. KD-Trees, L-Systeme, Space-Partitioning
+	\item Die Spiellevel enthalten Böden, Wände und auch Spawn-Points für Objekte und NPCs
+	\item Gleichzeitig sollen die Komplexität, Größe und der Schwierigkeitsgrad der Level parametrisierbar sein
+\end{itemize}
+\textbf{\textit{Evaluation der Generierten Level}}
+\begin{itemize}
+	\item Die Level/Spielwelten sollen anhand vorbestimmter Metriken evaluiert werden, wie z.B.: Lösbarkeit der Level, Schwierigkeitsgrad
+	\item Folgende Ansätze sind dafür vorgeschlagen: Imitation Learning, Deep Reinforcement Learning
+\end{itemize}
+\textbf{\textit{Generierung der Monster}}
+\begin{itemize}
+	\item In diesem Bereich sind viele Freiheiten gelassen worden, da die Generierung der Monster auf viele unterschiedliche Weisen durchgeführt werden kann
+	\item Relevant dabei ist nur, dass die Erstellung von NPCs algorithmus-basiert ist und dass innerhalb von Unity die von Unity bereitgestellten Joints verwendet werden sollten
+	\item Eine Orientierungshilfe dabei kann der Unity-Walker sein
+\end{itemize}
+\textbf{\textit{Fortbewegung der Monster}}
+\begin{itemize}
+	\item Animationen sollen nicht händisch erstellt werden
+	\item Mit Hilfe von Deep Reinforcement Learning können die Monster lernen sich zu bewegen
+	\item Der Agent wählt die Kräfte aus, welche auf seine Joints ausgeübt werden
+	\item Je nach lösen einer spezifischen Aufgabe wird der Agent dann belohnt
+	\item Dabei könnten Inverse Kinematiken nützlich sein
+\end{itemize}
+\textbf{\textit{Strategie bzw. Verhaltensweise der Monster}}
+\begin{itemize}
+	\item Klassische Ansätze (high level) wären hier die Behavior Trees oder auch State machines
+	\item Währenddessen lernende Ansätze (low level) wären Imitation Learning und Deep Reinforcement learning
+\end{itemize}
+
+Ein besonderer Schwerpunkt soll dabei auf die Gruppen der \textbf{Generierung der Monster} und der \textbf{Fortbewegung der Monster} gelegt werden, da diese die Basis für die restlichen Aufgaben bilden sollten. Es wurde sich absichtlich dafür entschieden von Anfang an kein klares Design der späteren Spielwelt, Monster und des Spielercharakters zu definieren, sodass sich daraus keine Einschränkungen für die initiale Implementierungsphase ergeben sollten. Vielmehr sollte aus den Ergebnissen der initialen Phase das spätere Design abgeleitet werden. Damit also dieser Grundstein gelegt werden konnte, wurde sich dafür entschieden die \textbf{Generierung der Monster} und die \textbf{Fortbewegung der Monster} der Spielwelt als erstes zu priorisieren und somit die 12 Teilnehmer der Projektgruppe in zwei Untergruppen aufzuteilen: die \textbf{Creature-Generator} und die \textbf{Creature-Animator}.
+
+Hier weiter bei Seminar- und Praktikumsphase bzw. mit der Einteilung der Gruppen.... (oder direkt in Übersicht überleitend?)
+
