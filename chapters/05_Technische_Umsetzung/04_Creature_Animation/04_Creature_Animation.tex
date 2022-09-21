@@ -61,13 +61,38 @@ Da sich die statische Konfiguration des ML-Agents-Walker als problematisch erwie
 
 Im Fall, dass das Spiel ohne Editor gestartet wird, was meist beim Training der Fall ist, lädt das generische Objekt aus den Json-Dateien die Einstellungen und ersetzt die Editorkonfiguration damit. Hierdurch ist ein ändern der Konfiguration des Spiels ohne neu-erstellen der Binärdateien ermöglicht. Diese Konfigurationsart fügt Abhängigkeiten zu dem Unity eigenen JsonUtility\footnote{https://docs.unity3d.com/ScriptReference/JsonUtility.html} hinzu.
 
-\subsection{WalkerAgent/blabla}
-Jan mach mal! Irgendwo auch Generalisierung
-\begin{itemize}
-	\item UML von den Klassen
-	\item WalkerAgent/JointDriveController/TargetController
-	\item Reward Funktion
-\end{itemize}
+\subsection{Erweiterung der Agent-Klasse}
+\todo{texttt im Titel?}
+
+\begin{figure}
+	\includegraphics[width=\textwidth, trim={0cm 6.5cm 0cm 0cm}, clip]{resources/img/PG_Agent.drawio.pdf}
+	\caption{UML-Diagram der GenericAgent-Klasse und weitere relevante Klassen}
+	\label{fig:umlAgent}
+\end{figure}
+
+Als eine Erweiterung der \texttt{Agent}-Klasse von ML-Agents stellt die \texttt{GenericAgent}-Klasse das Verbindungsst"uck zwischen dem ML-Framework und der Unity-Engine dar. Im Folgenden wird der Aufbau der Klasse \texttt{GenericAgent} sowie derer Hilfsklassen \texttt{JointDrive\-Controller}, \texttt{BodyPart}, \texttt{OrientationCubeController} und \texttt{WalkTargetScript} erläutert und die Funktionalität dieser Klassen erklärt. Zur Veranschaulichung befindet sich in Abbildung \ref{fig:umlAgent} ein UML-Diagram. Der Aufbau dieser Klassen orientiert sich dabei sehr stark an die Implementierung des ML-Agents Walker.
+
+\subsubsection{GenericAgent}
+
+Die kontrollende Instanz einer konkreten Trainingsumgebung ist die \texttt{GenericAgent}-Klasse. Diese ist dazu in der Lage, mit dem Modell des ML-Frameworks zu interagieren, also sowohl Beobachtungen der Trainingsumgebung weiterzugeben also auch die Ausgaben des Modells anzunehmen (und zu verarbeiten). Außerdem ist die Klasse f"ur die Instandhaltung der Trainingsumgebung verantwortlich, indem sie Events der Umgebung verarbeitet (z.B. das Erreichen des Targets oder das Verlassen des zugänglichen Bereiches) und ggf. spezifizierte Routinen wie das Zur"ucksetzen der Umgebung durf"uhrt.
+Schließlich muss die \texttt{GenericAgent}-Klasse noch die Rewards f"ur die Trainingsumgebung verteilen. Zu diesem Zweck ist die Klasse als \textit{abstract} definiert, da diese Rewardfunktionen stark von der Aufgabe des Agents abhängig sind. So benötigt zum Beispiel ein Agent, welcher ein bestimmtest Ziel möglichst schnell erreichen soll eine andere Reward-Funktion als ein Agent, welcher sich möglichst gut vor dem Spieler verstecken soll. Verschiedene Agents können so ohne Redundanz einfach als eine Erweiterung der \texttt{GenericAgent}-Klasse implementiert werden.
+
+\todo{Mehr auf Reward-Funktionen eingehen oder erst bei konkreten Agents?}
+
+\subsubsection{JointDriveController und BodyPart}
+
+Um die Ingame-Repräsentation (also die generierte Creature) des Agents zu kontrollieren, besitzt der \texttt{GenericAgent} einen \texttt{JointDriveController}. Bei der Initialisierung der Trainingsumgebung wrappt der \texttt{JointDriveController} die verschiedenen Unity-Transforms der Creature in Instanzen der Hilfsklasse \texttt{BodyPart}. Die Klasse \texttt{BodyPart} gibt uns leichten Zugang zu häufig benötigten Funktionalitäten, wie zum Beispiel das Zur"ucksetzen oder Steuern des Transform. Auch besitzt ein \texttt{BodyPart} n"utzliche Informationen "uber das jeweilige Transform, welche dem ML-Modell weitergegeben werden können. Nach der Initialisierung stellt der \texttt{JointDriveController} nur noch das Verbindungsst"uck zwischen der \texttt{GenericAgent}-Klasse und der verschiedenen \texttt{BodyPart}-Instanzen dar.
+
+
+\subsubsection{OrientationCubeController}
+
+Da sich das Target des Agenten potentiell "uberall innerhalb einer großen (und weitgehend unbekannten) Ingame-Umgebung befinden kann, ist es hilfreich, die gezielte Laufrichtung des Agenten an eine einheitliche Position zu platzieren. Hierf"ur besitzt jeder Agent einen sogenannten \textit{OrientationCube}, welcher an einer festen Position relativ zum Agenten steht und sich lediglich in die Richtung des Targets dreht. So kann der Agent (und infolgedessen das ML-Modell) einfach den OrientationCube referenzieren, um die Laufrichtung zu bestimmen. Der \texttt{OrientationCubeController} stellt daf"ur die Reorientierungsfunktion des OrientationCubes bereit.
+
+
+\subsubsection{WalkTargetScript}
+
+Größtenteils unabhängig vom Agenten agiert das Target mithilfe des \texttt{WalkTargetScript}. Die Hauptaufgabe des Scripts ist es, das Target zu steuern (sowohl Neuplatzierung bei einem Reset, als auch normale Bewegungen innerhalb einer Episode) und beim Eintreten eines CollisionEvents zwischen dem Target und dem Agenten den Agenten zu notifizieren. Da zurzeit das Target nur aus einer Kugel besteht, ist komplizierteres Verhalten nicht notwendig.
+
 
 \subsection{LiDO3}
 % Nils
