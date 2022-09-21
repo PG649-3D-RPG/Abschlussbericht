@@ -1,13 +1,31 @@
 \documentclass{scrbook}
-\usepackage[utf8]{inputenc}
+\usepackage[utf8]{inputenc}			% Zeichensatzkodierung
 \usepackage[T1]{fontenc}
-\usepackage{amsmath}
+\usepackage{amsmath}				% Mathematischer Formelsatz AMS
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{graphicx}
+\usepackage{graphicx}				% Einbinden von Bildern
 
+\usepackage[ngerman]{babel}			% deutsche Namen/Umlaute
+\usepackage{fancyhdr}
+\usepackage{color}					% Farben wenn es sein muß
+\usepackage{hyperref}				% Klickbare Verweise und \autoref{label}
+\usepackage{booktabs}				% "Schöne" Tabellen	
 
 \begin{document}
+	
+	\include{chapters/Titelseite/Titelseite}
+	
+	\cleardoublepage
+	\tableofcontents			% Inhaltsverzeichnis ... nicht für kurze Dokumente!
+	\cleardoublepage
+	\listoffigures				% Abbildungsverzeichnis ... nicht für kurze Dokumente
+	\cleardoublepage
+	\pagenumbering{arabic}
+	\setcounter{page}{4}
+	%\cleardoublepage				
+	%\bibliographystyle{IEEEtran}	% Das Literaturverzeichnis; ieeetran verwenden, damit auch URLs angezeigt werden
+	%\bibliography{seminar-lit}
 	
 	\include{chapters/01_Einleitung/01_Einleitung}
 	
