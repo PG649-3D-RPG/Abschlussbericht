@@ -1,5 +1,5 @@
 \section{Introduction}
-\subsection{ml-Agents}
+\subsection{ml-Agents} \label{mlAgentsFramework}
 Das Unity Machine Learning Agents Toolkit, kurz ml-Agents, ist ein von Unity entwickeltes und unter der Apache License 2.0 lizensiertes open-source Projekt, dass Implementierungen von beliebten Reinforment Learning Algorithmen zur Verfügung stellt.
 Das Toolkit wurde am 19. September 2017 vorgestellt und wurde seitdem stetig weiterentwickelt. Die aktuellste Version ist Release 19, welcher am 14. Januar 2022 veröffentlicht wurde. Diese Version bietet neben Implementierungen für die Deep Reinforcement Learning Algorithmen PPO, SAC und MA-POCA auch Implementierungen für die Imitation Learning Algorithmen BC und GAIL.\\
 
@@ -13,7 +13,7 @@ Der Network Settings Abschnitt beschreibt die Größe und Anzahl der Schichten i
 \noindent Sowohl die Checkpoints als auch das finale Netzwerk werden als onnx Datei gespeichert, die dann, zum Beispiel mit Unity Barracuda, geladen werden kann, um das Netzwerk zu verwenden.\\
 Zum Analysieren und Bewerten des Trainings erhebt ml-Agents während des Trainings verschiedene Daten, wie den durchschnittlichen Reward und die Loss Werte der verschiedenen Netzwerke. Diese werden in einem Tensorboard gespeichert, welches in dem selben Ordner wie die onnx Datei gefunden werden kann. 
 
-\subsection{neroRL}
+\subsection{neroRL}\label{neroRLFramework}
 
 NeroRL ist ein unter der MIT Lizenz lizensiertes Reinforment Learning Framework, dass seinen Fokus auf verschiedene Varianten des Proximal Policy Optimization (PPO) Algorithmus legt. Es basiert auf dem Code von dem ml-Agents Toolkit und verwendet dessen Python API, um mit den Umgebungen zu kommunizieren. \\
 NeroRL stellt neben der regulären Variante von PPO auch eine Implementierung mit Rekkurenz zur Verfügung. Zusätzlich kann bei allen Implementierungen der Agent entweder mit geteilten oder mit getrennten Netzwerken und Gradienten für den Aktor und den Kritiker trainiert werden. \\
