@@ -94,6 +94,27 @@ Da sich das Target des Agenten potentiell "uberall innerhalb einer großen (und 
 Größtenteils unabhängig vom Agenten agiert das Target mithilfe des \texttt{WalkTargetScript}. Die Hauptaufgabe des Scripts ist es, das Target zu steuern (sowohl Neuplatzierung bei einem Reset, als auch normale Bewegungen innerhalb einer Episode) und beim Eintreten eines CollisionEvents zwischen dem Target und dem Agenten den Agenten zu notifizieren. Da zurzeit das Target nur aus einer Kugel besteht, ist komplizierteres Verhalten nicht notwendig.
 
 
+\subsection{NeroRL \& ML-Agents}
+% Jannik
+
+Für das Training der Kreaturen kommt das Python-basierte Machine Learning Framework neroRL zum Einsatz. Die Auswahl ist in Kapitel \ref{} beschrieben. neroRL verbindet sich mit der Unity-seitig implementierten ML-Agents API und implementiert den PPO Algorithmus (siehe Kapitel \ref{}) auf Basis von PyTorch. Kapitel \ref{} beschreibt für die technische Umsetzung relevante Probleme, die die ursprüngliche Version von neroRL mit sich bringt. In diesem Kapitel wird die technische Umsetzung der Veränderungen an neroRL beschrieben, durch die das Framework für unser Projekt einsetzbar ist.
+
+\subsubsection{Kontinuierliche Aktionsräume}
+In der ursprünglichen Version von neroRL werden ausschließlich diskrete und multi-diskrete Aktionsräume unterstützt. Unsere Kreaturen benötigen kontinuierliche Aktionen. Die Klasse \texttt{ContinuousActionPolicy} implementiert einen Head (Kopf) für das neuronale Netzwerk, der kontinuierliche Aktionen umsetzt. Für jede Aktion des zugrundeliegenden Aktionsraumes werden $\mu$ (der Mittelwert) und $\sigma$ (die Standardabweichung) gelernt. Daraus wird eine Normalverteilung generiert, aus der dann ein tatsächliches Aktionstupel gesamplet werden kann. Als Verteilung wird die \texttt{Normal} Implementierung einer Gaußschen Normalverteilung aus PyTorch verwendet.
+
+\subsubsection{Multi-Agent Builds}
+Abhängig von den verfügbaren Rechenressourcen lassen sich maximal ca. 16 Builds parallel ausführen (LiDo3 cgpu01 Knoten mit 2 Intel Xeon E5-2640v4 und 2 NVIDIA Tesla K40). Um mehr Daten parallel zu sammeln, haben wir neroRL so erweitert, dass in einem Build mehrere Umgebungen mit jeweils einem Agenten parallel laufen können. Die von neroRL verwendeten Buffer Systeme verwenden dafür die Dimensionen $[worker][agent][timestep][content]$. Über $[worker]$ und $[agent]$ werden alle Daten genau einem Agenten in einem der ausgeführten Builds zugeordnet. Für die $[timestep]$ Dimension wird außerdem für jeden Build und Agenten festgehalten, welches der aktuelle Zeitschritt ist. Da Umgebungen zu unterschiedlichen Zeitpunkten terminieren und zurückgesetzt werden, ist es möglich, dass die Zeitschritte zwischen verschiedenen Agenten nicht synchronisiert sind. Sobald genug Daten für die definierte Batchgröße gesampelt sind, werden diese von den verschiedenen Builds und Agenten eingesammelt und in einem Batch kombiniert, das dann an den Trainingsalgorithmus übergeben wird.
+
+\subsubsection{Optimierung der Trainingsqualität}
+Nach Fertigstellung der Implementierung der Unterstützung von kontinuierlichen Aktionen zeigen die ersten Trainingsergebnisse unzureichende Ergebnisse. Während das Training der ML-Agents Walker Beispielumgebung mit ML-Agents nach ca. 30 Millionen Schritten einen durchschnittlichen Reward von ca. 2000 erreicht, erreicht neroRL auch nach über 150 Millionen Schritten nur einen Reward von ca. 220. Eine qualitative visuelle Bewertung des gelernten Verhaltens zeigt, dass der Walker sich zwar gezielt auf die erste Position des Ziels zubewegt, allerdings nach dem Verschieben des Ziels nicht in der Lage ist, sich umzudrehen. 
+Um die Qualität des Trainings mit neroRL zu steigern, werden verschiedene Optimierungen verwendet.
+
+\begin{itemize}
+	\item \textbf{Normalisierung der Observationen:} Die Observationen werden durch den Sampler automatisch normalisiert, um das Training zu stabiliseren und vor ausreißenden Werten zu schützen.
+	\item \textbf{Squashing:} Grundsätzlich können die aus dem Netzwerk gesampleten kontinuierlichen Aktionen im Intervall $[-\infty;\infty]$ liegen. Auf Unity liegen die Aktionen im Intervall $[-1;1]$ und werden dementsprechend abgeschnitten. In einigen Fällen hat sich Tanh-Squashing als eine Methode erwiesen, um die Trainingsqualität mit kontinuierlichen Aktionen zu steigern und die Aktionen auf das Intervall $[-1;1]$ zu projizieren, anstatt diese abzuschneiden (vgl. \cite{}). Unsere Implementierung von Tanh-Squashing wurde jedoch verworfen, da diese konsistent das Exploding-Gradients-Problem ausgelöst hat und das Training somit fehlgeschlagen ist. 
+\end{itemize}
+
+
 \subsection{LiDO3}
 % Nils
 Wie bereits erwähnt, werden die Berechnungen jeweils auf den HPC der TU Dortmund ausgeführt. Um auf LiDO3 zu arbeiten wird mit Hilfe eines Gatewayservers auf das Cluster zugegriffen. Der Zugriff ist ausschließlich über das TU Dortmund Netzwerk möglich. Über den Gatewayserver kann ein Zugriff auf die Rechenressourcen direkt über die Shell oder über Skripte angefordert werden. Da die Shell-Methode einen dauerhaften Login erfordern würde, wird mit Skripten gearbeitet. Diese bestehen aus Konfigurationen für LiDO3 und den eigentlich Programmteil, welcher ausgeführt werden soll. LiDO3 nutzt als Jobmanager Slurm, weshalb die Skripte die Slurm-Syntax nutzen. Eine ausführliche Beschreibung die LiDO3 Konfiguration findet sich im Benutzerhandbuch\cite{lido};

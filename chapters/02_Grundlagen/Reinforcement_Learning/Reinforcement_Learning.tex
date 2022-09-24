@@ -1,0 +1,145 @@
+\section{Reinforcement Learning}
+Mit Reinforcement Learning (RL, deutsch: verstärkendes Lernen) werden bestimmte Varianten des maschinellen Lernens bezeichnet. Allgemein lernt beim Reinforcement Learning ein Agent eine Policy (deutsch: Strategie), um ein Problem zu lösen.\\
+\begin{figure}
+    \centering
+    \includegraphics{resources/img/Reinforcement_Learning/RL Control Loop.png}
+    \caption{Reinforcement Learning Kontrollfluss \cite{FoundationsDeepRL}}
+    \label{fig:rl_control_loop}
+\end{figure}
+Abbildung \ref{fig:rl_control_loop} stellt den allgemeinen Kontrollfluss Zyklus eines Reinforcement Learning Prozesses dar. Der Agent ist in einer Umgebung (Environment) aktiv. In regelmäßigen Schritten erhält der Agent von der Umgebung einen aktuellen Zustand (State) in Form eines Vektors, sowie eine Belohnung (Reward), die entweder Null (d.h. keine Belohnung im aktuellen Schritt), oder ein positiver oder negativer Wert sein kann. Der Agent wendet die gelernte Policy auf den State an und berechnet damit eine Aktion. Die Aktion wird in der Umgebung ausgeführt. Danach übergibt die Umgebung den neuen State und die neue Belohnung an den Agenten.\\
+
+\subsection{Episoden und Trajektorien}
+Eine Episode beschreibt die Zeitspanne von der Initialisierung bis zur Terminierung der Umgebung. Eine Trajektorie beschreibt eine Reihe von Tupeln aus State, Aktion und Reward aus den einzelnen Schritten einer Episode. Die Gleichung \ref{eq:trajectory} stellt die mathematische Schreibweise einer Trajektorie dar. Auf Basis gesammelter Trajektorien kann der Agent einen Lernvorgang durchführen und die Policy updaten.
+\begin{equation}
+    \tau = (s_0,a_0,r_0), (s_1,a_1,r_1), \dots, (s_n,a_n,r_n)
+    \label{eq:trajectory}
+\end{equation}
+
+\subsection{Policy-basierte \& Value-basierte Algorithmen}
+Grundsätzlich wird im Reinforcement Learning zwischen Policy-basierten und Value-basierten Algorithmen unterschieden. Diese werden in den folgenden Abschnitten genauer beschrieben.
+
+\subsubsection{Policy-basierte Algorithmen}
+Bei Policy-basierten Algorithmen wählt eine Policy ($\pi$) die nächste Aktion ($a \sim \pi(a)$) aus, die in der Umgebung umgesetzt wird. Es können zwei Arten von Policies verwendet werden. Eine deterministische Policy bildet deterministisch einen Zustand $s$ auf eine Aktion $a$ ab (siehe Gleichung \ref{eq:deterministic_policy}). 
+\begin{equation}
+    \pi(s) = a
+    \label{eq:deterministic_policy}
+\end{equation}
+In der Praxis werden fast ausschließlich stochastische Policies (siehe Gleichung \ref{eq:stochastic_policy}) verwendet.
+\begin{equation}
+    \pi(a\vert s) = \mathbb{P}_{\pi}\left[ A=a \vert S=s \right]
+    \label{eq:stochastic_policy}
+\end{equation}
+Eine stochastische Policy ordnet für jede Aktion $a$ eine Wahrscheinlichkeit unter Bedingung des Zustands $s$ zu. Aus der entstehenden Verteilung wird dann die Aktion $a$ gesamplet. Policy-basierte Algorithmen lernen die Funktion $\pi$, sodass das Objective maximiert wird.
+Policy-basierte Algorithmen können grundsätzlich auf beliebige Aktionstypen angewendet werden, kontinuierliche Aktionsräume sind möglich. Policy-basierte Algorithmen konvergieren garantiert zu einer lokalen, optimalen Policy. Allerdings sind Policy-basierte Algorithmen Sample-ineffizient und haben eine hohe Varianz.
+
+\subsubsection{Value-basierte Algorithmen}
+Bei Value-basierten Algorithmen wird eine Funktion zum Schätzen der Wertung eines Zustands bzw. eines Zustand-Aktion Tupels gelernt. Aus der Bewertung wird dann eine Policy generiert. Es gibt zwei grundlegende Value-Funktionen.
+
+\begin{equation}
+    V^\pi (s)=\mathbb{E}_{s_0=s, \tau \sim \pi} \left[ \sum_{t=0}^T \gamma^t r_t \right]
+    \label{eq:v_function}
+\end{equation}
+\begin{equation}
+    Q^\pi (s,a) = \mathbb{E}_{s_0=s,a_0=a,\tau\sim\pi} \left[ \sum_{t=0}^T \gamma^t r_t\right]
+    \label{eq:q_function}
+\end{equation}
+Die V-Funktion (''Value-Function'', siehe Gleichung \ref{eq:v_function}) schätzt den Wert eines Zustandes anhand der diskontierten Rewards einer in diesem Zustand startenden Trajektorie. 
+Die Q-Funktion (''Action-Value-Function'', siehe Gleichung \ref{eq:q_function}) schätzt den Wert eines Zustandes unter Durchführung einer Aktion anhand der diskontierten Rewards einer in diesem Zustand startenden Trajektorie, die zuerst die gewählte Aktion durchführt. 
+Bei reinen Value-basierten Algorithmen, wird bevorzugt die Action-Value-Funktion $Q^\pi$ verwendet, da sich diese leichter in eine Policy umwandeln lässt. 
+Value-basierte Algorithmen sind Sample-effizienter als Policy-based Algorithmen und haben eine niedrigere Varianz. Allerdings kann eine Konvergenz zu einem lokalen Optimum nicht garantiert werden. Die Standard-Methode für Value-basierte Algorithmen ist nur auf diskreten Aktionsräumen anwendbar. \ref{}
+
+\subsection{Optimierung}
+Der Lernvorgang eines Reinforcement Learning Systems erfolgt über den Policy Gradient.
+\begin{equation}
+    \vartheta \leftarrow \vartheta + \alpha \nabla_\vartheta J(\pi_\vartheta)
+    \label{eq:policy_optimization}
+\end{equation}
+Gleichung \ref{eq:policy_optimization} zeigt die Optimierung einer Policy. Die optimierte Policy entsteht aus der alten Policy, indem eine Anpassung aus Gradient und Objective Funktion ($J(\pi_\vartheta)$) aufaddiert werden.
+\begin{equation}
+    \nabla_\vartheta J(\pi_\vartheta) = \mathbb{E}_{\tau\sim\pi_\vartheta} \left[ \sum_{t=0}^T R_t(\tau) \nabla_\vartheta log(\pi_\vartheta(a_t\vert s_t))\right]
+    ;\; R_t(\tau) = \sum_{t'=t}^T \gamma^{t'-t} r_{t'}
+    \label{eq:gradient_objective_function}
+\end{equation}
+Dabei werden die Wahrscheinlichkeiten $\pi\vartheta(a_t\vert s_t)$ der Policy angepasst. Ungünstige Aktionen ($R_t(\tau) < 0$) werden weniger wahrscheinlich. Günstige Aktionen ($R_t(\tau) > 0$) werdeen wahrscheinlicher.
+
+\subsection{Actor-Critic}
+Die Actor-Critic Methode ist eine Methode des Reinforcement Learning. Die Actor-Critic Methode kombiniert die Policy-Gradient und die Value-Function Methoden. Der Actor lernt eine Policy (Policy Gradient Methode) und nutzt für das Lernsignal eine durch den Critic gelernte Value-Function (Value-Function Methode). Durch den Critic wird so eine dichte Bewertungsfunktion erzeugt, auch wenn die echten Rewards aus dem Environment nur selten (d.h. an wenigen Zeitpunkten) vorkommen. 
+
+\subsubsection{Advantage-Actor-Critic (A2C)}
+Advantage-Actor-Critic ist eine Variante der Actor-Critic Methode, bei der statt einer Value-Funktion eine Advantage-Funktion verwendet wird.
+\begin{equation}
+    A^\pi(s_t,a_t) = Q^\pi(s_t,a_t) - V^\pi(s_t)
+    \label{eq:advantage_function}
+\end{equation}
+Die Advantage-Funktion bewertet Zustand-Aktion Tupel im Vergleich zum Durchschnitt des Zustandes. Dadurch wird der erreichbare Reward in Relation zur Ausgangssituation gesetzt. Ein kleiner Reward aus einem schlechten Zustand wird somit ebenso gut gewertet, wie ein großer Reward aus einem guten Ausgangszustand. Überdurchschnittliche Aktionen haben also einen positiven Advantage, während unterdurchschnittliche Aktionen einen negativen Advantage haben.
+Durch die Verwendung der Advantage-Funktion ändert sich die Formel für den Gradienten. Die Gradienten Formel für die A2C Methode ist in Gleichung \ref{eq:a2c_gradient} dargestellt.
+\begin{equation}
+    \nabla_\vartheta J(\pi_\vartheta) = \mathbb{E}_t\left[ A_t^\pi (s_t,a_t) \nabla_\vartheta log(\pi_\vartheta(a_t\vert s_t))\right]
+    \label{eq:a2c_gradient}
+\end{equation}
+Für die Berechnung der Advantage-Funktion werden $V^\pi$ und $Q^\pi$ benötigt. Da es sehr ineffizient ist, sowohl $Q^\pi$, als auch $V^\pi$ zu lernen, lernt der Critic nur $V^\pi$ und schätzt auf dieser Grundlage dann $Q^\pi$. Für die Schätzung kann z.B. Generalized-Advantage-Estimation verwendet werden.
+
+\subsubsection{Generalized-Advantage-Estimation (GAE)}
+Generalized-Advantage-Estimation (GAE) ist eine Methode, den Advantage anhand einer gelernten $V^\pi$ Funktion zu schätzen. GAE verwendet einen exponentiell gewichteten Durchschnitt von n-step Forward Return Advantages.
+\begin{equation}
+    A^\pi_{NSTEP} = \left[ (\sum_{i=0}^n \gamma^i r_{t+i}) + \gamma^{n+1} V^\pi (s_{t+n+1}) \right] - V^\pi(s_t)
+    \label{eq:nstep}
+\end{equation}
+Gleichung \ref{eq:nstep} stellt die Berechnung von n-step Forward Return Advantages dar. Dabei werden $n$ Schritte an tatsächlichen Rewards gewertet. Ab dem $n+1$ Schritt wird mit einer gelernten $V^\pi$ Funktion geschätzt. Die tatsächlichen Rewards sorgen für eine hohe Varianz und haben dafür kein Bias, da sie direkt aus der Umgebung gesamplet werden. Die $V^\pi$ Funktion stellt eine Erwartung über alle möglichen Trajektorien dar und weist damit eine geringe Varianz auf. Da die $V^\pi$ Funktion gelernt wurde, entsteht dabei Bias. Mit kleinen Werten für $n$ haben n-step Forward Return Advantages eine geringe Varianz bei hohem Bias, mit großen Werten für $n$ haben n-step Forward Return Advantages eine hohe Varianz bei geringem Bias (Bias-Variance Trade-Off). Allgemeine Aussagen über die Wahl des $n$ Parameters sind schwierig.\\
+Generalized Advantage Estimation hebt die explizite Wahl von $n$ aus, indem n-step Forward Return Advantages für verschiedene $n$ Werte gewichtet. kombiniert werden.
+\begin{equation}
+    A^\pi_{GAE(\gamma,\lambda)} (s_t,a_t) = \sum_{l=0}^\infty (\gamma\lambda)^l \delta_{t+l} ;\; \delta_t = r_t + \gamma V^\pi (s_{t+1}) - V^\pi(s_t)
+    \label{eq:gae}
+\end{equation}
+Die allgemeine Formel für GAE ist in Gleichung \ref{eq:gae} abgebildet. Die Gewichtung wird durch die Decay-Rate $\gamma \in [0;1]$ und den Discount-Factor $\lambda \in [0;1]$ parametrisiert.
+In der Praxis wird statt der unendlichen Summe eine Summe bis zum Ende der verfügbaren Trajektorie verwendet.
+
+
+\section{PPO}
+Proximal Policy Optimization (PPO) ist ein Reinforcement Learning Algorithmus, der die Actor-Critic Methode umsetzt.
+
+\subsection{Performance Collapse}
+Ein Problem von Reinforcement Learning Algorithmen ist der Performance Collapse (Leistungseinbruch). Performance Collapse bedeutet, dass die Returns der Umgebung im Lernvorgang plötzlich einbrechen, da z.B. die Policy über ein lokales Optimum heraus optimiert wurde und der Gradient nun zu einem schlechteren lokalen Optimum konvergiert. Die Ursache für das Problem ist der indirekte Ansatz der Policies. Ein RL Algorithmus manipuliert die Parameter der Policy, um diese zu verändern. Kleine Veränderungen in den Parametern können dabei große Veränderungen in der Policy auslösen.
+
+% \paragraph{Surrogate Objective}
+% Ein Lösungsansatz für das Performance Collapse Problem ist das Einschränken der Größe einzelner Lernschritte. Dieser Ansatz wurde mit dem Trust Region Policy Optimization Algorithmus (TRPO) (\ref{}) eingeführt, auf dem PPO aufbaut. 
+% \begin{equation}
+%     J(\pi') - J(\pi) = \mathbb{E}_{\tau \sim \pi} \left[ \sum_{t=0}^T \gamma^t A^\pi(s_t,a_t) \frac{\pi'(a_t\vert s_t)}{\pi(a_t\vert s_t)} \right] = J_\pi^{CPI}(\pi')
+%     \label{eq:surrogate_objective}
+% \end{equation}
+% Gleichung \ref{eq:surrogate_objective} zeigt das sogenannte Surrogate Objective $J_\pi^{CPI}$, das von TRPO verwendet wird um die 
+
+\subsection{Clipping}
+Es gibt zwei theoretische Varianten des PPO Algorithmus. Die erste Variante baut direkt auf dem Trust Region Policy Optimization Algorithmus (TRPO) auf und verwendet eine Adaptive KL Penalty, um die Schrittgröße einzuschränken. In der Praxis wird jedoch nur die zweite Variante von PPO verwendet, da diese in Tests bessere Ergebnisse erzielt und leichter zu implementieren ist.
+Die zweite Variante nutzt ein Clipped Surrogate Objective.
+\begin{equation}
+    J^{CLIP}(\vartheta) = \mathbb{E}_t\left[ \min(r_t(\vartheta)A_t,clip(r_t(\vartheta),1-\epsilon,1+\epsilon)A_t \right]
+    \label{eq:clipped_surrogate_objective}
+\end{equation}
+Die Gleichung \ref{eq:clipped_surrogate_objective} zeigt das Clipped Surrogate Objective, das vom PPO Algorithmus maximiert wird. Eine Veränderung außerhalb des Bereichs $[1-\epsilon; 1+\epsilon]$ wird dabei geclippt (abgeschnitten) und somit die Schrittgröße eingeschränkt.
+\begin{equation}
+    J^{CLIP+VF+S}(\vartheta) = \mathbb{E}_t \left[ J_t^{CLIP} - c_1L_t^{VF} + c_2S[\pi_\vartheta(s_t)] \right]
+    \label{eq:ppo_objective}
+\end{equation}
+Die für die Clipped Surrogate Objective Variante des PPO Algorithmus verwendete Loss Funktion wird in Gleichung \ref{eq:ppo_objective} gezeigt. Zusätzlich zum Clipped Surrogate Objective wird der Loss der Value-Funktion und ein Entropie Bonus zur Steigerung der Exploration berechnet. In der Praxis wird das Objective negiert, damit Gradient Descent statt Gradient Ascent durchgeführt werden kann.
+
+\paragraph{Algorithmus}
+
+\begin{algorithm}
+\begin{lstlisting}[mathescape=true, numbers=left]
+for episode=0...MAX do
+    for actor=1...N do
+        Sample Trajectory for T time steps with $\pi_{\vartheta_{old}}$
+        Compute advantage estimates $A_1,\dots,A_T$ with $\pi_{\vartheta_{old}}$
+    Collect all states in batch of size N*T
+    for epoch=1...K do
+        for minibatch of size m in batch do
+            Optimize Clipped Surrogate Objective L w.r.t. $\vartheta$
+    $\vartheta_{old} = \vartheta$
+\end{lstlisting}
+\caption{PPO Pseudocode Algorithmus}
+\label{alg:ppo}
+\end{algorithm}
+
+Algorithmus \ref{alg:ppo} zeigt den Pseudocode des PPO Algorithmus. Für jede Episode wird zuerst pro Actor eine Trajektorie in der Umgebung gesamplet. Dabei werden die Aktionen jeweils durch die aktuelle Policy $\pi_{\vartheta_{old}}$ bestimmt. Für diese Trajektorie werden die zugehörigen Advantages mit GAE berechnet. 
+Mit den gesampleten Trajektorien wird die Policy in Epochen trainiert. In jeder Epoche werden Minibatches aus dem gesampleten Batch generiert. Mit den Daten der Minibatches wird das Clipped Surrogate Objective optimiert.
