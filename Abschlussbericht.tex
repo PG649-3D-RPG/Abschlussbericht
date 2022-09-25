@@ -8,7 +8,7 @@
 \usepackage{graphicx}
 \usepackage{todonotes}
 \usepackage[english, main=ngerman]{babel}
-\usepackage[backend=biber]{biblatex}
+\usepackage[backend=biber, style=ieee]{biblatex}
 \usepackage{algorithm}
 \usepackage{listings}
 \addbibresource{literature/literature.bib}
@@ -55,8 +55,9 @@
 	\pagenumbering{arabic}
 	\setcounter{page}{4}
 	\cleardoublepage				
-	\bibliographystyle{IEEEtran}	% Das Literaturverzeichnis; ieeetran verwenden, damit auch URLs angezeigt werden
-	\bibliography{seminar-lit}
+	% \bibliographystyle{IEEEtran}	% Das Literaturverzeichnis; ieeetran verwenden, damit auch URLs angezeigt werden
+	% \bibliography{seminar-lit}
+	\printbibliography
 	
 	
 \end{document}
