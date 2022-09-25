@@ -1,7 +1,7 @@
 \documentclass{scrbook}
-\usepackage[utf8]{inputenc}
+\usepackage[utf8]{inputenc}			% Zeichensatzkodierung
 \usepackage[T1]{fontenc}
-\usepackage{amsmath}
+\usepackage{amsmath}				% Mathematischer Formelsatz AMS
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{csquotes}
@@ -12,8 +12,25 @@
 \usepackage{algorithm}
 \usepackage{listings}
 \addbibresource{literature/literature.bib}
+\usepackage{graphicx}				% Einbinden von Bildern
+
+\usepackage{fancyhdr}
+\usepackage{color}					% Farben wenn es sein muß
+\usepackage{hyperref}				% Klickbare Verweise und \autoref{label}
+\usepackage{booktabs}				% "Schöne" Tabellen	
+
+% Custom-Liste für Themenallokation
+\usepackage{enumitem}
+\newlist{thallok}{enumerate}{10}
+\setlist[thallok]{label*=\arabic*.}
 
 \begin{document}
+	
+	\include{chapters/Titelseite/Titelseite}
+	
+	\cleardoublepage
+	\tableofcontents			% Inhaltsverzeichnis ... nicht für kurze Dokumente!
+	\cleardoublepage
 	
 	\include{chapters/01_Einleitung/01_Einleitung}
 	
@@ -28,6 +45,18 @@
 	\include{chapters/06_Vorlaeufige_Ergebnisse/06_Vorlaeufige_Ergebnisse}
 	
 	\include{chapters/07_Ausblick/07_Ausblick}
+	
+	\include{chapters/Themenallokation/Themenallokation}
+	
+	\listoffigures				% Abbildungsverzeichnis ... nicht für kurze Dokumente
+	\cleardoublepage
+	\listoftables				% Tabellenverzeichnis
+	\cleardoublepage
+	\pagenumbering{arabic}
+	\setcounter{page}{4}
+	\cleardoublepage				
+	\bibliographystyle{IEEEtran}	% Das Literaturverzeichnis; ieeetran verwenden, damit auch URLs angezeigt werden
+	\bibliography{seminar-lit}
 	
 	
 \end{document}
