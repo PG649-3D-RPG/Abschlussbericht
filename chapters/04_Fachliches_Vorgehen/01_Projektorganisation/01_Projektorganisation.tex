@@ -1,18 +1,49 @@
 \section{Projektorganisation}
 
-Wie sind wir vorgegangen... auf alles bezogen. Wer hat an welchen Kapiteln mitgearbeitet.
+% Wie sind wir vorgegangen... auf alles bezogen. Wer hat an welchen Kapiteln mitgearbeitet.
 
 %Thomas
-? Während der Projektgruppe haben sich ... Untergruppen/Teams für die jeweiligen Bereiche ... herausgestellt.
+% ? Während der Projektgruppe haben sich ... Untergruppen/Teams für die jeweiligen Bereiche ... herausgestellt.
 
-Für die Projektorganisation haben sich ein Projektleiter und jeweils 2 Projektmanager aus den Gruppen der \textbf{Creature-Generator} und \textbf{Creature-Animator} einberufen. Wöchentlich findet ein Jour-Fixe statt um gemeinsam über die aktuellen Entwicklungen zu sprechen und Herausforderungen gemeinsam anzugehen und zu lösen. Der Projektleiter sollte darin eine Moderator- und Organisationsrolle einnehmen, die Gruppen und Themen zusammen- und im Überblick behalten und somit potentielle Konflikte frühzeitig erkennen und auflösen. Die Projektmanager übernehmen eine analoge Aufgabe im Rahmen ihrer jeweiligen Gruppen und bilden somit gemeinsam mit dem Projektleiter eine Struktur in der die Übersicht über aktuelle Themen einfach beibehalten werden kann. Im Anschluss an das Jour-Fixe treffen sich die vier Projektmanager und der Projektleiter, bereiten für den nächsten Termin des Jour-Fixe die zu besprechenden Themen vor und klären gegebenenfalls organisatorische Einzelheiten um somit die restliche Gruppe der Teilnehmer zu entlasten. Während der Jour-Fixe wird von jedem der Teilnehmer abwechselnd eine Dokumentation des Treffens manifestiert um somit Ergebnisse aber auch ToDo's festhalten und einsehen zu können. Für das wöchentliche Treffen wurde ein Tagesprotokoll (Fig. ) genutzt, welches von dem Projektleiter durch Bildschirmübertragung an die Teilnehmer präsentiert und durchgesprochen wurde. Das Tagesprotokoll konnte jederzeit durch jeden Teilnehmer modifiziert und ergänzt werden, falls zu besprechende Themen durch den jeweiligen Teilnehmer aufgekommen sind.
+Um koordiniert das Ziel der Projektgruppe zu erreichen, spielt die Projektorganisation bei einer Gruppe von 12 Teilnehmern eine wichtige Rolle. Im Laufe der Projektgruppe wurden Untergruppen für verschiedene Bereiche gebildet. Außerdem übernahmen einige Teilnehmer Rollen im Rahmen der Projektleitung. Die primäre Gruppenaufteilung ist in Tabelle \ref{tab:gruppenaufteilung} abgebildet. Initial wurde die Projektgruppe in die Untergruppen Creature-Generation und Creature-Animation aufgeteilt.
+
+\begin{itemize}
+	\item \textbf{Creature-Generation: } Die Creature-Generation Gruppe wendet verschiedene Methoden der prozeduralen Inhaltsgenerierung an. Damit sollen Skelette für Kreaturen generiert werden und auf Basis dieser Skelette Skinning hinzugefügt werden. Außerdem ist die Creature-Generation Gruppe für die prozedurale Generierung einer Spielwelt verantwortlich.
+	\item \textbf{Creature-Animation: } Die Creature-Animation Gruppe wendet Reinforcement Learning an, um Bewegungsmodelle für die von der Creature-Generation Gruppe generierten Kreaturen zu trainieren. 
+\end{itemize}
+
+Die weitere Organisation innerhalb der Untergruppen wird in den Abschnitten \ref{sec:creature-animation-orga} und \ref{} genauer beschrieben.
+
+\begin{table}[]
+	\centering
+	\begin{tabular}{c | c || c | c}
+		\multicolumn{2}{c||}{(Creature-)Generation} & \multicolumn{2}{c}{(Creature-)Animation}\\
+		\hline
+		Creature-Generation & Terrain-Generation & Creature-Animation & neroRL\\
+		\hline\hline
+		\dotuline{Leonard Fricke} & Kay Heider & Jan Beier & Niklas Haldorn\\
+		Jona Lukas Heinrichs& Tom Voellmer & Nils Dunker & \dotuline{Jannik Stadtler}\\
+		\dotuline{Mathieu Herkersdorf} & & \dotuline{Carsten Kellner}\\
+		Markus Mügge&\\ 
+		\underline{Thomas Rysch} &\\    
+		
+	\end{tabular}
+	\caption{Primäre Gruppenaufteilung der Projektgruppe}
+	\label{tab:gruppenaufteilung}
+\end{table}
+
+\paragraph{Projektleitung}
+Aus den initialen Gruppen, der Creature-Generation und der Creature-Animation Gruppe, wurden jeweils zwei Projektmanager einberufen. Diese sind in Tabelle \ref{tab:gruppenaufteilung} gepunktet unterstrichen. Außerdem wurde Thomas Rysch als Projektleiter ernannt. Der Projektleiter sollte darin eine Moderator- und Organisationsrolle einnehmen, die Gruppen und Themen zusammen- und im Überblick behalten und somit potentielle Konflikte frühzeitig erkennen und auflösen. Die Projektmanager übernehmen eine analoge Aufgabe im Rahmen ihrer jeweiligen Gruppen und bilden somit gemeinsam mit dem Projektleiter eine Struktur in der die Übersicht über aktuelle Themen einfach beibehalten werden kann.
+
+\paragraph{Jour-Fixe}
+Wöchentlich findet ein Jour-Fixe statt um gemeinsam über die aktuellen Entwicklungen zu sprechen und Herausforderungen gemeinsam anzugehen und zu lösen. Der Projektleiter sollte darin eine Moderator- und Organisationsrolle einnehmen, die Gruppen und Themen zusammen- und im Überblick behalten und somit potentielle Konflikte frühzeitig erkennen und auflösen. Im Anschluss an das Jour-Fixe treffen sich die vier Projektmanager und der Projektleiter, bereiten für den nächsten Termin des Jour-Fixe die zu besprechenden Themen vor und klären gegebenenfalls organisatorische Einzelheiten um somit die restliche Gruppe der Teilnehmer zu entlasten. Während der Jour-Fixe wird von jedem der Teilnehmer abwechselnd eine Dokumentation des Treffens manifestiert um somit Ergebnisse aber auch ToDo's festhalten und einsehen zu können. Für das wöchentliche Treffen wurde ein Tagesprotokoll (Fig. ) genutzt, welches von dem Projektleiter durch Bildschirmübertragung an die Teilnehmer präsentiert und durchgesprochen wurde. Das Tagesprotokoll konnte jederzeit durch jeden Teilnehmer modifiziert und ergänzt werden, falls zu besprechende Themen durch den jeweiligen Teilnehmer aufgekommen sind.
 
 \paragraph{Organisationswerkzeuge}
 Für die weitere Organisation (der Entwicklung und Implementierung) der Projektgruppe wurden verschiedene Tools und Hilfsmittel eingesetzt, die im Folgenden beschrieben werden.
 
 \begin{itemize}
 	\item \textbf{Discord: } Discord wurde als Basis-Kommunikationsmittel genutzt. Hier wurden für die entsprechenden Phasen und Themenbereiche, sowie Gruppen eigene Text- und Sprach-Kanäle erstellt (Fig. (?)). Hier wurden auch aktuelle (organisatorische-) Themen aufgegriffen und besprochen. Der wöchentliche Jour-Fixe Termin wurde ebenfalls in Discord abgehalten.
-	\item \textbf{GitHub: } GitHub wurde als Entwicklungs-, Repository- und Speicherplattform genutzt. Die Dokumentationen des wöchentlichen Jour-Fixe sind im GitHub-Wiki abgelegt und zusätzlich in einem Discord Textkanal gespeichert. omit wurde implizit auch durch die Verfügbarkeit auf zwei Plattformen ein Backup der Dokumentationen realisiert, falls im worst-case eine der beiden Plattformen ausfallen sollte. Für die Projektgruppe wurde eine GitHub-Organisation gegründet (\href{https://github.com/PG649-3D-RPG}{Link zur Organisation}). Pro Gruppe bzw. Themenbereich wurde zunächst ein Repository erstellt. Nach Fertigstellung einzelner Versionen werden diese als Pakete exportiert und in einem Main-Repository (\href{}{Link}) zum fertigen Spiel zusammengestellt.
+	\item \textbf{GitHub: } GitHub wurde als Entwicklungs-, Repository- und Speicherplattform genutzt. Die Dokumentationen des wöchentlichen Jour-Fixe sind im GitHub-Wiki abgelegt und zusätzlich in einem Discord Textkanal gespeichert. Somit wurde implizit auch durch die Verfügbarkeit auf zwei Plattformen ein Backup der Dokumentationen realisiert, falls im worst-case eine der beiden Plattformen ausfallen sollte. Für die Projektgruppe wurde eine GitHub-Organisation gegründet (\href{https://github.com/PG649-3D-RPG}{Link zur Organisation}). Pro Gruppe bzw. Themenbereich wurde zunächst ein Repository erstellt. Nach Fertigstellung einzelner Versionen werden diese als Pakete exportiert und in einem Main-Repository (\href{}{Link}) zum fertigen Spiel zusammengestellt.
 	\item \textbf{Google-Kalender: } Um insbesondere in der vorlesungsfreien Zeit eine reibungslose Organisation und Ressourcenallozierung gewährleisten zu können, wurde Google-Kalender genutzt, in dem sich alle Teilnehmenden in einem Kalender gesammelt haben und ihre jeweiligen Universitäts- und Urlaubsbezogenen Termine eingetragen haben.
 	\item \textbf{Status-Quo-Übersicht: } In der Anfangszeit der Projektgruppe hat sich herausgestellt, dass nur schwierig der Überblick über den Gesamtfortschritt der Projektgruppe zu halten ist. Um den Fortschritt insbesondere auch außerhalb der Projektorganisation zu festzuhalten, wurde ein Status-Quo Dokument entwickelt. Dieses stellt bereits fertiggestellte, momentan laufende und potentiell in Zukunft zu behandelnde Projekte und Themengebiete übersichtlich dar. Dafür wurde mit Hilfe des Tools Graphviz ein simpler Graphen erzeugt der zudem am Anfang jedes Monats durch die Management-Runde aktuell gehalten wurde. Abbildung \ref{fig:status-quo} zeigt den Status-Quo zum Zeitpunkt der Erstellung des Abschlussberichtes.
 	\begin{figure}
@@ -26,7 +57,7 @@ Für die weitere Organisation (der Entwicklung und Implementierung) der Projektg
 
 
 
-\subsection{Creature Animator}
+\subsection{Creature Animator}\label{sec:creature-animation-orga}
 % Carsten
 Die Gruppe der Creature Animator hat sich in zwei Untergruppen aufgeteilt. In der ersten Phase hat sich die erste Untegruppe damit beschäftigt, den ML-Agents Walker in eine neue Trainingsumgebung einzubauen und die Skripte dynamischer zu gestalten, damit diese in der zweiten Arbeitsphase verwendet und erweitert werden konnten. Währenddessen versuchte die andere Untergruppe den ML-Agents Walker das Schlagen beizubringen. Die beiden Untergruppen haben sich wöchentlich mittwochs getroffen, um von ihren Fortschritten und Problemen zu berichten. Dabei wurden die Ergebnisse in Protokollen festgehalten, welche in einem GitHub Wiki abgelegt wurden.
 
