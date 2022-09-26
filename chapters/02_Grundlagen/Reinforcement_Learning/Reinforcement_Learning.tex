@@ -6,10 +6,10 @@ Mit Reinforcement Learning (RL, deutsch: verstärkendes Lernen) werden bestimmte
     \caption{Reinforcement Learning Kontrollfluss \cite{FoundationsDeepRL}}
     \label{fig:rl_control_loop}
 \end{figure}
-Abbildung \ref{fig:rl_control_loop} stellt den allgemeinen Kontrollfluss Zyklus eines Reinforcement Learning Prozesses dar. Der Agent ist in einer Umgebung (Environment) aktiv. In regelmäßigen Schritten erhält der Agent von der Umgebung einen aktuellen Zustand (State) in Form eines Vektors, sowie eine Belohnung (Reward), die entweder Null (d.h. keine Belohnung im aktuellen Schritt), oder ein positiver oder negativer Wert sein kann. Der Agent wendet die gelernte Policy auf den State an und berechnet damit eine Aktion. Die Aktion wird in der Umgebung ausgeführt. Danach übergibt die Umgebung den neuen State und die neue Belohnung an den Agenten.\\
+Abbildung \ref{fig:rl_control_loop} stellt den allgemeinen Kontrollfluss Zyklus eines Reinforcement Learning Prozesses dar. Der Agent ist in einer Umgebung (Environment) aktiv. In regelmäßigen Schritten erhält der Agent von der Umgebung einen aktuellen Zustand (State) in Form eines Vektors, sowie eine Belohnung (Reward), die entweder Null (d.h. keine Belohnung im aktuellen Schritt), oder ein positiver oder negativer Wert sein kann. Der Agent wendet die gelernte Policy auf den State an und berechnet damit eine Aktion. Die Aktion wird in der Umgebung ausgeführt. Danach übergibt die Umgebung den neuen State und die neue Belohnung an den Agenten.\cite{FoundationsDeepRL}
 
 \subsection{Episoden und Trajektorien}
-Eine Episode beschreibt die Zeitspanne von der Initialisierung bis zur Terminierung der Umgebung. Eine Trajektorie beschreibt eine Reihe von Tupeln aus State, Aktion und Reward aus den einzelnen Schritten einer Episode. Die Gleichung \ref{eq:trajectory} stellt die mathematische Schreibweise einer Trajektorie dar. Auf Basis gesammelter Trajektorien kann der Agent einen Lernvorgang durchführen und die Policy updaten.
+Eine Episode beschreibt die Zeitspanne von der Initialisierung bis zur Terminierung der Umgebung. Eine Trajektorie beschreibt eine Reihe von Tupeln aus State, Aktion und Reward aus den einzelnen Schritten einer Episode. Die Gleichung \ref{eq:trajectory} stellt die mathematische Schreibweise einer Trajektorie dar. Auf Basis gesammelter Trajektorien kann der Agent einen Lernvorgang durchführen und die Policy updaten.\cite{FoundationsDeepRL}
 \begin{equation}
     \tau = (s_0,a_0,r_0), (s_1,a_1,r_1), \dots, (s_n,a_n,r_n)
     \label{eq:trajectory}
@@ -19,7 +19,7 @@ Eine Episode beschreibt die Zeitspanne von der Initialisierung bis zur Terminier
 Grundsätzlich wird im Reinforcement Learning zwischen Policy-basierten und Value-basierten Algorithmen unterschieden. Diese werden in den folgenden Abschnitten genauer beschrieben.
 
 \subsubsection{Policy-basierte Algorithmen}
-Bei Policy-basierten Algorithmen wählt eine Policy ($\pi$) die nächste Aktion ($a \sim \pi(a)$) aus, die in der Umgebung umgesetzt wird. Es können zwei Arten von Policies verwendet werden. Eine deterministische Policy bildet deterministisch einen Zustand $s$ auf eine Aktion $a$ ab (siehe Gleichung \ref{eq:deterministic_policy}). 
+Bei Policy-basierten Algorithmen wählt eine Policy ($\pi$) die nächste Aktion ($a \sim \pi(a)$) aus, die in der Umgebung umgesetzt wird. Diese Policy bzw. ihre Parameter werden direkt durch den Algorithmus gelernt. Es können zwei Arten von Policies verwendet werden. Eine deterministische Policy bildet deterministisch einen Zustand $s$ auf eine Aktion $a$ ab (siehe Gleichung \ref{eq:deterministic_policy}). \cite{FoundationsDeepRL}
 \begin{equation}
     \pi(s) = a
     \label{eq:deterministic_policy}
@@ -30,7 +30,7 @@ In der Praxis werden fast ausschließlich stochastische Policies (siehe Gleichun
     \label{eq:stochastic_policy}
 \end{equation}
 Eine stochastische Policy ordnet für jede Aktion $a$ eine Wahrscheinlichkeit unter Bedingung des Zustands $s$ zu. Aus der entstehenden Verteilung wird dann die Aktion $a$ gesamplet. Policy-basierte Algorithmen lernen die Funktion $\pi$, sodass das Objective maximiert wird.
-Policy-basierte Algorithmen können grundsätzlich auf beliebige Aktionstypen angewendet werden, kontinuierliche Aktionsräume sind möglich. Policy-basierte Algorithmen konvergieren garantiert zu einer lokalen, optimalen Policy. Allerdings sind Policy-basierte Algorithmen Sample-ineffizient und haben eine hohe Varianz.
+Policy-basierte Algorithmen können grundsätzlich auf beliebige Aktionstypen angewendet werden, kontinuierliche Aktionsräume sind möglich. Policy-basierte Algorithmen konvergieren garantiert zu einer lokalen, optimalen Policy. Allerdings sind Policy-basierte Algorithmen Sample-ineffizient und haben eine hohe Varianz. \cite{deepRL-2020}
 
 \subsubsection{Value-basierte Algorithmen}
 Bei Value-basierten Algorithmen wird eine Funktion zum Schätzen der Wertung eines Zustands bzw. eines Zustand-Aktion Tupels gelernt. Aus der Bewertung wird dann eine Policy generiert. Es gibt zwei grundlegende Value-Funktionen.
@@ -45,8 +45,8 @@ Bei Value-basierten Algorithmen wird eine Funktion zum Schätzen der Wertung ein
 \end{equation}
 Die V-Funktion (''Value-Function'', siehe Gleichung \ref{eq:v_function}) schätzt den Wert eines Zustandes anhand der diskontierten Rewards einer in diesem Zustand startenden Trajektorie. 
 Die Q-Funktion (''Action-Value-Function'', siehe Gleichung \ref{eq:q_function}) schätzt den Wert eines Zustandes unter Durchführung einer Aktion anhand der diskontierten Rewards einer in diesem Zustand startenden Trajektorie, die zuerst die gewählte Aktion durchführt. 
-Bei reinen Value-basierten Algorithmen, wird bevorzugt die Action-Value-Funktion $Q^\pi$ verwendet, da sich diese leichter in eine Policy umwandeln lässt. 
-Value-basierte Algorithmen sind Sample-effizienter als Policy-based Algorithmen und haben eine niedrigere Varianz. Allerdings kann eine Konvergenz zu einem lokalen Optimum nicht garantiert werden. Die Standard-Methode für Value-basierte Algorithmen ist nur auf diskreten Aktionsräumen anwendbar. \ref{}
+Bei reinen Value-basierten Algorithmen, wird bevorzugt die Action-Value-Funktion $Q^\pi$ verwendet, da sich diese leichter in eine Policy umwandeln lässt. \cite{FoundationsDeepRL}
+Value-basierte Algorithmen sind Sample-effizienter als Policy-based Algorithmen und haben eine niedrigere Varianz. Allerdings kann eine Konvergenz zu einem lokalen Optimum nicht garantiert werden. Die Standard-Methode für Value-basierte Algorithmen ist nur auf diskreten Aktionsräumen anwendbar. \cite{}
 
 \subsection{Optimierung}
 Der Lernvorgang eines Reinforcement Learning Systems erfolgt über den Policy Gradient.
