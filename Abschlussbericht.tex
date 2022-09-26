@@ -9,7 +9,8 @@
 \usepackage[english, main=ngerman]{babel} % Sprache, Silbentrennung etc.
 \usepackage[backend=biber, style=ieee]{biblatex}	%Bibliographie
 \addbibresource{literature/literature.bib}
-\usepackage{algorithm}				% Algorithmen Umgebung mit Algorithmenverzeichnis
+\usepackage[german]{algorithm2e}				% Algorithmen Umgebung mit Algorithmenverzeichnis
+\renewcommand{\listalgorithmcfname}{Algorithmenverzeichnis}
 \usepackage{listings}				% Quelltext
 \usepackage{graphicx}				% Einbinden von Bildern
 \usepackage{ulem}					% Unterstreichen von Text
@@ -52,6 +53,8 @@
 	\listoffigures				% Abbildungsverzeichnis ... nicht für kurze Dokumente
 	\cleardoublepage
 	\listoftables				% Tabellenverzeichnis
+	\cleardoublepage
+	\listofalgorithms
 	\cleardoublepage
 	%\setcounter{page}{4}
 	\cleardoublepage				

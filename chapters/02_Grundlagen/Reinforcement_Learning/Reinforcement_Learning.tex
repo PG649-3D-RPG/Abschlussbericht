@@ -95,10 +95,10 @@ Die allgemeine Formel für GAE ist in Gleichung \ref{eq:gae} abgebildet. Die Gew
 In der Praxis wird statt der unendlichen Summe eine Summe bis zum Ende der verfügbaren Trajektorie verwendet.
 
 
-\section{PPO}
+\subsection{PPO}
 Proximal Policy Optimization (PPO) ist ein Reinforcement Learning Algorithmus, der die Actor-Critic Methode umsetzt.
 
-\subsection{Performance Collapse}
+\subsubsection{Performance Collapse}
 Ein Problem von Reinforcement Learning Algorithmen ist der Performance Collapse (Leistungseinbruch). Performance Collapse bedeutet, dass die Returns der Umgebung im Lernvorgang plötzlich einbrechen, da z.B. die Policy über ein lokales Optimum heraus optimiert wurde und der Gradient nun zu einem schlechteren lokalen Optimum konvergiert. Die Ursache für das Problem ist der indirekte Ansatz der Policies. Ein RL Algorithmus manipuliert die Parameter der Policy, um diese zu verändern. Kleine Veränderungen in den Parametern können dabei große Veränderungen in der Policy auslösen.
 
 % \paragraph{Surrogate Objective}
@@ -109,7 +109,7 @@ Ein Problem von Reinforcement Learning Algorithmen ist der Performance Collapse 
 % \end{equation}
 % Gleichung \ref{eq:surrogate_objective} zeigt das sogenannte Surrogate Objective $J_\pi^{CPI}$, das von TRPO verwendet wird um die 
 
-\subsection{Clipping}
+\subsubsection{Clipping}
 Es gibt zwei theoretische Varianten des PPO Algorithmus. Die erste Variante baut direkt auf dem Trust Region Policy Optimization Algorithmus (TRPO) auf und verwendet eine Adaptive KL Penalty, um die Schrittgröße einzuschränken. In der Praxis wird jedoch nur die zweite Variante von PPO verwendet, da diese in Tests bessere Ergebnisse erzielt und leichter zu implementieren ist.
 Die zweite Variante nutzt ein Clipped Surrogate Objective.
 \begin{equation}
