@@ -1,0 +1,136 @@
+% Einleitung
+%   - Ziel: Rechtfertigung technischer design entscheidungen, plus überblick über den Code
+%   - Creature Generator als Unity Package
+%   - Erläutere Aufbau des Kapitels
+%       - Der Pipeline folgend, von der Bone Definition, bis zur Creature Generator Klasse
+% Settings als ScriptableObjects
+%   Creature Parameters
+%       - Funktion als zentrales Einstellungsobjekt des Generators
+%       - Tabelle mit momentanen Einstellungen
+%   Creature Generator Settings
+% Bone Definition
+%   - Existenzgrund: Generische Datenstruktur für alle möglichen Generatoren
+%   - Erläuterung der Datenstruktur
+%   - Anatomische Koordinatensysteme
+%       - Verweis auf Fachliches Vorgehen für Details
+%       - Technischer Grund: Annahmen über Koordinatensysteme werden nicht über Generator grenzen getragen
+% Generator Klassen
+%   - Instanziieren der Creature Parameters um Knochenlängen an AI zu liefern
+%   - Zusammenstecken der Bone Definitions
+% Skeleton Definition
+%   - 
+% Joint Tables und Density Tables
+% Skeleton Assembler
+%   - Erzeugt Unity Gameobjects aus der Skeleton Definition
+% Mesh Generator
+
+Das folgende Kapitel ist eine Tour durch den PG649 Creature Generator und wird die wichtigsten Datenstrukturen und Klassen erläutern.
+Ziel der Tour ist es sowohl eine Hilfe beim Lesen des Quellcodes zu sein, als auch Design-Entscheidungen und Trade-Offs zu erläutern.
+
+\subsection{Unity Package}
+Der Generator wird als unabhängiges Unity Package entwickelt.
+So kann der Generator einfach in KI-Lernumgebungen und das spätere Spiel eingebunden werden und es wird eine saubere API für den Generator ermutigt.
+
+Die Dateistruktur des Generators unterscheidet sich damit von einem typischen Unity Projekt. Statt im \texttt{Assets}-Ordner, liegen alle hier erläuterten Klassen in \linebreak\texttt{Packages/com.pg649.creaturegenerator/Runtime}.
+Der \texttt{Assets}-Ordner enthält lediglich Debug-Skripte, die nicht exportiert werden sollen.
+
+\subsection{Konfiguration}
+Die Klassen \texttt{Creature\-Generator\-Settings} und \texttt{Parametric\-Creature\-Settings} enthalten alle Konfigurationsmöglichkeiten für den Generator.
+Sie sind der Hauptweg mit dem Nutzer mit dem Generator interagieren und bilden somit den Anfang der Tour. 
+
+Die Klasse \texttt{CreatureGeneratorSettings} enthält Einstellungen, die das Verhalten des Generators und der generierten Kreaturen bestimmen.
+Dazu gehören Einstellungen die zum Beispiel das generieren eines Meshes für die Kreatur abschalten, Einstellungen für das physikalische Verhalten der Kreature, sowie Einstellungen für Debug-Optionen.
+Die individuellen Einstellungen sind in der Klasse selbst dokumentiert und werden hier nicht einzeln aufgeführt.
+
+Die Klasse \texttt{ParametricCreatureSettings} enthält Einstellungen, die das Aussehen der generierten Kreaturen bestimmen.
+Die Einstellungen definieren Intervalle für die erlaubte Länge, Dicke, und ggbf. Anzahl für Knochen bestimmter Kategorien.
+Wieder sind die individuellen Einstellungen in der Klasse selbst dokumentiert.
+
+Beide Konfigurationsklassen sind sogenannte \texttt{ScriptableObjects}.
+Sie können von Unity serialisiert und als Assets gespeichert werden.
+So können für das spätere Spiel Einstellungen für verschiedene Kreaturen genau so mit exportiert werden wie beispielsweise Shader.
+Außerdem ist es möglich die Einstellungen mittels \texttt{git} zu versionieren.
+
+\subsection{Bone Definition}
+Eine der ersten Datenstrukturen, die von dem Generator erzeugt werden, ist ein Baum von \texttt{BoneDefinition}s.
+Dieser Baum bildet die abstrakteste Darstellung eines Skeletts und dient als generisches Ziel für die Generatoren der verschiedenen Kreaturen-Typen.
+Jede \texttt{BoneDefinition} enthält die Details eines Knochens, d.h. um was für einen Knochen es sich handelt (Arm, Bein, etc.), die Länge und Dicke des Knochens, die Ausrichtung seines lokalen Koordinatensystems, und Informationen dazu, wie der Knochen für das finale Skelett an seinem Eltern-Knochen angebracht werden soll.
+
+Letztere Informationen werden \texttt{AttachmentHint} genannt und erlauben es Knochen relativ zur Größe des Elternknochens zu positionieren, sie um einen absoluten Vektor zu verschieben, die ventrale Achse des Koordinatensystems auszurichten, und zuletzt den Knochen in eine gewünschte Ausgangspose zu rotieren.
+So können humanoide Kreaturen beispielsweise in die typische T-Pose gebracht werden.
+
+Es gibt drei Gründe das lokale Koordinatensystem eines jeden Knochens explizit anzugeben:
+\begin{itemize}
+    \item Quellcode außerhalb der, später beschriebenen, paramatrischen Generatoren ist nicht durchsetzt mit Konventionen und Annahmen über Koordinatensysteme; Statdessen sind die gewählten Koordinatensysteme explizit.
+    \item es erlaubt die Wahl von semantisch bedeutungsvollen Koordinatenachsen (Proximal, Ventral, Lateral)
+    \item es erlaubt unterschiedlichen parametrischen Generatoren eigene Konventionen für ihre Koordinatensysteme zu wählen.
+\end{itemize}
+
+\subsection{Parametrische Generatoren}
+Parametrische Generatoren haben die Aufgabe anhand der \texttt{Parametric\-Creature\-Settings} \texttt{Bone\-Definition}-Bäume zu generieren.
+Das Package enthält momentan Generatoren für zwei verschiedene Typen von Kreaturen: \texttt{BipedGenerator} und \texttt{QuadrupedGenerator}.
+Einstiegspunkte in die Generatoren sind jeweils die \texttt{BuildCreature} Methoden.
+
+Beide Generatoren erzeugen zunächst aus den Intervallen in den \texttt{Parametric\-Creature\-Settings} zufällig tatsächliche Längen, Dicken, and Anzahlen in Form einer \texttt{Biped\-Settings\-Instance} bzw. \texttt{Quadruped\-Settings\-Instance}.
+Die generierte Einstellungs\--Instanz ist später Teil der Metadaten die zusammen mit der Kreatur zur Verfügung gestellt werden und wird während des Lern-Prozesses genutzt.
+Zu diesem Zweck implementieren sie das \texttt{ISettings\-Instance}-Interface.
+Die Werte anfangs zu generieren erleichtert es außerdem die Symmetrie der Kreatur sicherzustellen.
+
+Um die Kreaturen später trainieren zu können, müssen sie mehrfach generierbar sein.
+Beide Generatoren akzeptieren deshalb einen Seed für den Zufallsgenerator. Dabei ist zu beachten, dass der selbe Seed in der selben Version des Packages die selbe Kreatur erzeugen wird. Der Aufwand die Stabilitäts-Garantie auch über Package Versionen hinweg zu garantieren, wurde für nicht nötig gehalten und wurde nicht betrieben.
+
+Nachdem die Parameter der Knochen finalisiert wurden, konstruieren beide Generatoren einen Baum aus \texttt{BoneDefinition}s.
+\todo{Explain tree structure if not done in chapter 5}
+
+\subsection{Skeleton Definition}
+Die Ausgabe der Parametrischen-Generatoren ist eine \texttt{Skeleton\-Definition}, bestehend aus dem \texttt{Bone\-Definition}-Baum, der Einstellungs-Instanz, und einem \texttt{Limit\-Table}.
+Die \texttt{LimitTable}-Klasse ist dabei eine Tabelle, die festhält um welche Koordinatenachsen und wie weit sich jeder Knochen rotieren darf.
+
+Die \texttt{Skeleton\-Definition} dient dann im nächsten Schritt als Eingabe für den \texttt{Skeleton\-Assembler}.
+
+\subsection{Skeleton Assembler}
+Der \texttt{Skeleton\-Assembler} baut aus der \texttt{Skeleton\-Definition} einen Baum aus Unity \texttt{Game\-Object}s, der dann in Szenen als Ragdoll verwendet werden kann. Einstiegspunkt dafür ist die Methode \texttt{Assemble}.
+
+In einem ersten Durchgang wird für jede \texttt{Bone\-Definition} des Baumes ein \texttt{Game\-Object} erstellt. Jedes dieser \texttt{GameObject}s wird mit mehreren Komponenten ausgestattet:
+\begin{itemize}
+    \item ein \texttt{Rigidbody}, damit physikalische Kräfte auf den Knochen wirken können
+    \item ein \texttt{Collider}, damit der Knochen mit anderen Objekten kollidieren kann. Die Form des \texttt{Colliders} hängt vom Typen des Knochen ab.
+    \item ein \texttt{Bone}, der Metadaten, wie z.B. Länge oder Kategorie des Knochens, enthält
+\end{itemize}
+Der Wurzel-Knochen wird zusätzlich mit einer \texttt{Skeleton}-Komponente ausgestattet, die weitere Metadaten über das Skelett als ganzes enthält und einfaches iterieren über alle Knochen erlaubt.
+
+Die Nicht-Wurzel Knochen werden entsprechend ihres \texttt{Attachment\-Hint}s positioniert.
+Lediglich die Rotation in die Ausgangspose wird noch nicht angewandt, da dies die Ausrichtung der ventralen Achse aller Knoten unterhalb des momentanen Knoten beeinflussen würde.
+
+Optional wird an dieser Stelle ein weiteres \texttt{Game\-Object} unter jeden Knoten gehangen, welches ein Mesh enthält, dass den \texttt{Collider} des Knochens visualisiert.
+
+In einem weiteren Durchgang wird das Skelett zunächst in seine Ausgangspose rotiert.
+Danach werden Eltern-Kind Paare von Knochen mittels Unitys \texttt{Configurable\-Joint}-Komponente verbunden.
+Die Reihenfolge ist hier essentiell, da die Joints die Position der Knochen zum Zeitpunkt der Erstellung der Joints als Ruheposition ansehen.
+
+Die \texttt{Configurable\-Joint}s erlauben das setzen einer Ziel-Position und Ziel-Rotation und errechnen dann selbstständig die nötigen Kräfte, die auf ihren verbundenen Körper wirken müssen, um diese zu erreichen.
+Die Machine-Learning Verfahren produzieren Ziel-Rotationen für jeden Joint.
+Die Joints sind damit Herzstück des Bewegungssystems und ihre Konfiguration wird daher später näher erläutert.
+
+Zuletzt wird noch der Wurzel-Knochen markiert und die von dem parametrischen Generator erzeugte Einstellungs-Instanz in der \texttt{Skeleton}-Komponente hinterlegt.
+
+\subsubsection{Configurable Joints}
+Die lineare Bewegung der Joints wird vollständig gesperrt.
+Dazu werden die \texttt{xMotion}, \texttt{yMotion}, \texttt{zMotion} Felder auf \texttt{Locked} gesetzt. Die Joints halten nun, soweit physikalisch möglich, ihre Position relativ zum Eltern-Knochen.
+
+Die Rotation der Joint wird entsprechend der \texttt{Limit\-Table} eingeschränkt.
+Die \texttt{angular\-XMotion}, \texttt{angular\-YMotion}, \texttt{angular\-ZMotion} Felder werden entsprechend auf \texttt{Locked} oder \texttt{Limited} gesetzt, und die dazugehörigen \texttt{angularLimits} werden ausgefüllt.
+Dabei gibt es zwei Dinge zu beachten.
+
+Zum einen erlauben die Joints nur für die x-Achse die Angabe eines minimalen und maximalen Winkels, Rotationen um die y- und z-Achse können nur symmetrisch eingeschränkt werden.
+Allerdings haben die Joints ein eigenes Koordinatensystem separat von dem des Knochens.
+Der \texttt{Limit\-Table} enthält deshalb gegebenenfalls außerdem Informationen darüber welche Koordinatenachse des Knochens als x-Achse des Joints fungieren soll.
+
+Zum anderen müssen Knochen behandelt werden, die zueinander gespiegelt sind. So muss zum Beispiel der eine Arm eines Zweibeiners im Uhrzeigersinn rotieren, um nach vorne bewegt zu werden, der andere aber gegen den Uhrzeigersinn. Die \texttt{Bone}-Komponenten enthalten deshalb das Feld \texttt{Mirrored}, was angibt ob der Knochen gespiegelt ist. Ist der Knochen gespiegelt, so werden die Koordinatenachsen des Joint-Koordinatensystems mit \(-1\) multipliziert. So genügt ein einzelner Eintrag im \texttt{Limit\-Table} für beide Versionen des Knochens.
+
+Zuletzt wird noch der \texttt{projectionMode} des Joints auf \texttt{Postion\-And\-Rotation} gestellt, um den Joint zu zwingen die gesetzten Rotations-Limits einzuhalten und für Debug-Zwecke wird der \texttt{slerpDrive} initialisiert, damit der Joint Kraft aufwenden kann.
+
+\subsection{Mesh Generator}
+
+\subsection{Creature Generator}
+Der oben beschriebene Ablauf des Creature-Generators ist implementiert in der Klasse \texttt{Creature\-Generator}, die zugleich das öffentliche Interface des Generators ist. Die Methoden \texttt{Parametric\-Biped} und \texttt{Parametric\-Quadruped} erstellen jeweils die passende \texttt{Skeleton\-Definition} und übergeben sie an die Methode \texttt{Parametric}, die daraus die vollständige Kreatur generiert.

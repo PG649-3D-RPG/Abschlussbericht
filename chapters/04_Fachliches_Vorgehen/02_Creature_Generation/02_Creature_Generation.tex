@@ -1,4 +1,51 @@
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
+
 \section{Creature Generation}
+\subsection{Parametrische Kreatur}
+Als Grundlage für die parametrische Generierung der Kreaturen dient das von Jon Hudson in seiner Thesis \cite{Janno20182dCG} beschriebene Modell, welches in Abschnitt \ref{} näher beschrieben wird.\\
+
+Die Kreatur besteht aus mehreren Körperteilen, die separat generiert werden und jeweils ihre eigenen Parameter besitzen. Diese Körperteile sind Torso, Beine, Arme, Hals, Füße und Kopf.
+
+
+
+\subsection{L-System Creature}
+
+
+
+\subsection{Metaballs}
+Zur Generierung der Geometrie der Kreatur verwenden wir, angelehnt an den Ansatz von Madis Janno \cite{Hudson2013CreatureGU} (siehe \ref{}), eine modifizierte Form von Metaballs. Wie auch bei Janno lässt sich unsere Methode mit beliebigen Metaball-Funktionen durchführen. Aufgrund der guten Ergebnisse haben wir uns jedoch vorerst auf die gleiche, zuerst von Ken Perlin beschriebene, Falloff-Funktion festgelegt.
+\[f_i(x,y,z) = exp(B_i - \frac{B_ir_i^2}{R_i^2} - B_i)\]
+Für Metaball $i$ ist $r_i$ der Abstand des Punktes $(x,y,z)^T$ zu dessen Zentrum, also: \[r_i=||(x,y,z)^T-(x_i,y_i,z_i)^T||_2=\sqrt{(x-x_i)^2+(y-y_i)^2+(z-z_i)^2}\]
+$R_i$ ist der Radius von Metaball $i$ und $B_i$ ein Parameter zur Einstellung der "Blobbiness". Wir verwenden Werte mit $B_i < 0.5$. \\
+Die generierten Kreaturen bestehen aus mehreren Segmenten (Knochen) mit jeweils einem Start- und Endpunkt sowie einer Dicke, die als Radius der darauf platzierten Metaballs verwendet werden kann. Entlang dieser Segmente soll dann das Mesh erzeugt werden. Die von Janno beschriebene Methode berechnet dafür, abhängig von der gewählten Falloff-Funktion, die minimale Anzahl an Metabällen für ein Segment und platziert diese gleichmäßig entlang dessen. Das Problem, welches sich daraus bei unseren Experimenten ergeben hat, liegt darin, dass mit höherer Komplexität der Kreaturen und einer damit einhergehenden steigenden Anzahl an Segmenten, der Einfluss von benachbarten Segmenten nicht gut kontrollieren lässt und diese teilweise ineinander verschmelzen. \\
+
+Unser Ansatz um dieses Problem zu umgehen ist es, die Anzahl der einzelnen Metabälle drastisch zu reduzieren. Anstatt einer beliebig großen Zahl an Bällen entlang jedes Segments, erzeugen wir jeweils nur einen einzigen. Dazu ersetzen wir die Bälle durch Kapseln, also Zylinder mit jeweils durch eine Halbkugel abgerundeten Enden. Möglich macht uns dies eine Modifikation der Falloff-Funktion, beziehungsweise der darin verwendeten Distanz. Wir berechnen hierbei nicht den Abstand zum Zentrum einer Kugel, sondern zu der Verbindungslinie zwischen Start- und Endpunkt. \\
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.7\textwidth]{resources/img/metacapsule.png}
+\caption{Beispiel Metakapsel; Die gestrichelte Linie enthält alle Punkte mit $r=R$}
+\label{metacapsule}
+\end{figure}
+
+Sei $s$ der Startpunkt, $e$ der Endpunkt, $a$ der Vektor $e-s$, $p$ ein Punkt, dessen Abstand berechnet werden soll, $u=p-s$ und $v=p-e$ (Siehe Abbildung \ref{metacapsule}). Die Distanz lässt sich dann folgendermaßen bestimmen:
+\[
+    r= 
+\begin{cases}
+    ||p-s||,& \text{falls } a\cdot u < 0\\
+    ||p-e||,& \text{falls } a\cdot v > 0\\
+    \norm*{\frac{a\times u}{\norm{a}}},& \text{sonst}
+\end{cases}
+\]
+
+Es werden drei Fälle unterschieden. Liegt der Punkt $p$ im Falle von Abbildung \ref{metacapsule} links von $s$, beziehungsweise rechts von $e$, ist Die Distanz von $p$ zum Segment einfach der euklidische Abstand zum jeweiligen Punkt. Ob dies der Fall ist, lässt sich mit Hilfe der Skalarprodukte $a\cdot u$ beziehungsweise $a\cdot v$ überprüfen. Ansonsten berechnet man die Distanz von Punkt p zur Geraden, die durch $s$ und $e$ verläuft.\\
+
+Da dies nur eine Erweiterung der Metaball-Funktion ist, lassen sich diese Kapseln weiterhin mit anderen Metabällen kombinieren. So können auch Körperteile erstellt werden, die nicht aus solchen Segmenten bestehen, oder Details aus kleineren Metabällen entland der Segmente platziert werden.
+
+
+
+\subsection{Marching Cubes / Mesh Generation}
+
 
 \subsection{Automatisches Rigging}
 Um die Bone-Struktur des generierten Skelettes mit dem Mesh zu verknüpfen, muss bei der 3D-Modellierung der Prozess des Riggings durchlaufen werden. Dieser beschreibt wie sich jeder einzelne Vertex des Meshes mit den Bones in der Szene bewegt. Jeder Vertex kann an beliebig vielen Bones angehängt werden. Durch eine Gewichtung wird bestimmt wie sehr ein Vertex durch der Transformation eines Bones mitbewegt wird.
