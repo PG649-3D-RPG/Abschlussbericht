@@ -1,0 +1,199 @@
+%  Grundlagen L-System: Allgemein, Theoretischer Hintergrund, 2D, 3D
+\section{L-System}
+Eine zentrale Eigenschaft in der Natur ist die Selbstähnlichkeit von Strukturen auf makroskopischer und mikroskopischer Ebene~\cite{Shaker2016}. % ref this + reword
+Hier lassen sich dieselben Strukturen in verschiedenen Größenordnungen wiederfinden. % delete this
+Beispielsweise ähneln die Knospen eines Blumenkohls auch seiner äußeren Struktur, wie in Abbildung~\ref{fig:Blumenkohl}\footnote{Quelle: {https://commons.wikimedia.org/wiki/File:Blumenkohl-1.jpg}, Autor: Rainer Zenz, CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>, via Wikimedia Commons} zu sehen ist.
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{chapters/02_Grundlagen/L_System/Blumenkohl-1.jpg}
+    \caption{Blumenkohl}\label{fig:Blumenkohl}
+\end{figure}
+
+Um diese Eigenschaften präzise und strukturell darzustellen kann ein Lindenmayer-System (L-System)~\cite{lindenmayer1990} eingesetzt werden.
+Die Basis eines L-Systems bildet eine kontextfreie Grammatik $G=(N,T,S,P)$ mit einer Menge von Nicht-Terminalsymbolen $N$, Terminalsymbolen $T$, einem Startsymbol $S$ und einer Menge von Produktionen $P$.
+Der Unterschied zwischen einem L-System und einer üblichen kontextfreien Grammatik besteht darin, dass in einem Ableitungsschritt eines L-Systems parallel alle Nicht-Terminale ersetzt werden.
+Zusätzlich werden nur eine feste Anzahl an Ableitungsschritten durchgeführt und es kann anstatt eines Startsymbols auch ein Startstring angegeben werden.
+
+\subsection{Grafische Darstellung in 2D}
+Der resultierende String einer Ableitung kann grafisch als Zeichenvorschriften für \emph{turtle graphics} gesehen werden. % reword
+In \emph{turtle graphics} gibt es eine \emph{turtle}, oder Zeichenkopf, der initial in eine Richtung zeigt und sich in zwei oder drei Dimensionen fortbewegen kann.
+Bei jeder Fortbewegung wird entlang der aktuellen Richtung des Kopfes und der hinterlegten Distanz eine Strecke gezeichnet.
+Die Symbole der Grammatik werden hierbei als Fortbewegung um eine gewisse Distanz oder eine Drehung um eine der Achsen interpretiert.
+In Abbildung~\ref{fig:L-System 2D Rotation} ist eine Visualisierung dieses Konzeptes zu sehen.
+Hier ist der Zeichenkopf initial nach oben gerichtet.
+% Add 2D rotation tikz
+\begin{figure}[ht]
+    \centering
+    % \resizebox{\linewidth-3cm}{!}{%
+        
+    % }
+    \includegraphics[width=0.5\linewidth]{example-image-a}
+    \caption{L-System 2D Rotation}\label{fig:L-System 2D Rotation}
+\end{figure}
+
+Ohne Erweiterungen entstehen hierbei immer zusammenhängende Strukturen bei dem der Zeichenkopf nicht springen kann.
+Das heißt, Blätter oder Äste sind nur schwer zu realisieren.
+
+
+\subsection{Erweiterungen}
+Damit komplexere Strukturen abgebildet werden können, werden zusätzliche Symbole eingesetzt und die Auswertung erweitert.
+Zwei übliche Erweiterung die besonders zur Generierung von Vegetation nützlich sind, sind \emph{Bracketed L-Systeme} und \emph{Stochastische L-Systeme}.
+
+\subsubsection{Bracketed L-Systeme}
+Um Strukturen abzubilden die nur durch "absetzen" des Stiftes generiert werden können, können \emph{Bracketed L-Systeme}~\cite*{Shaker2016} eingesetzt werden.
+Damit die generierte Struktur zusammenhängend bleibt, wird die Position und aktuelle Richtung des Zeichenkopfes auf einem Stack gespeichert und kann durch \texttt{push} und \texttt{pop} Operationen verwaltet werden.
+Die Menge der Nicht-Terminalsymbole wird dabei um \texttt{[} für die \texttt{push} Operation und \texttt{]} für \texttt{pop} erweitert.
+
+Mit dieser Erweiterung können nun auch Äste von Bäumen oder Stängel von Blumen gezeichnet werden.
+Ein Beispiel für eine Art von Strauch kann mittels dieses L-Systems erzeugt werden:
+\begin{itemize}
+    \item Nicht-Terminalsymbole $N=\{F\}$
+    \item Terminalsymbole $T=\{\texttt{+},\texttt{-},\texttt{[},\texttt{]}\}$
+    \item Startstring $S=F$
+    \item Produktionen:
+    \begin{align*}
+        F\rightarrow~F\texttt{[+}F\texttt{]}F\texttt{[-}F\texttt{]}\texttt{[}F\texttt{]}
+    \end{align*}
+\end{itemize}
+
+Hierbei beschreibt das Nicht-Terminalsymbol $F$ eine Fortbewegung, \texttt{+} und \texttt{-} jeweils eine Drehung um 30 Grad nach links bzw. rechts in 2D und \texttt{[}, \texttt{]} beschreiben die \texttt{push} und \texttt{pop} Operationen.
+Die generierten Strukturen sind in Abbildung~\ref{fig:Bracketed} zu sehen.
+
+\begin{figure}[ht]
+    \begin{subfigure}[t]{.3\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/bracketed-1.tex}
+        \caption*{1 Ableitungsschritt}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{.3\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/bracketed-2.tex}
+        \caption*{2 Ableitungsschritte}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{.3\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/bracketed-3.tex}
+        \caption*{3 Ableitungsschritte}
+    \end{subfigure}
+    \caption{Resultate bracketed L-System}\label{fig:Bracketed}
+\end{figure}
+
+
+\subsubsection{Stochastische L-Systeme}
+Eine Eigenschaft von den bisher verwendeten L-Systemen ist, dass die Produktionen deterministisch ausgewertet werden.
+Um realistische Pflanzen generieren zu können muss jedoch etwas Variation eingeführt werden; es wäre also vorteilhaft, wenn die Produktionen nicht-deterministisch ausgewertet werden.
+Dazu kann ein \emph{stochastisches L-System}~\cite*{Shaker2016} verwendet werden.
+Hierbei kann es mehrere Produktionen mit gleichen linken Seiten geben.
+Jeweils über die Menge von Produktionen mit gleicher linken Seite wird eine Wahrscheinlichkeitsverteilung erstellt.
+Das heißt die Auswahl der Ersetzung eines Nicht-Terminalsymbols erfolgt zufällig.
+
+Im Folgenden ist ein Beispiel für ein stochastisches bracketed L-System gegeben:
+\begin{itemize}
+    \item Nicht-Terminalsymbole $N=\{F\}$
+    \item Terminalsymbole $T=\{\texttt{+},\texttt{-},\texttt{[},\texttt{]}\}$
+    \item Startstring $S=F$
+    \item Produktionen:
+    \begin{align*}
+        F\xrightarrow{0.33} & ~F\texttt{[+}F\texttt{]}F\texttt{[-}F\texttt{]} F \\
+        F\xrightarrow{0.33} & ~F\texttt{[+}F\texttt{]} F                         \\
+        F\xrightarrow{0.34} & ~F\texttt{[-}F\texttt{]} F
+    \end{align*}
+\end{itemize}
+
+Hier gibt es für das Nicht-Terminal $F$ drei Produktionen, zwei Produktionen mit einer Wahrscheinlichkeit von $33\%$ gewählt und eine Produktion mit $34\%$.
+Drei resultierende Bilder dieses L-Systems sind in Abbildung~\ref{fig:Stochastic} gegeben.
+Hieran kann man gut sehen wie aus einem L-System deutlich unterschiedliche Strukturen generiert werden können die jedoch alle ähnliche Grundstrukturen aufweisen.
+\begin{figure}[ht]
+    \begin{subfigure}[t]{.25\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/r-1.tex}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{.25\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/r-2.tex}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{.25\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/r-3.tex}
+    \end{subfigure}
+    \caption{Resultate Stochastisches L-System}\label{fig:Stochastic}
+\end{figure}
+
+
+\subsubsection{Erweiterung in 3D}
+Die L-Systeme aus den vorherigen Abschnitten haben stets zweidimensionale Strukturen erstellt.
+Dabei wurden die Symbole \texttt{+} und \texttt{-} genutzt um die aktuelle Richtung des Zeichenkopfes in der Ebene zu rotieren.
+Für Strukturen in drei Dimensionen kann diese Idee weiterverwendet werden.
+Hierbei werden jeweils zwei Symbole für Rotationen um jede der drei Achsen eingeführt.
+Die Symbole \texttt{+} und \texttt{-} rotieren den Zeichenkopf um die $z$-Achse, \texttt{\&} und \texttt{\textasciicircum} rotieren um die $x$-Achse und \texttt{/} und \texttt{\textbackslash} rotieren um die $y$-Achse.
+Eine Visualisierung dieser Idee ist in Abbildung~\ref{fig:L-System 3D Rotation} zu sehen.
+% Add 3D rotation tikz
+\begin{figure}[ht]
+    \centering
+    % \resizebox{\linewidth-3cm}{!}{%
+        
+    % }
+    \includegraphics[width=0.5\linewidth]{example-image-a}
+    \caption{L-System 3D Rotation}\label{fig:L-System 3D Rotation}
+\end{figure}
+
+Ein Beispiel für ein L-System, das einen dreidimensionalen Baum erzeugt ist im Folgenden gegeben:
+\begin{itemize}
+    \item Nicht-Terminalsymbole $N=\{F\}$
+    \item Terminalsymbole $T=\{\texttt{+},\texttt{-},\texttt{\&},\texttt{\textasciicircum},\texttt{/},\texttt{\textbackslash},\texttt{[},\texttt{]}\}$
+    \item Startstring $S=FFFA$
+    \item Produktionen:
+    \begin{align*}
+        A\rightarrow &~\texttt{[}B\texttt{]////[}B\texttt{]////}B \\
+        B\rightarrow &~\texttt{\&}FFFA
+    \end{align*}
+\end{itemize}
+
+Mit diesem L-System kann ein dreidimensionaler Baum wie in Abbildung~\ref{fig:L-System 3D Unity} in Unity erzeugt werden.
+Es wurden 7 Ableitungsschritte durchgeführt und es wurde jeweils um 28 Grad um die Achsen rotiert.
+% TODO add picture and L-System from Unity when its fixed
+\begin{figure}[ht]
+    \centering
+    % \resizebox{\linewidth-3cm}{!}{%
+        
+    % }
+    \includegraphics[width=0.5\linewidth]{chapters/02_Grundlagen/L_System/L_System_3D_Tree.png}
+    \caption{L-System 3D Baum}\label{fig:L-System 3D Unity}
+\end{figure}
+
+
+\subsection{Auswertung}
+Die Auswertung eines L-Systems wird in diesem Abschnitt beschrieben.
+
+
+\begin{algorithm}[H]
+    \begin{algorithmic}[1]
+        \footnotesize
+        \REQUIRE{Grammatik $(N,T,S,P)$, Iterationen $i$}
+        \ENSURE{Wort $w$ nach $i$ Iterationen}
+        \STATE{$w \gets S$}
+        \FOR{$i$ Iterationen}
+        \STATE{$temp\gets \emptyset$}
+        \FOR{$c\in w$}
+        \IF{$c\in N$}
+        \FOR{$(p,\Omega,R)\in P$ mit $c$ == $p$}
+        \STATE{Wähle eine Ersetzung $r\in R$ mit Wahrscheinlichkeit $\omega\in \Omega$}
+        \STATE{Hänge $r$ an $temp$ an}
+        \ENDFOR
+        \ELSE
+        \STATE{Hänge $c$ an $temp$ an}
+        \ENDIF
+        \ENDFOR
+        \STATE{$w\gets temp$}
+        \ENDFOR
+        \RETURN{$w$}
+    \end{algorithmic}
+    \caption{L-System Auswertung}\label{alg:L-System Auswertung}
+\end{algorithm}
+
+
+
