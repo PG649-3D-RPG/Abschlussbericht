@@ -2,7 +2,7 @@
 \section{L-System}
 Eine zentrale Eigenschaft in der Natur ist die Selbstähnlichkeit von Strukturen auf makroskopischer und mikroskopischer Ebene~\cite{Shaker2016}. % ref this + reword
 Hier lassen sich dieselben Strukturen in verschiedenen Größenordnungen wiederfinden. % delete this
-Beispielsweise ähneln die Knospen eines Blumenkohls auch seiner äußeren Struktur, wie in Abbildung~\ref{fig:Blumenkohl}\footnote{Quelle: {https://commons.wikimedia.org/wiki/File:Blumenkohl-1.jpg}, Autor: Rainer Zenz, CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>, via Wikimedia Commons} zu sehen ist.
+Beispielsweise ähneln die Knospen eines Blumenkohls auch seiner äußeren Struktur, wie in Abbildung~\ref{fig:Blumenkohl}\footnote{Quelle: \url{https://commons.wikimedia.org/wiki/File:Blumenkohl-1.jpg}, Autor: Rainer Zenz, CC BY-SA 3.0 \url{http://creativecommons.org/licenses/by-sa/3.0/}, via Wikimedia Commons} zu sehen ist.
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.5\linewidth]{chapters/02_Grundlagen/L_System/Blumenkohl-1.jpg}
@@ -15,12 +15,12 @@ Der Unterschied zwischen einem L-System und einer üblichen kontextfreien Gramma
 Zusätzlich werden nur eine feste Anzahl an Ableitungsschritten durchgeführt und es kann anstatt eines Startsymbols auch ein Startstring angegeben werden.
 
 \subsection{Grafische Darstellung in 2D}
-Der resultierende String einer Ableitung kann grafisch als Zeichenvorschriften für \emph{turtle graphics} gesehen werden. % reword
-In \emph{turtle graphics} gibt es eine \emph{turtle}, oder Zeichenkopf, der initial in eine Richtung zeigt und sich in zwei oder drei Dimensionen fortbewegen kann. % TODO change Zeichenkopf
-Bei jeder Fortbewegung wird entlang der aktuellen Richtung des Kopfes und der hinterlegten Distanz eine Strecke gezeichnet.
-Die Symbole der Grammatik werden hierbei als Fortbewegung um eine gewisse Distanz oder eine Drehung um eine der Achsen interpretiert.
+Der resultierende String einer Ableitung kann grafisch als Zeichenvorschriften für \emph{turtle graphics} interpretiert werden.
+In \emph{turtle graphics} gibt es eine \emph{turtle}, oder Zeichenkopf, der initial in eine Richtung zeigt und sich in zwei oder drei Dimensionen fortbewegen kann.
+Bei jeder Fortbewegung wird entlang der aktuellen Richtung der turtle und der hinterlegten Distanz, eine Strecke gezeichnet.
+Die Symbole der Grammatik werden hierbei als Fortbewegung um eine gewisse Distanz oder eine Drehung interpretiert.
 In Abbildung~\ref{fig:L-System 2D Rotation} ist eine Visualisierung dieses Konzeptes zu sehen.
-Hier ist der Zeichenkopf initial nach oben gerichtet.
+Hier ist die turtle initial nach oben gerichtet.
 % Add 2D rotation tikz
 \begin{figure}[ht]
     \centering
@@ -31,20 +31,23 @@ Hier ist der Zeichenkopf initial nach oben gerichtet.
     \caption{L-System 2D Rotation}\label{fig:L-System 2D Rotation}
 \end{figure}
 
-Ohne Erweiterungen entstehen hierbei immer zusammenhängende Strukturen bei dem der Zeichenkopf nicht springen kann.
-Das heißt, Blätter oder Äste sind nur schwer zu realisieren.
+Ohne Erweiterungen entstehen hierbei immer zusammenhängende Strukturen bei dem die turtle nicht springen kann.
+Das heißt, Blätter, Äste oder Stängel sind nur schwer zu realisieren.
 
 
 \subsection{Erweiterungen}
-Damit komplexere Strukturen abgebildet werden können, werden zusätzliche Symbole eingesetzt und die Auswertung erweitert.
-Zwei übliche Erweiterung die besonders zur Generierung von Vegetation nützlich sind, sind \emph{Bracketed L-Systeme} und \emph{Stochastische L-Systeme}.
+Um komplexere Strukturen abzubilden, werden zusätzliche Symbole eingesetzt und die Auswertung erweitert.
+Zwei übliche Erweiterung, die besonders zur Generierung von Vegetation nützlich sind, sind \emph{Bracketed L-Systeme} und \emph{Stochastische L-Systeme}.
 
 \subsubsection{Bracketed L-Systeme}
-Um Strukturen abzubilden die nur durch "absetzen" des Stiftes generiert werden können, können \emph{Bracketed L-Systeme}~\cite*{Shaker2016} eingesetzt werden.
-Damit die generierte Struktur zusammenhängend bleibt, wird die Position und aktuelle Richtung des Zeichenkopfes auf einem Stack gespeichert und kann durch \texttt{push} und \texttt{pop} Operationen verwaltet werden.
+\emph{Bracketed L-Systeme}~\cite*{Shaker2016} werden zur Definition von Strukturen eingesetzt, bei denen die turtle ihre Position ändern muss, ohne dass ein Strich gezeichnet wird.
+Damit die generierte Struktur zusammenhängend bleibt, wird die Position und aktuelle Richtung der turtle auf einem Stack gespeichert und kann durch \texttt{push} und \texttt{pop} Operationen verwaltet werden.
+Die turtle kann sich also nur fortbewegen ohne zu zeichnen, indem sie an eine vorherige Position zurückspringt.
 Die Menge der Nicht-Terminalsymbole wird dabei um \texttt{[} für die \texttt{push} Operation und \texttt{]} für \texttt{pop} erweitert.
+Bei dem Lesen eines \texttt{[}, wird die aktuelle Position und Rotation der turtle auf dem Stack gespeichert.
+Wenn ein \texttt{]} gelesen wird, dann wird die turtle zu der Position und Rotation zurückgesetzt, die auf dem Stack als oberstes Element gespeichert worden war.
 
-Mit dieser Erweiterung können nun auch Äste von Bäumen oder Stängel von Blumen gezeichnet werden.
+Mit dieser Erweiterung können insbesondere auch Äste von Bäumen oder Stängel von Blumen gezeichnet werden.
 Ein Beispiel für eine Art von Strauch kann mittels dieses L-Systems erzeugt werden:
 \begin{itemize}
     \item Nicht-Terminalsymbole $N=\{F\}$
@@ -56,28 +59,28 @@ Ein Beispiel für eine Art von Strauch kann mittels dieses L-Systems erzeugt wer
     \end{align*}
 \end{itemize}
 
-Hierbei beschreibt das Nicht-Terminalsymbol $F$ eine Fortbewegung, \texttt{+} und \texttt{-} jeweils eine Drehung um 30 Grad nach links bzw. rechts in 2D und \texttt{[}, \texttt{]} beschreiben die \texttt{push} und \texttt{pop} Operationen.
-Die generierten Strukturen sind in Abbildung~\ref{fig:Bracketed} zu sehen.
+Hierbei beschreibt das Nicht-Terminalsymbol $F$ eine Fortbewegung, \texttt{+} und \texttt{-} jeweils eine Drehung um \ang{30} nach links bzw. rechts in 2D und \texttt{[}, \texttt{]} beschreiben die \texttt{push} und \texttt{pop} Operationen.
+Für die ersten drei Ableitungsschritte sind die generierten Strukturen in Abbildung~\ref{fig:Bracketed} dargestellt.
 
 \begin{figure}[ht]
     \begin{subfigure}[t]{.3\textwidth}
         \centering
         \input{chapters/02_Grundlagen/L_System/bracketed-1.tex}
-        \caption*{1 Ableitungsschritt}
+        \caption*{Ein Ableitungsschritt}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{.3\textwidth}
         \centering
         \input{chapters/02_Grundlagen/L_System/bracketed-2.tex}
-        \caption*{2 Ableitungsschritte}
+        \caption*{Zwei Ableitungsschritte}
     \end{subfigure}
     \hfill
     \begin{subfigure}[t]{.3\textwidth}
         \centering
         \input{chapters/02_Grundlagen/L_System/bracketed-3.tex}
-        \caption*{3 Ableitungsschritte}
+        \caption*{Drei Ableitungsschritte}
     \end{subfigure}
-    \caption{Resultate bracketed L-System}\label{fig:Bracketed}
+    \caption{Darstellung der ersten drei Ableitungsschritte eines Bracketed L-Systems}\label{fig:Bracketed}
 \end{figure}
 
 
@@ -89,7 +92,7 @@ Hierbei kann es mehrere Produktionen mit gleichen linken Seiten geben.
 Jeweils über die Menge von Produktionen mit gleicher linken Seite wird eine Wahrscheinlichkeitsverteilung erstellt.
 Das heißt die Auswahl der Ersetzung eines Nicht-Terminalsymbols erfolgt zufällig.
 
-Im Folgenden ist ein Beispiel für ein stochastisches bracketed L-System gegeben:
+Im Folgenden ist ein Beispiel für ein stochastisches Bracketed L-System gegeben:
 \begin{itemize}
     \item Nicht-Terminalsymbole $N=\{F\}$
     \item Terminalsymbole $T=\{\texttt{+},\texttt{-},\texttt{[},\texttt{]}\}$
@@ -102,9 +105,9 @@ Im Folgenden ist ein Beispiel für ein stochastisches bracketed L-System gegeben
     \end{align*}
 \end{itemize}
 
-Hier gibt es für das Nicht-Terminal $F$ drei Produktionen, zwei Produktionen mit einer Wahrscheinlichkeit von $33\%$ gewählt und eine Produktion mit $34\%$.
+Hier gibt es für das Nicht-Terminal $F$ drei Produktionen, zwei Produktionen mit einer Wahrscheinlichkeit von \SI{33}{\percent} gewählt und eine Produktion mit \SI{34}{\percent}.
 Drei resultierende Bilder dieses L-Systems sind in Abbildung~\ref{fig:Stochastic} gegeben.
-Hieran kann man gut sehen wie aus einem L-System deutlich unterschiedliche Strukturen generiert werden können die jedoch alle ähnliche Grundstrukturen aufweisen.
+Es ist gut erkennbar wie aus einem L-System deutlich unterschiedliche Strukturen generiert werden können die jedoch alle ähnliche Grundstrukturen aufweisen.
 \begin{figure}[ht]
     \begin{subfigure}[t]{.25\textwidth}
         \centering
@@ -120,16 +123,16 @@ Hieran kann man gut sehen wie aus einem L-System deutlich unterschiedliche Struk
         \centering
         \input{chapters/02_Grundlagen/L_System/r-3.tex}
     \end{subfigure}
-    \caption{Resultate Stochastisches L-System}\label{fig:Stochastic}
+    \caption{Drei Resultate desselben stochastischen L-Systems}\label{fig:Stochastic}
 \end{figure}
 
 
 \subsubsection{Erweiterung in 3D}
 Die L-Systeme aus den vorherigen Abschnitten haben stets zweidimensionale Strukturen erstellt.
-Dabei wurden die Symbole \texttt{+} und \texttt{-} genutzt um die aktuelle Richtung des Zeichenkopfes in der Ebene zu rotieren.
+Dabei wurden die Symbole \texttt{+} und \texttt{-} genutzt um die aktuelle Richtung der turtle in der Ebene zu rotieren.
 Für Strukturen in drei Dimensionen kann diese Idee weiterverwendet werden.
 Hierbei werden jeweils zwei Symbole für Rotationen um jede der drei Achsen eingeführt.
-Die Symbole \texttt{+} und \texttt{-} rotieren den Zeichenkopf um die $z$-Achse, \texttt{\&} und \texttt{\textasciicircum} rotieren um die $x$-Achse und \texttt{/} und \texttt{\textbackslash} rotieren um die $y$-Achse.
+Die Symbole \texttt{+} und \texttt{-} rotieren die turtle um die $z$-Achse, \texttt{\&} und \texttt{\textasciicircum} rotieren um die $x$-Achse und \texttt{/} und \texttt{\textbackslash} rotieren um die $y$-Achse.
 Eine Visualisierung dieser Idee ist in Abbildung~\ref{fig:L-System 3D Rotation} zu sehen.
 % Add 3D rotation tikz
 \begin{figure}[ht]
@@ -141,7 +144,7 @@ Eine Visualisierung dieser Idee ist in Abbildung~\ref{fig:L-System 3D Rotation} 
     \caption{L-System 3D Rotation}\label{fig:L-System 3D Rotation}
 \end{figure}
 
-Ein Beispiel für ein L-System, das einen dreidimensionalen Baum erzeugt ist im Folgenden gegeben:
+Ein Beispiel\footnote{L-System adaptiert von: \url{https://www.sidefx.com/docs/houdini/nodes/sop/lsystem.html#3d}} für ein L-System, das einen dreidimensionalen Baum erzeugt ist im Folgenden gegeben:
 \begin{itemize}
     \item Nicht-Terminalsymbole $N=\{F\}$
     \item Terminalsymbole $T=\{\texttt{+},\texttt{-},\texttt{\&},\texttt{\textasciicircum},\texttt{/},\texttt{\textbackslash},\texttt{[},\texttt{]}\}$
@@ -154,7 +157,7 @@ Ein Beispiel für ein L-System, das einen dreidimensionalen Baum erzeugt ist im 
 \end{itemize}
 
 Mit diesem L-System kann ein dreidimensionaler Baum wie in Abbildung~\ref{fig:L-System 3D Unity} in Unity erzeugt werden.
-Es wurden 7 Ableitungsschritte durchgeführt und es wurde jeweils um 28 Grad um die Achsen rotiert.
+Es wurden 7 Ableitungsschritte durchgeführt und es wurde jeweils \ang{28} um die Achsen rotiert.
 
 \begin{figure}[ht]
     \centering
@@ -174,7 +177,7 @@ Die Auswertung eines L-Systems wird in diesem Abschnitt beschrieben.
     \begin{algorithmic}[1]
         \footnotesize
         \REQUIRE{Grammatik $(N,T,S,P)$, Iterationen $i$}
-        \ENSURE{Wort $w$ nach $i$ Iterationen}
+        \ENSURE{String $w$ nach $i$ Ableitungsschritten}
         \STATE{$w \gets S$}
         \FOR{$i$ Iterationen}
         \STATE{$temp\gets \emptyset$}
