@@ -1,0 +1,87 @@
+\documentclass[tikz]{standalone}
+\usetikzlibrary{positioning,chains,arrows,arrows.meta,shadows,fadings,shapes,backgrounds,matrix,patterns,plotmarks,trees,mindmap,automata,fit,calc,decorations.text}
+
+% adapted from https://tex.stackexchange.com/a/273473
+\colorlet{lliw symbolau cefndir}{white}
+\tikzset{
+  pics/crwban/.style n args={2}{
+    code={
+      \path [fill=#1, draw=#1, double=lliw symbolau cefndir, line width=.025*#2, double distance=.01*#2, pic actions]
+      (-.5*#2,-.2*#2)
+      [out=-20, in=-160] to coordinate [pos=.15] (troed1a) coordinate [pos=.2] (troed1b)  coordinate [pos=.3] (troed1d) coordinate [pos=.65] (troed2a) coordinate [pos=.7] (troed2b) coordinate [pos=.8] (troed2e) coordinate [pos=.85] (troed2d) coordinate [pos=.9] (crwb4) (.25*#2,-.2*#2)
+      [out=20, in=-90] to (.3*#2,-.15*#2) coordinate (crwb3)
+      [out=90, in=20] to coordinate [pos=.5] (crwb5) (.25*#2,-.1*#2) coordinate (crwb2)
+      [out=-160, in=-20] to (-.5*#2,-.1*#2) coordinate (crwb1)
+      [out=160, in=90] to (-.55*#2,-.15*#2)
+      [out=-90, in=160] to cycle
+      (crwb1)
+      [out=75, in=180] to coordinate (crwb6) (-.125*#2,.25*#2)
+      [out=0, in=105] to (crwb2)
+      [out=-160, in=-20] to cycle
+      (crwb4)
+      [out=-15, in=-70] to (.55*#2,.1*#2)
+      [out=110, in=0] to (.5*#2,.125*#2)
+      [out=180, in=75] to (.45*#2,.1*#2)
+      [out=-105, in=15] to (crwb5)
+      (troed1a)
+      [out=-135, in=-170] to ++(.125*#2,-.1*#2)
+      [out=10, in=-20] to coordinate (troed1c) ++(-.05*#2,.05*#2)
+      [out=160, in=-80] to (troed1b)
+      (troed1d)
+      [out=-135, in=10] to ++(.05*#2,-.05*#2)
+      [out=-170, in=-20] to (troed1c)
+      (troed2a)
+      [out=-135, in=-170] to ++(.125*#2,-.1*#2)
+      [out=10, in=-20] to  ++(-.05*#2,.05*#2)
+      [out=160, in=-80] to (troed2b)
+      (troed2e)
+      [out=-135, in=-170] to ++(.105*#2,-.09*#2)
+      [out=10, in=-20] to  ++(-.05*#2,.05*#2)
+      [out=160, in=-80] to (troed2d)
+
+      
+      ;
+      \path [draw=lliw symbolau cefndir, line cap=round, line join=round, line width=.01*#2]
+      (crwb6) ++(0,-.025*#2)
+      [out=-100, in=80] to coordinate (crwb13) ($(crwb1)!1/2!(crwb2) - (0,.04*#2)$)
+      (crwb6) ++(.01*#2,-.025*#2)
+      [out=-35, in=120] to coordinate (crwb11) ($(crwb1)!3/4!(crwb2) - (0,.02*#2)$)
+      (crwb6) ++(-.01*#2,-.025*#2)
+      [out=-145, in=60] to coordinate (crwb12) ($(crwb1)!1/4!(crwb2) - (0,.02*#2)$)
+      (crwb6) ++(-.02*#2,-.015*#2)
+      [out=-175, in=45] to coordinate [pos=.5] (crwb7) coordinate (crwb8) ($(crwb1)!1/9!(crwb2) + (0,.1*#2)$)
+      (crwb6) ++(.02*#2,-.015*#2)
+      [out=-5, in=135] to  coordinate [pos=.5] (crwb9) coordinate (crwb10) ($(crwb1)!8/9!(crwb2) + (0,.1*#2)$)
+      (crwb7) ++(-.015*#2,.025*#2) [out=-35, in=170] to ($(crwb9) + (.05*#2,-.025*#2)$)
+      (crwb8) ++(-.01*#2,-.005*#2) [out=15, in=-170] to ($(crwb10) + (.005*#2,0)$)
+      (crwb8)
+      [out=-100, in=-160] to (crwb12)
+      [out=20, in=170] to (crwb13)
+      [out=-10, in=170] to (crwb11)
+      [out=-10, in=-80] to (crwb10)
+
+      ([shift={(2.55pt,0.7pt)}]crwb5)
+      [out=-120, in=-20] to ++(-.06*#2,.01*#2)
+      ([shift={(2.5pt,1.6pt)}]crwb5)
+      [bend left = 50] to ++(-.06*#2,0*#2)
+      ;
+    }
+  },
+}
+
+\begin{document}
+    \begin{tikzpicture}[auto,rotate=90,transform shape]
+        \pic at (3.25pt,4pt) {crwban={black}{10pt}};
+        \begin{scope}[on background layer]
+            \path[-Latex] (0pt,0pt) edge (40pt,0pt);
+            \path[-Latex] (0pt,0pt) edge (-45:40pt);
+            \path[-Latex] (0pt,0pt) edge (45:40pt);
+            \draw (0,0) -- (30pt,0) arc (0:45:30pt);
+            \draw (0,0) -- (30pt,0) arc (0:-45:30pt);
+        \end{scope}
+        \node[rotate=-90] (+) at (30pt,14pt) {\tiny\texttt{+}};
+        \node[rotate=-90] (d+) at (23pt,9pt) {\tiny$\delta$};
+        \node[rotate=-90] (-) at (30pt,-14pt) {\tiny\texttt{-}};
+        \node[rotate=-90] (d-) at (23pt,-9pt) {\tiny$-\delta$};
+      \end{tikzpicture}
+\end{document}

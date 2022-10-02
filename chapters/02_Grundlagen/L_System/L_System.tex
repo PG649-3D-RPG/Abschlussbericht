@@ -1,7 +1,7 @@
 %  Grundlagen L-System: Allgemein, Theoretischer Hintergrund, 2D, 3D
 \section{L-System}
-Eine zentrale Eigenschaft in der Natur ist die Selbstähnlichkeit von Strukturen auf makroskopischer und mikroskopischer Ebene~\cite{Shaker2016}. % ref this + reword
-Hier lassen sich dieselben Strukturen in verschiedenen Größenordnungen wiederfinden. % delete this
+Eine zentrale Eigenschaft in der Natur ist die Selbstähnlichkeit von Strukturen auf makroskopischer und mikroskopischer Ebene~\cite{Shaker2016}.
+Das heißt, es lassen sich dieselben geometrischen Strukturen in verschiedenen Größenordnungen wiederfinden.
 Beispielsweise ähneln die Knospen eines Blumenkohls auch seiner äußeren Struktur, wie in Abbildung~\ref{fig:Blumenkohl}\footnote{Quelle: \url{https://commons.wikimedia.org/wiki/File:Blumenkohl-1.jpg}, Autor: Rainer Zenz, CC BY-SA 3.0 \url{http://creativecommons.org/licenses/by-sa/3.0/}, via Wikimedia Commons} zu sehen ist.
 \begin{figure}[ht]
     \centering
@@ -10,7 +10,7 @@ Beispielsweise ähneln die Knospen eines Blumenkohls auch seiner äußeren Struk
 \end{figure}
 
 Um diese Eigenschaften präzise und strukturell darzustellen kann ein Lindenmayer-System (L-System)~\cite{lindenmayer1990} eingesetzt werden.
-Die Basis eines L-Systems bildet eine kontextfreie Grammatik $G=(N,T,S,P)$ mit einer Menge von Nicht-Terminalsymbolen $N$, Terminalsymbolen $T$, einem Startsymbol $S$ und einer Menge von Produktionen $P$.
+Die Basis eines L-Systems bildet eine kontextfreie Grammatik $G=(N,T,S,P)$ mit einer Menge von Nicht-Terminalsymbolen $N$, einer Menge von Terminalsymbolen $T$, einem Startsymbol $S$ und einer Menge von Produktionen $P$.
 Der Unterschied zwischen einem L-System und einer üblichen kontextfreien Grammatik besteht darin, dass in einem Ableitungsschritt eines L-Systems parallel alle Nicht-Terminale ersetzt werden.
 Zusätzlich werden nur eine feste Anzahl an Ableitungsschritten durchgeführt und es kann anstatt eines Startsymbols auch ein Startstring angegeben werden.
 
@@ -21,17 +21,14 @@ Bei jeder Fortbewegung wird entlang der aktuellen Richtung der turtle und der hi
 Die Symbole der Grammatik werden hierbei als Fortbewegung um eine gewisse Distanz oder eine Drehung interpretiert.
 In Abbildung~\ref{fig:L-System 2D Rotation} ist eine Visualisierung dieses Konzeptes zu sehen.
 Hier ist die turtle initial nach oben gerichtet.
-% Add 2D rotation tikz
+
 \begin{figure}[ht]
     \centering
-    % \resizebox{\linewidth-3cm}{!}{%
-        
-    % }
-    \includegraphics[width=0.5\linewidth]{example-image-a}
+    \includegraphics[width=0.5\linewidth]{chapters/02_Grundlagen/L_System/L_System_2D.pdf}
     \caption{L-System 2D Rotation}\label{fig:L-System 2D Rotation}
 \end{figure}
 
-Ohne Erweiterungen entstehen hierbei immer zusammenhängende Strukturen bei dem die turtle nicht springen kann.
+Ohne Erweiterungen entstehen hierbei immer zusammenhängende Strukturen, die an einem Stück gezeichnet werden müssen; die turtle darf also nicht springen.
 Das heißt, Blätter, Äste oder Stängel sind nur schwer zu realisieren.
 
 
@@ -42,8 +39,8 @@ Zwei übliche Erweiterung, die besonders zur Generierung von Vegetation nützlic
 \subsubsection{Bracketed L-Systeme}
 \emph{Bracketed L-Systeme}~\cite*{Shaker2016} werden zur Definition von Strukturen eingesetzt, bei denen die turtle ihre Position ändern muss, ohne dass ein Strich gezeichnet wird.
 Damit die generierte Struktur zusammenhängend bleibt, wird die Position und aktuelle Richtung der turtle auf einem Stack gespeichert und kann durch \texttt{push} und \texttt{pop} Operationen verwaltet werden.
-Die turtle kann sich also nur fortbewegen ohne zu zeichnen, indem sie an eine vorherige Position zurückspringt.
-Die Menge der Nicht-Terminalsymbole wird dabei um \texttt{[} für die \texttt{push} Operation und \texttt{]} für \texttt{pop} erweitert.
+Die turtle kann sich nur fortbewegen ohne zu zeichnen, indem sie an eine vorherige Position zurückspringt.
+Die Menge der Terminalsymbole wird dabei um \texttt{[} für die \texttt{push} Operation und \texttt{]} für \texttt{pop} erweitert.
 Bei dem Lesen eines \texttt{[}, wird die aktuelle Position und Rotation der turtle auf dem Stack gespeichert.
 Wenn ein \texttt{]} gelesen wird, dann wird die turtle zu der Position und Rotation zurückgesetzt, die auf dem Stack als oberstes Element gespeichert worden war.
 
@@ -85,7 +82,7 @@ Für die ersten drei Ableitungsschritte sind die generierten Strukturen in Abbil
 
 
 \subsubsection{Stochastische L-Systeme}
-Eine Eigenschaft von den bisher verwendeten L-Systemen ist, dass die Produktionen deterministisch ausgewertet werden.
+Eine Eigenschaft von den bisher verwendeten L-Systemen ist, dass die Produktionen deterministisch ausgewertet werden und die resultierenden Strings eindeutig sind.
 Um realistische Pflanzen generieren zu können muss jedoch etwas Variation eingeführt werden; es wäre also vorteilhaft, wenn die Produktionen nicht-deterministisch ausgewertet werden.
 Dazu kann ein \emph{stochastisches L-System}~\cite*{Shaker2016} verwendet werden.
 Hierbei kann es mehrere Produktionen mit gleichen linken Seiten geben.
@@ -105,9 +102,9 @@ Im Folgenden ist ein Beispiel für ein stochastisches Bracketed L-System gegeben
     \end{align*}
 \end{itemize}
 
-Hier gibt es für das Nicht-Terminal $F$ drei Produktionen, zwei Produktionen mit einer Wahrscheinlichkeit von \SI{33}{\percent} gewählt und eine Produktion mit \SI{34}{\percent}.
+Hier gibt es für das Nicht-Terminal $F$ drei Produktionen, zwei Produktionen werden mit einer Wahrscheinlichkeit von \SI{33}{\percent} gewählt und eine Produktion wird mit \SI{34}{\percent} gewählt.
 Drei resultierende Bilder dieses L-Systems sind in Abbildung~\ref{fig:Stochastic} gegeben.
-Es ist gut erkennbar wie aus einem L-System deutlich unterschiedliche Strukturen generiert werden können die jedoch alle ähnliche Grundstrukturen aufweisen.
+Es ist gut erkennbar wie aus einem L-System deutlich unterschiedliche Strukturen generiert werden können, die jedoch alle ähnliche Grundstrukturen aufweisen.
 \begin{figure}[ht]
     \begin{subfigure}[t]{.25\textwidth}
         \centering
@@ -127,22 +124,12 @@ Es ist gut erkennbar wie aus einem L-System deutlich unterschiedliche Strukturen
 \end{figure}
 
 
-\subsubsection{Erweiterung in 3D}
+\subsubsection{Erweiterung in 3D}\label{subsub: L-System 3D}
 Die L-Systeme aus den vorherigen Abschnitten haben stets zweidimensionale Strukturen erstellt.
 Dabei wurden die Symbole \texttt{+} und \texttt{-} genutzt um die aktuelle Richtung der turtle in der Ebene zu rotieren.
 Für Strukturen in drei Dimensionen kann diese Idee weiterverwendet werden.
 Hierbei werden jeweils zwei Symbole für Rotationen um jede der drei Achsen eingeführt.
 Die Symbole \texttt{+} und \texttt{-} rotieren die turtle um die $z$-Achse, \texttt{\&} und \texttt{\textasciicircum} rotieren um die $x$-Achse und \texttt{/} und \texttt{\textbackslash} rotieren um die $y$-Achse.
-Eine Visualisierung dieser Idee ist in Abbildung~\ref{fig:L-System 3D Rotation} zu sehen.
-% Add 3D rotation tikz
-\begin{figure}[ht]
-    \centering
-    % \resizebox{\linewidth-3cm}{!}{%
-        
-    % }
-    \includegraphics[width=0.5\linewidth]{example-image-a}
-    \caption{L-System 3D Rotation}\label{fig:L-System 3D Rotation}
-\end{figure}
 
 Ein Beispiel\footnote{L-System adaptiert von: \url{https://www.sidefx.com/docs/houdini/nodes/sop/lsystem.html#3d}} für ein L-System, das einen dreidimensionalen Baum erzeugt ist im Folgenden gegeben:
 \begin{itemize}
@@ -169,9 +156,17 @@ Es wurden 7 Ableitungsschritte durchgeführt und es wurde jeweils \ang{28} um di
 \end{figure}
 
 
-\subsection{Auswertung}
+\subsection{Auswertung eines L-Systems}
 Die Auswertung eines L-Systems wird in diesem Abschnitt beschrieben.
-
+Der Algorithmus~\ref{alg:L-System Auswertung} umfasst die, ausgehend vom Startstring, durchgeführten $i$ Ableitungsschritte der Grammatik.
+Der Startstring wird Zeichen-für-Zeichen von links nach rechts durchlaufen und es wird für jede Iteration ein leerer String als Zwischenresultat angelegt.
+Für jedes gelesene Zeichen des Startstrings wird überprüft, ob es sich um ein Nicht-Terminalsymbol oder Terminalsymbol handelt.
+Im Falle eines Nicht-Terminalsymbols wird die Ersetzung gemäß der entsprechenden Produktion an das Zwischenresultat angehangen.
+Ein Terminalsymbol wird einfach in das Zwischenresultat übernommen.
+In jeder Iteration wird der Startstring vollständig durchlaufen.
+Dadurch werden alle Nicht-Terminale des Startstrings der jeweiligen Iteration ersetzt.
+Am Ende der $n$-ten Iteration wird das Zwischenresultat als neuen Startstring für die $n+1$-te Iteration gesetzt und der Prozess wiederholt sich für die festgelegten $i$ Iterationen.
+Für ein stochastisches L-System muss die Wahl der Ersetzung in Zeile 6 gemäß der Wahrscheinlichkeiten für das Nicht-Terminalsymbol erfolgen.
 
 \begin{algorithm}[H]
     \begin{algorithmic}[1]
@@ -183,10 +178,8 @@ Die Auswertung eines L-Systems wird in diesem Abschnitt beschrieben.
         \STATE{$temp\gets \emptyset$}
         \FOR{$c\in w$}
         \IF{$c\in N$}
-        \FOR{$(p,\Omega,R)\in P$ mit $c$ == $p$}
-        \STATE{Wähle eine Ersetzung $r\in R$ mit Wahrscheinlichkeit $\omega\in \Omega$}
+        \STATE{Wähle Ersetzung $r$ aus Produktion mit $(c\rightarrow r)\in P$}
         \STATE{Hänge $r$ an $temp$ an}
-        \ENDFOR
         \ELSE
         \STATE{Hänge $c$ an $temp$ an}
         \ENDIF
@@ -197,6 +190,3 @@ Die Auswertung eines L-Systems wird in diesem Abschnitt beschrieben.
     \end{algorithmic}
     \caption{L-System Auswertung}\label{alg:L-System Auswertung}
 \end{algorithm}
-
-
-
