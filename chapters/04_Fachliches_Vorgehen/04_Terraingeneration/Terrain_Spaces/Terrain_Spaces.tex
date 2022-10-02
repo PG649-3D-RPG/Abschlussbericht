@@ -1,2 +1,13 @@
-% Idee von Perlin-Noise als Basis + Berge als Begrenzung + Obstacles + Zonen als Backend
 \subsection{Generierung der Terrain-Flächen}
+Um ein Terrain mit natürlich erscheinenden Höhenunterschieden zu generieren, wird eine Perlin-Noise als Basis verwendet.
+Hierbei entstehen sanfte Höhenunterschiede, die für eine kleine Wölbung des Terrains sorgen.
+Mithilfe einer Perlin-Noise lassen sich auf das Terrain auch Flächen setzen, welche stärkere Höhenunterschiede haben.
+Diese Idee wird verwendet um eine Begrenzung des Terrains in Form von Gebirgen am Rande des Terrains zu generieren.
+Auch Hindernisse lassen sich mit diesem Ansatz generieren.
+
+Allgemein wird das Platzieren der einzelnen Objekte wie Gebirge, Hindernisse, Vegetation oder Creature-Spawn-Points durch \emph{Zonen}\footnote{inspiriert von: \url{https://youtu.be/h9tLcD1r-6w?t=2416}} ermöglicht.
+Diese Zonen bestimmen die Kategorie des platzierten Objektes an einer Koordinate und halten fest, ob überhaupt ein Objekt an einer Position gesetzt wurde.
+Dadurch lässt sich auch bestimmen, welcher Bereich des Terrains noch frei ist, oder durch Objekte belegt wurde.
+Dies ist hilfreich um festzulegen, wo beispielsweise zusätzliche Monster generiert werden können.
+Auch lassen sich die Zonen nutzen um abhängig von der Umgebung der Zone, passende Vegetation zu generieren oder Texturen zu setzen.
+Ein Vorteil dieses Ansatzes ist es, dass leicht neue Kategorien von Objekten eingeführt werden können und diese regelbasiert in die Umgebung eingefügt werden können.

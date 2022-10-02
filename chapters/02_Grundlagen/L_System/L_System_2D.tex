@@ -76,8 +76,8 @@
             \path[-Latex] (0pt,0pt) edge (40pt,0pt);
             \path[-Latex] (0pt,0pt) edge (-45:40pt);
             \path[-Latex] (0pt,0pt) edge (45:40pt);
-            \draw (0,0) -- (30pt,0) arc (0:45:30pt);
-            \draw (0,0) -- (30pt,0) arc (0:-45:30pt);
+            \draw[-stealth,densely dotted] (0,0) -- (30pt,0) arc (0:45:30pt);
+            \draw[-stealth,densely dotted] (0,0) -- (30pt,0) arc (0:-45:30pt);
         \end{scope}
         \node[rotate=-90] (+) at (30pt,14pt) {\tiny\texttt{+}};
         \node[rotate=-90] (d+) at (23pt,9pt) {\tiny$\delta$};
