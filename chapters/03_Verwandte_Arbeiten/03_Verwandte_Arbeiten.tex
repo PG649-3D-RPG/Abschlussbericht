@@ -1,3 +1,21 @@
 \chapter{Verwandte Arbeiten}
 
 Beschreiben warum andere Quellen nicht ausreichend waren und weshalb der eigene Ansatz jene fehlende Themen ergänzt.
+
+\section{Creature Generation using Genetic Algorithms and Auto-Rigging\cite{Hudson2013CreatureGU}}
+In seiner Thesis beschreibt Hudson einen möglichen Ansatz zur prozeduralen Generierung von Kreaturen, basierend auf Parametern in Form von Minima und Maxima für Dimensionen einzelner Körperteile.\\ Zunächst wird ein Torso generiert, der aus drei mit Hilfe der Parameter zufällig skalierten Segmenten besteht. Daran werden weitere Körperteile wie Arme, Beine, Kopf und Flügel jeweils an der richtigen Stelle platziert. Die Anzahl und Ausmaße dieser werden ebenfalls zufällig bestimmt.\\
+Vorausgesetzt werden hierbei Annahmen über die prinzipelle Struktur des Skeletts. Hudson beschränkt sich hierbei auf humanoide Zweibeiner und ein allgemeines Vierbeiner Modell. Welche Positionen und Rotationen dabei genau verwendet werden wird nicht spezifiziert. Dieser Aspekt lässt weiter Raum für Optimierung offen und wirft die Frage danach auf, inwiefern sich auch diese Werte randomisieren lassen. Des weiteren spricht Hudson selbst die mögliche Erweiterung auf andere Typen von Kreaturen an.\\
+Außerdem können die daraus erzeugten Kreaturen mit Hilfe eines genetischen Algorithmus kombiniert und mutiert werden, was für mehr Variation sorgen soll, während gleichzeitig gute Ergebnisse weiterentwickelt werden können.\\
+Die Motivation besteht darin, einem Experten Vorlagen zur manuellen Modellierung einer glaubwürdigen Kreatur zu liefern. Dieser Ansatz müsste erweitert werden um ihn auf unser Ziel anzupassen, wobei die vollständig prozedurale Generierung im Vordergrund steht.
+
+\section{Procedural Generation of 2D Creatures \cite{Janno20182dCG}}
+In dieser Thesis wird unter anderem ein möglicher Ansatz zur Generierung eines Meshes um das zuvor erzeugte Skelett einer Kreatur. Dies geschieht mit Hilfe von Metaballs.\\
+Metaballs bilden die implizite Definition einer Oberfläche, die jedem Punkt im Raum einen Wert $F(x,y,z)$ zuweist. Überschreitet dieser Wert einen festgelegten Schwellenwert(häufig 1), liegt der Punkt außerhalb des Meshes, liegt er darunter, liegt der Punkt innerhalb des Meshes. Die Oberfläche liegt dort wo $F$ gleich dem Schwellenwert ist. $F$ sezt sich aus den Gleichungen mehrerer Kugeln $i\in \{ 1, ..., N\}$ zusammen, sodass diese ineinander verschmelzen und eine Glatte Fläche bilden, wenn sie einander nahegelegen sind.
+\[F(x,y,z) = \sum_{i=1}^{N}{f_i(x,y,z)}\]
+Es können beliebige Distanzfunktionen für die einzelnen Kugeln verwendet werden, Janno hat sich auf die folgende festgelegt.
+\[f_i(x,y,z)=exp(\frac{B_ir_i^2}{R_i^2}-B_i)\]
+mit $B_i=-0.5$. Dabei ist $r_i$ die euklidische Distanz des Punktes zum Mittelpunkt der Kugel, und $R_i$ der Radius der Kugel.\\
+Die Idee zur Platzierung der Kugeln entlang der Kreatur ist, sie entlang jedes Segmentes mit einem Abstand zu positionieren, der garantiert, dass sie eine zusammenhängende Fläche bilden. Nimmt man einen gleichen Radius $R$ von zwei Kugeln an, lässt sich der maximale Abstand dieser zu einem Punkt bestimmen, der genau den Schwellenwert(=1) erreicht.
+\[2\cdot f(x,y,z) = 1\]
+Durch Umformen erhält man einen Wert für den Abstand zum Mittelpunkt, der verdoppelt den maximalen Abstand der beiden Kugeln ergibt. Im Fall der verwendeten Funktion bedeutet dies einen Abstand von $R \cdot 3.13$.\\
+Die Kugeln werden anschließend mit gleichem Abstand entlang des Segmentes platziert, sodass dieser den maximalen Abstand nicht überschreitet.
