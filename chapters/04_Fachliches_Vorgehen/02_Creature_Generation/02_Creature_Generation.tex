@@ -44,7 +44,14 @@ Da dies nur eine Erweiterung der Metaball-Funktion ist, lassen sich diese Kapsel
 
 
 
-\subsection{Marching Cubes / Mesh Generation}
+\subsection{Mesh Generation}
+
+\subsubsection{Marching Cubes}
+
+\subsubsection{Mesh Indices}
+Zur weitere Verarbeitung des Meshes beim automatischen Rigging, ist es wichtig, dass das Mesh korrekt indiziert ist, sodass keine doppelten Vertices existieren. Außerdem können so die ausgehenden Kanten der Vertices bestimmt werden, welche ebenfalls später für das automatische Rigging benötigt werden. Während dem Marching Cubes Algorithmus werden die entstehende Dreiecke in eine gesonderte Datenstruktur hinzugefügt, welche für jeden Vertex prüft, ob dieser bereits im Vertex-Buffer existiert. Falls ja, wird kein neuer Vertex eingefügt, sondern das Dreieck referenziert den Vertex über den Index-Buffer. Neue Vertices werden dem Vertex-Buffer hinzugefügt und das entsprechende Dreieck referenziert den neuen Vertex. Die Anzahl der Vertices wird dadurch außerdem signifikant verringert, was Performance-Vorteile beim Rendering und bei der Weiterverarbeitung des Meshes ermöglicht.
+
+\subsubsection{Delaunay Triangulation}
 
 
 \subsection{Automatisches Rigging}
