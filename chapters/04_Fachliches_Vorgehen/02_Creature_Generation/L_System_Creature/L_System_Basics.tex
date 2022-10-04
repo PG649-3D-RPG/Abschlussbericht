@@ -1,0 +1,24 @@
+Der erste Ansatz zur Generierung von Kreaturen verwendet ein L-System, um die Struktur des Skelettes zu formalisieren.
+Dabei wird jede gezeichnete Strecke der turtle als ein Knochen interpretiert.
+Hierdurch entsteht stets ein zusammenhängendes Skelett, da sich die turtle nicht fortbewegen kann ohne zu zeichnen.
+An Positionen wo die turtle anhält werden Joints gelegt.
+Mit diesem Ansatz können nicht nur Skelette von Zweibeinern und Vierbeinern erzeugt werden, sondern auch Kreaturen mit beliebig vielen Armen oder Beinen.
+
+\subsubsection{Generierung der Skelettstruktur}
+Um eine Kreatur mithilfe des L-Systems zu generieren wird zunächst die grundlegende Struktur im Startstring definiert.
+Hierbei werden ausgehend von der initialen Richtung der turtle, Komponenten des Skeletts wie der Kopf, Arme, der Torso und die Beine definiert.
+Für jede dieser Körperteile kann ein eigenes Nicht-Terminalsymbol verwendet werden, um das jeweilige Skelett der Komponente zu definieren.
+Mit diesem Ansatz kann jedes Körperteil unabhängig von allen anderen entworfen werden.
+Mithilfe eines stochastischen L-Systems können diese zudem zufällige Ausprägungen haben.
+Beispielsweise ist es einfach, unterschiedlich lange Körperteile zufällig zu generieren.
+Allgemein ist es auch möglich eine zufällige Anzahl an Armen und Beinen zu erzeugen, womit direkt sehr unterschiedliche Kreaturen erzeugt werden können, die aber stets die gleiche Grundstruktur haben.
+Der Entwurf der einzelnen Körperteile wird durch die Produktionen des L-Systems definiert.
+
+Der resultierende String des L-Systems wird von der turtle von links nach rechts, den Regeln entsprechend, durchlaufen.
+Die turtle bewegt sich dabei im dreidimensionalen Raum, wie in Abschnitt~\ref{subsub: L-System 3D} beschrieben.
+Für jede Fortbewegung der turtle wird jeweils ihre Startposition und die Endposition im dreidimensionalen Raum als ein Tupel gespeichert.
+Die Tupel können als Strecken interpretiert werden, die daraufhin als Knochen dargestellt werden.
+Am Ende bildet die Liste der Tupel von Start- und Endpunkten die Skelettstruktur.
+Um die Joints sinnvoll definieren zu können muss festgehalten werden, welche Produktion ein jeweiliges Tupel erzeugt hat.
+Dies ist notwendig, da die Produktionen die Kategorien der Körperteile definieren und die Joints dementsprechend angepasst generiert werden müssen.
+Ausgehend von dieser Liste werden die Knochen erstellt und mit den Joints zu einem vollständigen Skelett zusammengesetzt.
