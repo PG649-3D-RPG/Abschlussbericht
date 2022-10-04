@@ -11,9 +11,11 @@
 \usepackage{mathtools}
 \usepackage{gensymb}
 \addbibresource{literature/literature.bib}
+\usepackage[german]{algorithm2e}				% Algorithmen Umgebung mit Algorithmenverzeichnis
+\renewcommand{\listalgorithmcfname}{Algorithmenverzeichnis}
+\usepackage{listings}
 \usepackage{graphicx}				% Einbinden von Bildern
-
-\usepackage[ngerman]{babel}			% deutsche Namen/Umlaute
+\usepackage{ulem}					% Unterstreichen von Text
 \usepackage{fancyhdr}
 \usepackage{color}					% Farben wenn es sein muß
 \usepackage{hyperref}				% Klickbare Verweise und \autoref{label}
@@ -31,6 +33,8 @@
 	\cleardoublepage
 	\tableofcontents			% Inhaltsverzeichnis ... nicht für kurze Dokumente!
 	\cleardoublepage
+
+	\pagenumbering{arabic}
 	
 	\include{chapters/01_Einleitung/01_Einleitung}
 	
@@ -52,11 +56,13 @@
 	\cleardoublepage
 	\listoftables				% Tabellenverzeichnis
 	\cleardoublepage
-	\pagenumbering{arabic}
-	\setcounter{page}{4}
+	\listofalgorithms
+	\cleardoublepage
+	%\setcounter{page}{4}
 	\cleardoublepage				
-	\bibliographystyle{IEEEtran}	% Das Literaturverzeichnis; ieeetran verwenden, damit auch URLs angezeigt werden
-	\bibliography{seminar-lit}
+	% \bibliographystyle{IEEEtran}	% Das Literaturverzeichnis; ieeetran verwenden, damit auch URLs angezeigt werden
+	% \bibliography{seminar-lit}
 	\printbibliography[title={Literatur}]
+	
 	
 \end{document}
