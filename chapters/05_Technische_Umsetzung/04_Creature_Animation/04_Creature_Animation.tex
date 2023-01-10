@@ -145,62 +145,77 @@ Um die Qualität des Trainings mit neroRL zu steigern, werden verschiedene Optim
 
 \subsection{LiDO3}
 % Nils
-Wie bereits erwähnt, werden die Berechnungen jeweils auf den HPC der TU Dortmund ausgeführt. Um auf LiDO3 zu arbeiten wird mit Hilfe eines Gatewayservers auf das Cluster zugegriffen. Der Zugriff ist ausschließlich über das TU Dortmund Netzwerk möglich. Über den Gatewayserver kann ein Zugriff auf die Rechenressourcen direkt über die Shell oder über Skripte angefordert werden. Da die Shell-Methode einen dauerhaften Login erfordern würde, wird mit Skripten gearbeitet. Diese bestehen aus Konfigurationen für LiDO3 und den eigentlich Programmteil, welcher ausgeführt werden soll. LiDO3 nutzt als Jobmanager Slurm, weshalb die Skripte die Slurm-Syntax nutzen. Eine ausführliche Beschreibung die LiDO3 Konfiguration findet sich im Benutzerhandbuch\cite{lido};
-
-% TODO hier Skript richtig einfügen
-\label{prog:lidoSkript}
-\begin{verbatim}
-#!/bin/bash -l
-#SBATCH -C cgpu01
-#SBATCH -c 20
-#SBATCH --mem=40G
-#SBATCH --gres=gpu:2
-#SBATCH --partition=long
-#SBATCH --time=48:00:00
-#SBATCH --job-name=pg_k40
-#SBATCH --output=/work/USER/log/log_%A.log
-#SBATCH --signal=B:SIGQUIT@120
-#SBATCH --mail-user=OUR_MAIL@tu-dortmund.de
-#SBATCH --mail-type=ALL
-#-------------------------------------
-
-GAME_NAME="GAME_NAME"
-GAME_PATH="/work/USER/games/$GAME_NAME"
-
-
-module purge
-module load nvidia/cuda/11.1.1
-
-source /work/USER/anaconda3/bin/activate
-conda activate /work/mmarplei/grudelpg649/k40_env
-
-chmod -R 771 $GAME_PATH
-cd $GAME_PATH
-
-srun mlagents-learn /work/smnidunk/games/config/Walker.yaml --run-id=$GAME_NAME --env=t.x86_64 --num-envs=6 --no-graphics
-
-\end{verbatim}
+Für die Trainingsdurchläufe wird das HPC-Cluster der TU-Dortmund genutzt. Zuänge hierfür wurden von unseren Projektgruppenbetreuern zur Verfügung gestellt. Um auf LiDO3 zu arbeiten wird mithilfe eines Gatewayservers auf das Cluster zugegriffen. Der Zugriff ist ausschließlich über das TU Dortmund Netzwerk möglich. Über den Gatewayserver kann ein Zugriff auf die Rechenressourcen direkt über die Shell oder über Skripte angefordert werden. Da die Shell-Methode einen dauerhaften Login erfordern würde, wird mit Skripten gearbeitet. Diese bestehen aus Konfigurationen für LiDO3 und den eigentlich Programmteil, welcher ausgeführt werden soll. LiDO3 nutzt als Jobmanager Slurm, weshalb die Skripte die Slurm-Syntax nutzen. Eine ausführliche Beschreibung die LiDO3 Konfiguration findet sich im Benutzerhandbuch\cite{lido};
+\begin{listing}
+	\begin{minted}[linenos,tabsize=2,breaklines]{shell}
+	#!/bin/bash -l
+	#SBATCH -C cgpu01
+	#SBATCH -c 20
+	#SBATCH --mem=40G
+	#SBATCH --gres=gpu:2
+	#SBATCH --partition=long
+	#SBATCH --time=48:00:00
+	#SBATCH --job-name=pg_k40
+	#SBATCH --output=/work/USER/log/log_%A.log
+	#SBATCH --signal=B:SIGQUIT@120
+	#SBATCH --mail-user=OUR_MAIL@tu-dortmund.de
+	#SBATCH --mail-type=ALL
+	#-------------------------------------
+	GAME_NAME="GAME_NAME"
+	GAME_PATH="/work/USER/games/$GAME_NAME"
+	module purge
+	module load nvidia/cuda/11.1.1
+	source /work/USER/anaconda3/bin/activate
+	conda activate /work/mmarplei/grudelpg649/k40_env
+	chmod -R 771 $GAME_PATH
+	cd $GAME_PATH
+	srun mlagents-learn /work/smnidunk/games/config/Walker.yaml --run-id=$GAME_NAME --env=t.x86_64 --num-envs=6 --no-graphics
+	\end{minted}
+	\caption{Skript zur Ausführung von ML-Agents auf LIDO3.}
+	\label{prog:lidoSkript}
+\end{listing}
 
 In dem Beispielskript \ref{prog:lidoSkript} sind Anweisungen an die LiDO-Umgebung jeweils mit einem Kommentarzeichen gefolgt von \emph{SBATCH} gekennzeichnet. Die Konfiguration wird so gewählt, dass eine maximale Laufzeit mit exklusiven Ressourcenrechten auf den Rechenknoten besteht. Zusätzlich muss sichergestellt werden, dass eine Grafikkarte zur Verfügung steht. Diese stehen auf den \emph{cgpu01}-Rechenknoten mit jeweils 20 CPU-Kernen und 48 Gigabyte RAM zur Verfügung. Die maximale Laufzeit des Prozesses ist bei den GPU-Knoten auf \emph{long} begrenzt, was 48 Stunden entspricht. Es wird jeweils ein Log mitgeschrieben, aus dem der Trainingsfortschritt gelesen werden kann und bei besonderen Ereignissen eine Mail geschickt, um sofort benachrichtigt zu werden, falls der Job fertig ist oder fehlschlägt.
 
 \subsubsection{Kompatibilitätsprobleme}
 Um das beschriebene Skript auszuführen, muss auf LiDO3 eine ML-Agents-Umgebung installiert werden. Dabei handelt es sich um ein Python Umgebung, mit PyTorch und CUDA. In dem Slurm-Skript \ref{prog:lidoUmgebung} ist die Einrichtung einer funktionierenden Umgebung dargestellt. 
 
-\label{prog:lidoUmgebung}
-% TODO hier Skript richtig einfügen
-\begin{verbatim}
-// LIDO UMGEBUNGSVARIABLEN
-module purge
-module load nvidia/cuda/11.1.1
-
-source <anaconda3-path>/bin/activate
-conda activate <env_to_install>
-conda install torchvision torchaudio cudatoolkit=11.1 -c pytorch
-python -m pip install mlagents==0.29.0 --force-reinstall
-python -m pip install /work/mmarplei/grudelpg649/torch-1.10.0a0+git3c15822-cp39-cp39-linux_x86_64.whl --no-deps --force-reinstall 
-\end{verbatim}
+\begin{listing}
+	\begin{minted}[linenos,tabsize=2,breaklines]{shell}
+	module purge
+	module load nvidia/cuda/11.1.1
+	source <anaconda3-path>/bin/activate
+	conda activate <env_to_install>
+	conda install torchvision torchaudio cudatoolkit=11.1 -c pytorch
+	python -m pip install mlagents==0.29.0 --force-reinstall
+	python -m pip install /work/mmarplei/grudelpg649/torch-1.10.0a0+git3c15822-cp39-cp39-linux_x86_64.whl --no-deps --force-reinstall 
+	\end{minted}
+	\caption{Installationsskript für Python und ML-Agents auf LIDO3.}
+	\label{prog:lidoUmgebung}
+\end{listing}
 
 Für die Python-Installation wurde auf Anaconda\footnote{https://www.anaconda.com/} zurückgegriffen. Die installierte Anaconda-Arbeitsumgebung kann für die folgenden Schritte genutzt werden, indem die Slurm-Skripte diese am Anfang laden. CUDA kann als Kernelmodul in verschiedenen Versionen geladen werden oder per Anaconda installiert werden.
 
 Problematisch ist die Installation von PyTorch, da ab Version 1.5 die Installationsbinärdateien keine Unterstützung für die von LiDO3 genutzten NVIDIA Tesla K40 Grafikarten bietet. Es besteht die Möglichkeit PyTorch zu bauen um die Unterstürzung zu erhalten. Dies musste für unsere Arbeitsumgebung nicht gemacht werden, da die PG-Betreuer ein Paket mit einer für LiDO funktionierenden PyTorch-Version von einer vorherigen PG zur Verfügung stellen konnten. Wie in \ref{prog:lidoUmgebung} dargestellt müssen zuerst die Abhängigkeiten von PyTorch, dann ML-Agents und zuletzt die spezielle PyTorch Version installiert werden, da sonst die Abhängigkeiten Probleme bereiten.
+
+\subsubsection{NeroRL-Anpassungen}
+\begin{listing}
+	\begin{minted}[linenos,tabsize=2,breaklines]{shell}
+	GAME_NAME="GameMNSNero"
+	GAME_PATH="/work/<Username>/games/$GAME_NAME"
+	module purge
+	module load nvidia/cuda/11.1.1
+	module load gcc/11.1.0
+	source /work/<Username>/anaconda3/bin/activate
+	conda activate /work/mmarplei/grudelpg649/Jannik/neroEnv
+	chmod -R 771 $GAME_PATH
+	cd /work/<Username>/neroRL  
+	srun python -m neroRL.train --config /work/<Username>/games/config/Nero.yaml --run-id Generated2B --worker-id=6780 --env=$GAME_PATH/t
+	\end{minted}
+	\caption{Änderung des ML-Agents-Skripts für die Ausführung von NeroRL.}
+	\label{prog:neroRlChanges}
+\end{listing}
+Im späteren Verlauf der PG wurde die Umstellung auf NeroRL durchgeführt. Dies bedeutet auf LIDO3 nur geringe Anpassungen, mit den Erfahrungen von ML-Agents der Aufrufprozess möglichst vereinfacht werden konnte. Eine Anleitung für die Installation steht im Github-Wiki\footnote{https://github.com/PG649-3D-RPG/neroRL/wiki} des für diese Projektgruppe genutzten Forks zur Verfügung.
+
+
 
