@@ -1,13 +1,26 @@
-\documentclass{scrbook}
-\usepackage[utf8]{inputenc}			% Zeichensatzkodierung
-\usepackage[T1]{fontenc}
+% !TeX document-id = {d7247aab-0d3b-456c-a2ca-7facee9734c0}
+% !TeX encoding = utf8
+% !TeX program = xelatex
+% !BIB program = bibtex
+%
+
+\documentclass[german,pg]{tudo-sse-thesis}
+
+% Provide your title
+\title{Entwicklung eines 3D RPG Videospiels mittels prozeduraler Inhaltsgenerieung und Deep Reinforcement Learning}
+
+% Provide your name
+\author{Jan Beier, Nils Dunker, Leonard Fricke, Niklas Haldorn, Kay Heider, \linebreak Jona Lukas Heinrichs, Mathieu Herkersdorf, Carsten Kellner, Markus Mügge, Thomas Rysch, Jannik Stadtler, Tom Voellmer}
+
+\firstexaminer{Marco Pleines}
+\secondexaminer{Nicolas Fischöder}
+\thirdexaminer{Prof. Dr. Günter Rudolph}
+
 \usepackage{amsmath}				% Mathematischer Formelsatz AMS
 \usepackage{amsfonts}
-\usepackage{amssymb}
+
 \usepackage[autostyle,german=guillemets,german=quotes]{csquotes}
 \usepackage{todonotes}
-\usepackage[english, main=ngerman]{babel}
-\usepackage[backend=biber]{biblatex}
 
 \usepackage{tikz-qtree}
 \usepackage{tikz}
@@ -19,32 +32,30 @@
 \usepackage{mathtools}
 \usepackage{gensymb}
 \usepackage{siunitx}
-\addbibresource{literature/literature.bib}
 \usepackage[german]{algorithm2e}				% Algorithmen Umgebung mit Algorithmenverzeichnis
 \renewcommand{\listalgorithmcfname}{Algorithmenverzeichnis}
 \usepackage{listings}
-\usepackage{graphicx}				% Einbinden von Bildern
 \usepackage{ulem}					% Unterstreichen von Text
-\usepackage{fancyhdr}
 \usepackage{color}					% Farben wenn es sein muß
 \usepackage{hyperref}				% Klickbare Verweise und \autoref{label}
 \usepackage{booktabs}				% "Schöne" Tabellen	
 \usepackage{minted}
-
 
 % Custom-Liste für Themenallokation
 \usepackage{enumitem}
 \newlist{thallok}{enumerate}{10}
 \setlist[thallok]{label*=\arabic*.}
 
+
 \begin{document}
 	
-	\include{chapters/Titelseite/Titelseite}
+	\maketitle
 	
-	\cleardoublepage
-	\tableofcontents			% Inhaltsverzeichnis ... nicht für kurze Dokumente!
-	\cleardoublepage
+	\pagenumbering{roman}
 
+	\tableofcontents
+	\cleardoublepage
+	
 	\pagenumbering{arabic}
 	
 	\include{chapters/01_Einleitung/01_Einleitung}
@@ -69,11 +80,12 @@
 	\cleardoublepage
 	\listofalgorithms
 	\cleardoublepage
-	%\setcounter{page}{4}
-	\cleardoublepage				
-	% \bibliographystyle{IEEEtran}	% Das Literaturverzeichnis; ieeetran verwenden, damit auch URLs angezeigt werden
-	% \bibliography{seminar-lit}
-	\printbibliography[title={Literatur}]
+
+
+	% Bibliography
+	\bibliographystyle{ACM-Reference-Format}
+	\bibliography{bibliography/references}
+	\addcontentsline{toc}{chapter}{\bibname}
 	
 	
 \end{document}
