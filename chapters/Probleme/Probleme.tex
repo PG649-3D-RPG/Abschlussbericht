@@ -1,0 +1,8 @@
+\chapter{Probleme}
+\label{Probleme}
+\section{Unity Dokumentation} % Nils
+Die meisten Projektgruppenmitglieder hatten vor der PG höchsten erste Erfahrungen mit Unity. Deshalb ist die Dokumentation von Unity eine der wichtigsten Quellen für die Umsetzung der einzelnen Teilprojekte. Die Unity-Dokumentation\footnote{\url{https://docs.unity3d.com/Manual/index.html}} ist Online frei einsehbar für die verschiedenen Versionen der Grafik-Engine.
+Dabei ist problematisch, dass insbesondere in den Teil zur Physik-Engine oder neueren Pakete ist, welche noch nicht den Vorschau-Status verlassen haben, deutliche Formulierungen fehlen. Ein Beispiel dafür ist die Hilfestellung zur Ragdoll-Stabilität. In einen Nebensatz\footnote{Zu finden auf dieser Unterseite der Dokumentation \url{https://docs.unity3d.com/Manual/RagdollStability.html}} wird erwähnt, dass ein zu großer Massenunterschied zwischen zwei direkt verbundenen Elementen zu unruhigen Ragdolls führen kann. In der Praxis bedeutet dies, dass die generierten Kreaturen bei jegliche Krafteinwirkung explodieren. Eine Fehler-findung und -behebung dieses Problems hat mehrere Wochen gedauert, da die Auswirkungen nur in sehr abgeschwächter Form beschrieben wurden.
+
+\section{Joint-Stabilität}
+Insbesondere bei den Zweibeinern hat sich das vorher beschriebene Probleme ausgewirkt. Da für das aufrechte laufen die Kreatur eine gewisse Grundstabilität erreichen muss, konnten keine Ergebnisse mit den falschen Masseneinstellung erreicht werden. 
