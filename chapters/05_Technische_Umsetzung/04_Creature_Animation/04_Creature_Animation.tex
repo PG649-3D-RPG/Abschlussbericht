@@ -148,28 +148,28 @@ Um die Qualität des Trainings mit neroRL zu steigern, werden verschiedene Optim
 Für die Trainingsdurchläufe wird das HPC-Cluster der TU-Dortmund genutzt. Zuänge hierfür wurden von unseren Projektgruppenbetreuern zur Verfügung gestellt. Um auf LiDO3 zu arbeiten wird mithilfe eines Gatewayservers auf das Cluster zugegriffen. Der Zugriff ist ausschließlich über das TU Dortmund Netzwerk möglich. Über den Gatewayserver kann ein Zugriff auf die Rechenressourcen direkt über die Shell oder über Skripte angefordert werden. Da die Shell-Methode einen dauerhaften Login erfordern würde, wird mit Skripten gearbeitet. Diese bestehen aus Konfigurationen für LiDO3 und den eigentlich Programmteil, welcher ausgeführt werden soll. LiDO3 nutzt als Jobmanager Slurm, weshalb die Skripte die Slurm-Syntax nutzen. Eine ausführliche Beschreibung die LiDO3 Konfiguration findet sich im Benutzerhandbuch\cite{lido};
 \begin{listing}
 	\begin{minted}[linenos,tabsize=2,breaklines]{shell}
-	#!/bin/bash -l
-	#SBATCH -C cgpu01
-	#SBATCH -c 20
-	#SBATCH --mem=40G
-	#SBATCH --gres=gpu:2
-	#SBATCH --partition=long
-	#SBATCH --time=48:00:00
-	#SBATCH --job-name=pg_k40
-	#SBATCH --output=/work/USER/log/log_%A.log
-	#SBATCH --signal=B:SIGQUIT@120
-	#SBATCH --mail-user=OUR_MAIL@tu-dortmund.de
-	#SBATCH --mail-type=ALL
-	#-------------------------------------
-	GAME_NAME="GAME_NAME"
-	GAME_PATH="/work/USER/games/$GAME_NAME"
-	module purge
-	module load nvidia/cuda/11.1.1
-	source /work/USER/anaconda3/bin/activate
-	conda activate /work/mmarplei/grudelpg649/k40_env
-	chmod -R 771 $GAME_PATH
-	cd $GAME_PATH
-	srun mlagents-learn /work/smnidunk/games/config/Walker.yaml --run-id=$GAME_NAME --env=t.x86_64 --num-envs=6 --no-graphics
+#!/bin/bash -l
+#SBATCH -C cgpu01
+#SBATCH -c 20
+#SBATCH --mem=40G
+#SBATCH --gres=gpu:2
+#SBATCH --partition=long
+#SBATCH --time=48:00:00
+#SBATCH --job-name=pg_k40
+#SBATCH --output=/work/USER/log/log_%A.log
+#SBATCH --signal=B:SIGQUIT@120
+#SBATCH --mail-user=OUR_MAIL@tu-dortmund.de
+#SBATCH --mail-type=ALL
+#-------------------------------------
+GAME_NAME="GAME_NAME"
+GAME_PATH="/work/USER/games/$GAME_NAME"
+module purge
+module load nvidia/cuda/11.1.1
+source /work/USER/anaconda3/bin/activate
+conda activate /work/mmarplei/grudelpg649/k40_env
+chmod -R 771 $GAME_PATH
+cd $GAME_PATH
+srun mlagents-learn /work/smnidunk/games/config/Walker.yaml --run-id=$GAME_NAME --env=t.x86_64 --num-envs=6 --no-graphics
 	\end{minted}
 	\caption{Skript zur Ausführung von ML-Agents auf LIDO3.}
 	\label{prog:lidoSkript}
@@ -182,13 +182,13 @@ Um das beschriebene Skript auszuführen, muss auf LiDO3 eine ML-Agents-Umgebung 
 
 \begin{listing}
 	\begin{minted}[linenos,tabsize=2,breaklines]{shell}
-	module purge
-	module load nvidia/cuda/11.1.1
-	source <anaconda3-path>/bin/activate
-	conda activate <env_to_install>
-	conda install torchvision torchaudio cudatoolkit=11.1 -c pytorch
-	python -m pip install mlagents==0.29.0 --force-reinstall
-	python -m pip install /work/mmarplei/grudelpg649/torch-1.10.0a0+git3c15822-cp39-cp39-linux_x86_64.whl --no-deps --force-reinstall 
+module purge
+module load nvidia/cuda/11.1.1
+source <anaconda3-path>/bin/activate
+conda activate <env_to_install>
+conda install torchvision torchaudio cudatoolkit=11.1 -c pytorch
+python -m pip install mlagents==0.29.0 --force-reinstall
+python -m pip install /work/mmarplei/grudelpg649/torch-1.10.0a0+git3c15822-cp39-cp39-linux_x86_64.whl --no-deps --force-reinstall 
 	\end{minted}
 	\caption{Installationsskript für Python und ML-Agents auf LIDO3.}
 	\label{prog:lidoUmgebung}
@@ -201,16 +201,16 @@ Problematisch ist die Installation von PyTorch, da ab Version 1.5 die Installati
 \subsubsection{NeroRL-Anpassungen}
 \begin{listing}
 	\begin{minted}[linenos,tabsize=2,breaklines]{shell}
-	GAME_NAME="GameMNSNero"
-	GAME_PATH="/work/<Username>/games/$GAME_NAME"
-	module purge
-	module load nvidia/cuda/11.1.1
-	module load gcc/11.1.0
-	source /work/<Username>/anaconda3/bin/activate
-	conda activate /work/mmarplei/grudelpg649/Jannik/neroEnv
-	chmod -R 771 $GAME_PATH
-	cd /work/<Username>/neroRL  
-	srun python -m neroRL.train --config /work/<Username>/games/config/Nero.yaml --run-id Generated2B --worker-id=6780 --env=$GAME_PATH/t
+GAME_NAME="GameMNSNero"
+GAME_PATH="/work/<Username>/games/$GAME_NAME"
+module purge
+module load nvidia/cuda/11.1.1
+module load gcc/11.1.0
+source /work/<Username>/anaconda3/bin/activate
+conda activate /work/mmarplei/grudelpg649/Jannik/neroEnv
+chmod -R 771 $GAME_PATH
+cd /work/<Username>/neroRL  
+srun python -m neroRL.train --config /work/<Username>/games/config/Nero.yaml --run-id Generated2B --worker-id=6780 --env=$GAME_PATH/t
 	\end{minted}
 	\caption{Änderung des ML-Agents-Skripts für die Ausführung von NeroRL.}
 	\label{prog:neroRlChanges}
