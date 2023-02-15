@@ -21,8 +21,8 @@
 
 \defaultfontfeatures{Ligatures=TeX}
 % Font Configuration
-%\RequirePackage{libertineRoman}
-%\RequirePackage{nimbussans}
+\RequirePackage{libertineRoman}
+\RequirePackage{nimbussans}
 
 \setsansfont{NotoSans}[
 	  Ligatures={Common,Rare},
@@ -99,14 +99,14 @@
   \PassOptionsToPackage{main=german,english}{babel}
   \DeclareOption{ba}{\renewcommand{\thesistype}{Bachelorarbeit}}
   \DeclareOption{ma}{\renewcommand{\thesistype}{Masterarbeit}}
-  \DeclareOption{pg}{\renewcommand{\thesistype}{Projektgruppenendbericht}}
+  \DeclareOption{pg}{\renewcommand{\thesistype}{Projektgruppenbericht}}
   \renewcommand{\examination}{Betreuer:}
 }
 \DeclareOption{english}{%
   \PassOptionsToPackage{main=english,german}{babel}
   \DeclareOption{ba}{\renewcommand{\thesistype}{Bachelor Thesis}}
   \DeclareOption{ma}{\renewcommand{\thesistype}{Master Thesis}}
-  \DeclareOption{pg}{\renewcommand{\thesistype}{Projektgruppenendbericht}}
+  \DeclareOption{pg}{\renewcommand{\thesistype}{Projektgruppenbericht}}
   \renewcommand{\examination}{Tutor:}
 }
 

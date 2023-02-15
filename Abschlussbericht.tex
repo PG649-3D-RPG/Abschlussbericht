@@ -2,55 +2,50 @@
 % !TeX encoding = utf8
 % !TeX TXS-program:compile = txs:///latexmk/[--shell-escape --xelatex]
 % !BIB program = bibtex
-%
 
 \documentclass[german,pg]{tudo-sse-thesis}
-
-% Provide your title
-\title{Entwicklung eines 3D RPG Videospiels mittels prozeduraler Inhaltsgenerieung und Deep Reinforcement Learning}
-
-% Provide your name
-\author{Jan Beier, Nils Dunker, Leonard Fricke, Niklas Haldorn, Kay Heider, \linebreak Jona Lukas Heinrichs, Mathieu Herkersdorf, Carsten Kellner, Markus Mügge, Thomas Rysch, Jannik Stadtler, Tom Voellmer}
-
-\firstexaminer{Marco Pleines}
-\secondexaminer{Nicolas Fischöder}
-\thirdexaminer{Prof. Dr. Günter Rudolph}
-
 \usepackage{amsmath}				% Mathematischer Formelsatz AMS
 \usepackage{amsfonts}
-
-\usepackage[autostyle,german=guillemets,german=quotes]{csquotes}
-\usepackage{todonotes}
+\usepackage{mathtools}
 
 \usepackage{tikz-qtree}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows,arrows.meta,automata,positioning,fit,calc,matrix,backgrounds}
+
+\usepackage[german]{algorithm2e}				% Algorithmen Umgebung mit Algorithmenverzeichnis
 \usepackage{algorithmic}
-\usepackage{subcaption}
 \renewcommand{\algorithmicrequire}{\textbf{Eingabe:}}
 \renewcommand{\algorithmicensure}{\textbf{Ausgabe:}}
-\usepackage{mathtools}
-\usepackage{gensymb}
-\usepackage{siunitx}
-\usepackage[german]{algorithm2e}				% Algorithmen Umgebung mit Algorithmenverzeichnis
 \renewcommand{\listalgorithmcfname}{Algorithmenverzeichnis}
-\usepackage{listings}
+
 \usepackage{ulem}					% Unterstreichen von Text
-\usepackage{color}					% Farben wenn es sein muß
 \usepackage{hyperref}				% Klickbare Verweise und \autoref{label}
 \usepackage{booktabs}				% "Schöne" Tabellen	
+\usepackage{subcaption}
+\usepackage[autostyle,german=guillemets,german=quotes]{csquotes}
+
+\usepackage{siunitx}
 \usepackage{minted}
+\usepackage{gensymb}
+\usepackage{todonotes}
 
 % Custom-Liste für Themenallokation
 \usepackage{enumitem}
 \newlist{thallok}{enumerate}{10}
 \setlist[thallok]{label*=\arabic*.}
 
+% Provide your title
+\title{Entwicklung eines 3D RPG Videospiels mittels prozeduraler Inhaltsgenerieung und Deep Reinforcement Learning}
+
+% Provide your name
+\author{Jan Beier, Nils Dunker, Leonard Fricke, Niklas Haldorn, Kay Heider, \linebreak Jona Lukas Heinrichs, Carsten Kellner, Markus Mügge, Thomas Rysch, Jannik Stadtler, Tom Voellmer}
+
+\firstexaminer{Prof. Dr. Günter Rudolph}
+\secondexaminer{Nicolas Fischöder}
+\thirdexaminer{Marco Pleines}
 
 \begin{document}
-	
 	\maketitle
-	
 	\pagenumbering{roman}
 
 	\tableofcontents
@@ -70,8 +65,7 @@
 	
 	\include{chapters/06_Vorlaeufige_Ergebnisse/06_Vorlaeufige_Ergebnisse}
 	
-	% TODO Wo soll das Probleme Chapter hin?
-	\include{chapters/Probleme/Probleme}
+	\include{chapters/Probleme/Probleme} % TODO Wo soll das Probleme Chapter hin?
 	
 	\include{chapters/07_Ausblick/07_Ausblick}
 	
