@@ -160,18 +160,12 @@
     \pagestyle{empty}
 
     \begin{textblock}{8}(1,11)
-      \small \raggedright \noindent \sffamily
-      \setlength{\columnsep}{-5.9cm}
-      \begin{multicols}{2}
-        \includegraphics[width=2cm]{example-image-a}
-        \columnbreak
-
-        Technische Universität Dortmund \\
-        Fakultät für Informatik \\
-        Informatik XI - ALGORITHM ENGINEERING \\
-        Fachgruppe Computational Intelligence \\
-        \url{https://ls11-www.cs.tu-dortmund.de/}
-      \end{multicols}
+		\small \raggedright \noindent \sffamily
+		Technische Universität Dortmund \\
+		Fakultät für Informatik \\
+		Informatik XI - ALGORITHM ENGINEERING \\
+		Fachgruppe Computational Intelligence \\
+		\url{https://ls11-www.cs.tu-dortmund.de/}
     \end{textblock}
 
     \centering\sffamily
