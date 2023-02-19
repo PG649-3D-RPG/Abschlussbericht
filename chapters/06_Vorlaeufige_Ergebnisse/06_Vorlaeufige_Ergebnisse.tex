@@ -5,26 +5,5 @@ Unterkapitel nach Erkenntnissen. Metrik nach der bewertet wird erörtern. Objekt
 
 \input{chapters/06_Vorlaeufige_Ergebnisse/01_Diskussion/01_Diskussion}
 
-
-\section{Probleme}
-Bei der Bearbeitung der gegebenen Aufgabenstellung der Projektgruppe haben einige Probleme zu starken Verzögerungen geführt, welche sich insbesondere auf die endgültige Funktionalität des Endprodukts ausgewirkt haben.
-
-\subsection{Stabilität des Skeletts}
-Das Hauptproblem bei dem maschinellen Training, um eine Kreatur zum Laufen zu bringen, lag in der Stabilität. Zum Anfang der Arbeitsphase wurde die bestehende Walker-Umgebung von Unity analysiert und auf Basis der in dieser Umgebung vorhandenen Kreatur die ersten Tests erstellt. Hierbei konnte verifiziert werden, dass die neu entwickelte Trainingsumgebung funktioniert. Als die ersten prozedural generierten Kreaturen eingesetzt wurden, kam es zu einer Vielzahl von Problemen, welche durch andere Probleme in verschiedene Bereichen verstärkt wurden.
-
-\subsubsection{Dokumentation} % Nils
-Die meisten Projektgruppenmitglieder hatten vor der PG wenig Erfahrungen mit Unity. Deshalb ist die Dokumentation von Unity eine der wichtigsten Quellen für die Umsetzung der einzelnen Teilprojekte. Die Unity-Dokumentation\footnote{\url{https://docs.unity3d.com/Manual/index.html}} ist Online frei einsehbar für die verschiedenen Versionen der Grafik-Engine. Dabei ist problematisch, dass insbesondere in den Teil zur Physik-Engine oder neueren Pakete ist, welche noch nicht den Vorschau-Status verlassen haben, deutliche Formulierungen fehlen. Ein Beispiel dafür ist die Hilfestellung zur Ragdoll-Stabilität. In einen Nebensatz\footnote{Zu finden auf dieser Unterseite der Dokumentation \url{https://docs.unity3d.com/Manual/RagdollStability.html}} wird erwähnt, dass ein zu großer Massenunterschied zwischen zwei direkt verbundenen Elementen zu unruhigen Ragdolls führen kann. In der Praxis bedeutet dies, dass die generierten Kreaturen bei jegliche Krafteinwirkung explodieren. Eine Fehler-findung und -behebung dieses Problems hat mehrere Wochen gedauert, da die Auswirkungen nur in sehr abgeschwächter Form beschrieben wurden.
-
-%Ein weiteres Beispiel für eine problematische Dokumentation ist das Vorschaupaket\footnote{Eine Dokumentation ist hier zu finden \url{https://docs.unity3d.com/Packages/com.unity.ai.navigation@1.0/manual/NavMeshSurface.html}. Es sei anzumerken, dass das Paket in der finalen Version besser dokumentiert wurde.} für die Generierung von NavMeshes zur Laufzeit.
-
-\subsubsection{Organisatorische Probleme}
-Ein weiterer Teilbereich, der zu Verzögerung in den Arbeitsablauf der Animatorenteilgruppe geführt hat, ist organisatorischen Problemen zu zuschrieben. Einige der größten Hindernisse sind die starke Abhängigkeit von den Generatoren, veralte Rechenhardware und fehlender Vorkenntnisse.
-
-Das erste Problem kann wie folgt beschrieben werden. Immer wenn die Änderung an der Kreatur nötig waren, musste das für die Generierung verantwortliche Paket angepasst werden. Inklusive der Kommunikation und der dafür benötigten Arbeitszeit dauerte dies ungefähr eine Woche. In diesen Phasen konnte das Training häufig nicht fortgesetzt werden, da die Kreaturen zu große Fehler hatten. 
-
-Verstärkt wurde dies durch das zweite Problem. Da LIDO von der ganzen Universität genutzt wird, kann es einige Stunden bis Tage dauern, bis eine Aufgabe abgearbeitet wird. Inklusive der Berechnungszeit des Auftrags konnten so 2 aufeinanderfolgende Experimente gestartet werden je Woche. Da insbesondere in der Mitte der Projektgruppe die Fehler nicht bekannt waren, dauerte das Finden dieser dadurch besonders lange. 
-
-Zuletzt fehlten insbesondere bei dem maschinellen Lernen viele Vorkenntnisse. Das zu Beginn der PG gehaltene Seminar beschäftigte sich mit den eigentlich genutzten Algorithmen, hat aber keine Übersicht über die Forschung im Bereich des physikalischen Laufens gegeben. Hier wurde später \cite{Geijtenbeek2012} genutzt, welches aufgrund des Erscheinungsjahrs kein Überblick für Netzwerkbasierte-Lernmethoden gibt. Eine Einschätzung von weiteren Papieren war dadurch erschwert. Weiterhin beziehen sich viele Arbeiten auf andere Physikumgebgungen, nutzen Imitation zum Lernen oder nutzen explizite Designcharakteristiken der Kreaturen aus\cite{Mourot2022}.
-
-Die Probleme insgesamt führten häufig zu Arbeitsphasen in den die Animatorengruppe keine neuen Ergebnisse produzieren konnte oder breit nach Fehlern gesucht werden musste, was viel Rechenzeit kostet.
+\input{chapters/06_Vorlaeufige_Ergebnisse/probleme/probleme}
 
