@@ -23,6 +23,7 @@
 % Font Configuration
 \RequirePackage{libertineRoman}
 \RequirePackage{nimbussans}
+\RequirePackage{lmodern}
 
 \setsansfont{NotoSans}[
 	  Ligatures={Common,Rare},
