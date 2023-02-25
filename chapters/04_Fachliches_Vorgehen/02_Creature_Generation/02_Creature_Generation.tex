@@ -27,14 +27,15 @@ Die glaubwürdigkeit und Variation der Kreaturen ist dadurch also auch stark von
 \input{chapters/04_Fachliches_Vorgehen/02_Creature_Generation/02_skeletonfromlsystem.tex}
 
 
-\subsection{Metaballs}
-Zur Generierung der Geometrie der Kreatur verwenden wir, angelehnt an den Ansatz von Madis Janno \cite{Janno20182dCG} (siehe \ref{}), eine modifizierte Form von Metaballs. Wie auch bei Janno lässt sich unsere Methode mit beliebigen Metaball-Funktionen durchführen. Aufgrund der guten Ergebnisse haben wir uns jedoch vorerst auf die gleiche, zuerst von Ken Perlin beschriebene, Falloff-Funktion festgelegt.
-\[f_i(x,y,z) = exp(B_i - \frac{B_ir_i^2}{R_i^2} - B_i)\]
-Für Metaball $i$ ist $r_i$ der Abstand des Punktes $(x,y,z)^T$ zu dessen Zentrum, also: \[r_i=||(x,y,z)^T-(x_i,y_i,z_i)^T||_2=\sqrt{(x-x_i)^2+(y-y_i)^2+(z-z_i)^2}\]
-$R_i$ ist der Radius von Metaball $i$ und $B_i$ ein Parameter zur Einstellung der "Blobbiness". Wir verwenden Werte mit $B_i < 0.5$. \\
+\subsection{Mesh-Generierung}
+\subsubsection{Metaball}
+Zur Generierung der Geometrie der Kreatur verwenden wir, angelehnt an den Ansatz von Madis Janno \cite{Janno20182dCG} (siehe Abschnitt \ref{sec:metaball}), eine modifizierte Form von Metaballs. Dabei werden genau so viele Bälle entlang eines Generierten Segments platziert wie benötigt werden um zu garantierten, dass dadurch in jedem Fall ein zusammenhängendes Mesh entsteht. Tatsächlich ist jedoch der Einfluss nahegelegener Kugeln aufeinander so groß, dass dadurch nicht nur die minimale Berührung der einzelnen Kugeln entsteht, sondern diese glatt ineinander übergehen. Wie auch bei Janno lässt sich unsere Methode mit beliebigen Metaball-Funktionen durchführen. Aufgrund der guten Ergebnisse haben wir uns jedoch vorerst auf die gleiche, zuerst von Ken Perlin beschriebene, Falloff-Funktion festgelegt.
+\[f_i(\vec{x}) = exp(B_i - \frac{B_ir_i^2(\vec(x))}{R_i^2})\]
+Für Metaball $i$ ist $R_i$ dessen Radius, $B_i$ ein Parameter zur Einstellung der "Blobbiness", welcher beeinflusst wie sehr sich Metaballs miteinander verbinden. Wir verwenden den Wert $B_i = 0.5$. $r_i(vec{x})$ ist der Abstand des Punktes $\vec{x}$ zum Zentrum $c_i$ von Metaball $i$, also: \[r_i(\vec{x})=||\vec{x}-\vec{c_i}||=\sqrt{(x_x-c_{ix})^2+(x_y-c_{iy})^2+(x_z-c_{iz})^2}\]
+
 Die generierten Kreaturen bestehen aus mehreren Segmenten (Knochen) mit jeweils einem Start- und Endpunkt sowie einer Dicke, die als Radius der darauf platzierten Metaballs verwendet werden kann. Entlang dieser Segmente soll dann das Mesh erzeugt werden. Die von Janno beschriebene Methode berechnet dafür, abhängig von der gewählten Falloff-Funktion, die minimale Anzahl an Metabällen für ein Segment und platziert diese gleichmäßig entlang dessen. Das Problem, welches sich daraus bei unseren Experimenten ergeben hat, liegt darin, dass mit höherer Komplexität der Kreaturen und einer damit einhergehenden steigenden Anzahl an Segmenten, der Einfluss von benachbarten Segmenten nicht gut kontrollieren lässt und diese teilweise ineinander verschmelzen. \\
 
-Unser Ansatz um dieses Problem zu umgehen ist es, die Anzahl der einzelnen Metabälle drastisch zu reduzieren. Anstatt einer beliebig großen Zahl an Bällen entlang jedes Segments, erzeugen wir jeweils nur einen einzigen. Dazu ersetzen wir die Bälle durch Kapseln, also Zylinder mit jeweils durch eine Halbkugel abgerundeten Enden. Möglich macht uns dies eine Modifikation der Falloff-Funktion, beziehungsweise der darin verwendeten Distanz. Wir berechnen hierbei nicht den Abstand zum Zentrum einer Kugel, sondern zu der Verbindungslinie zwischen Start- und Endpunkt. \\
+Unser Ansatz um dieses Problem zu umgehen ist es, die Anzahl der einzelnen Metabälle drastisch zu reduzieren. Anstatt einer beliebig großen Zahl an Bällen entlang jedes Segments, erzeugen wir jeweils nur einen einzigen Körper. Dazu ersetzen wir die Bälle durch Kapseln, also Zylinder mit jeweils durch eine Halbkugel abgerundeten Enden, weshalb wir diese auch als "Metakaspeln" bezeichnen. Möglich macht uns dies eine Modifikation der Falloff-Funktion, beziehungsweise der darin verwendeten Distanz. Wir berechnen hierbei nicht den Abstand zum Zentrum einer Kugel, sondern zu der Verbindungslinie zwischen Start- und Endpunkt. \\
 
 \begin{figure}[ht]
 \centering
@@ -43,9 +44,10 @@ Unser Ansatz um dieses Problem zu umgehen ist es, die Anzahl der einzelnen Metab
 \label{metacapsule}
 \end{figure}
 
+Um diese Form zu erzeugen muss lediglich die Funktion $r(\vec{x})$ zur Berechnung des Abstandes angepasst werden.
 Sei $s$ der Startpunkt, $e$ der Endpunkt, $a$ der Vektor $e-s$, $p$ ein Punkt, dessen Abstand berechnet werden soll, $u=p-s$ und $v=p-e$ (Siehe Abbildung \ref{metacapsule}). Die Distanz lässt sich dann folgendermaßen bestimmen:
 \[
-    r= 
+    r(\vec{x)= 
 \begin{cases}
     ||p-s||,& \text{falls } a\cdot u < 0\\
     ||p-e||,& \text{falls } a\cdot v > 0\\
@@ -55,11 +57,10 @@ Sei $s$ der Startpunkt, $e$ der Endpunkt, $a$ der Vektor $e-s$, $p$ ein Punkt, d
 
 Es werden drei Fälle unterschieden. Liegt der Punkt $p$ im Falle von Abbildung \ref{metacapsule} links von $s$, beziehungsweise rechts von $e$, ist Die Distanz von $p$ zum Segment einfach der euklidische Abstand zum jeweiligen Punkt. Ob dies der Fall ist, lässt sich mit Hilfe der Skalarprodukte $a\cdot u$ beziehungsweise $a\cdot v$ überprüfen. Ansonsten berechnet man die Distanz von Punkt p zur Geraden, die durch $s$ und $e$ verläuft.\\
 
-Da dies nur eine Erweiterung der Metaball-Funktion ist, lassen sich diese Kapseln weiterhin mit anderen Metabällen kombinieren. So können auch Körperteile erstellt werden, die nicht aus solchen Segmenten bestehen, oder Details aus kleineren Metabällen entland der Segmente platziert werden.
+Da dies nur eine Erweiterung der Metaball-Funktion ist, lassen sich diese Kapseln weiterhin mit anderen Metabällen kombinieren. So können auch Körperteile erstellt werden, die nicht aus solchen Segmenten bestehen, oder Details aus kleineren Metabällen entland der Segmente platziert werden. Grundsätzlich lassen sich auf diese Weise beliebig geformte Objekte, die mit einer solchen Funktion definiert werden, einbinden.
+Da die Kapsel nur zylindrisch geformte Segmente darstellen lässt, die in alle Richtungen den gleichen Radius besitzen, haben wir eine weitere Modifikation vorgenommen, die es erlaubt die Metakapsel entlang der ventralen oder lateralen Achse zu strecken beziehungsweise zu stauchen. Dadurch ist es uns möglich Körperteile mit unterschiedlichen Abmessungen entlang der verschiedenen Achsen darzustellen und dennoch unnatürlich wirkende Formen wie beispielsweise einen Quader zu vermeiden.
+Dazu bestimmen wir bei der Berechnung von $r(\vec{x})$ zunächst den Vektor, der die kürzeste Verbindung von $\vec{x}$ und dem Segment darstellt, anstatt direkt dessen Länge auszuwerten. Diesen Vektor skalieren wir anschließend entlang der gewünschten Achse. Die Länge des skalierten Vektors ist dann die neue Distanz.
 
-
-
-\subsection{Mesh Generation}
 
 \subsubsection{Marching Cubes}
 TODO: wollen wir hier noch etwas genauer drauf eingehen, oder reicht der Teil von Jona???
