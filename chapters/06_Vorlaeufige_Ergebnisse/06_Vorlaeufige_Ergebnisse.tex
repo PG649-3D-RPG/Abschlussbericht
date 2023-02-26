@@ -15,9 +15,13 @@ Die Evaluation wird aufgrund der limitierten Rechenressourcen auf jeweils eine V
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.5\linewidth]{example-image-a}
-    \caption{2B Parameter}\label{fig:2B_creature_settings}
+    \includegraphics[width=0.5\linewidth]{resources/img/2bSettings}
+    \caption{2B Parameter}
+    \label{fig:2B_creature_settings}
 \end{figure}
+
+\paragraph{Zweibeiner-Einstellungen}
+Da die Zweibeinerkreatuen am meisten Probleme bei der Stabilität haben, gab es keine genauen Erfahrungen zum Aufbau der Kreatur. Durch den symmetrischen Generierungsprozess und Vorüberlegungen der Kreaturen-Ersteller sollten möglichst alle generierbaren Zweibeiner im Gleichgewicht sein. Der Einstellungsprozess für die Beispielfigur reduziert sich daher auf das Reduzieren der Größe. Hierfür wurden Menschen im Raum als Vorlage genutzt, um Möglichst die Proportionen in dem Generator nachzuahmen. Die daraus resultierende Figur bestätigte sich in mehreren Vortest und wurde deshalb auch für die finale Abgabe verwendet
 
 \subsection{Konfiguration der Trainingsdurchläufe}
 Die Erfahrung während der Entwicklungsphase der Projektgruppe hat gezeigt, dass die verwendete PPO Implementierung weitestgehend robust gegenüber der verwendeten Hyperparameter ist, solange eine ausreichend große Batchgröße verwendet wird. Aufgrund der limitierten Rechenressourcen wurde deswegen auf eine Hyperparameteroptimierung verzichtet. Abbildung \ref{fig:evaluation_config} zeigt die für die Evaluation verwendete neroRL Konfigurationsdatei. 
