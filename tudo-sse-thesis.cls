@@ -1,6 +1,6 @@
 \ProvidesClass{tudo-sse-thesis}[2021/10/05 v1.0 TU Dortmund Secure Software Engineering Group Thesis Template]
 \NeedsTeXFormat{LaTeX2e}
-\LoadClass[titlepage=firstiscover,parskip ]{scrbook}
+\LoadClass[titlepage=firstiscover,parskip=half  ]{scrbook}
 
 % Force XeLaTeX
 \RequirePackage{ifxetex}
