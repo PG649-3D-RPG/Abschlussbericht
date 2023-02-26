@@ -37,6 +37,23 @@ In diesem Abschnitt werden die Ergebnisse der Trainingsdurchläufe für die Vier
 \subsection{Vierbeiner Kreatur}
 
 \subsubsection{Laufen}
+Die Entwicklung des Rewards beim Trainieren des Laufens der Vierbeiner Kreatur ist in Abbildung \ref{fig:Walking4B_Reward} abgebildet. Der Reward steigt in den ersten 1000 Updates deutlich an und erreicht ein Maximum von 14000. Danach fällt der Reward langsam ab auf ca. 7000-1000, ein Policy Collapse tritt nicht ein. 
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{resources/img/results/Walking4B_Reward.png}
+    \caption{Walking 4B Reward}\label{fig:Walking4B_Reward}
+\end{figure}
+
+Die Episodenlänge der Vierbeiner beim Laufen ist unbeschränkt, eine Episode wird beendet, wenn die Kreatur mit einem Körperteil außer den Füßen den Boden berührt. Da alle 5 Physik-Aktualisierungen der Unity Umgebung eine Aktion des Agenten angefordert wird und die Unity Umgebung mit 120 Aktualisierungen pro Sekunde ausgeführt wird, entspricht eine Länge von 1000 ca. 41.5 Sekunden. Abbildung \ref{fig:Walking4B_Length} zeigt die Entwicklung der Episodenlänge während der Trainingsdurchläufe. Analog zum Reward steigt die durchschnittliche Episodenlänge in den ersten 1000 Updates deutlich an und stagniert danach bzw. fällt langsam ab. Das Maximum wird mit einer Episodenlänge von ca. 6000, umgerechnet ca. 4 Minuten und 9 Sekunden, erreicht.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{resources/img/results/Walking4B_Length.png}
+    \caption{Walking 4B Length}\label{fig:Walking4B_Length}
+\end{figure}
+
+Die Visuelle Evaluation in Unity zeigt, dass die Vierbeiner Kreatur mit beliebigen Policies ab ca. 500 Updates weitestgehend stabil läuft. Instabilität tritt insbesondere dann auf, wenn die Kreatur mit hoher Geschwindigkeit einen Wegpunkt erreicht und eine große Drehung in Richtung des nächsten Wegpunkts durchführen muss. 
 
 \subsubsection{Aufstehen}
 Abbildung \ref{fig:Standup4B_Reward} zeigt die Entwicklung des Rewards während der Updates des Trainingsdurchlaufs. Der Reward steigt in den ersten 250 Updates deutlich von 0 auf ca. 1700. Das Training stagniert für mehrere hundert Updates bei ca. 1700, bevor ein Performance Collapse eintritt, von dem sich die Policy nicht erneut erholt.
