@@ -1,6 +1,6 @@
 \ProvidesClass{tudo-sse-thesis}[2021/10/05 v1.0 TU Dortmund Secure Software Engineering Group Thesis Template]
 \NeedsTeXFormat{LaTeX2e}
-\LoadClass[titlepage=firstiscover]{scrbook}
+\LoadClass[titlepage=firstiscover,parskip ]{scrbook}
 
 % Force XeLaTeX
 \RequirePackage{ifxetex}
@@ -21,38 +21,10 @@
 
 \defaultfontfeatures{Ligatures=TeX}
 % Font Configuration
-\RequirePackage{libertineRoman}
-\RequirePackage{nimbussans}
+
 \RequirePackage{lmodern}
 
-\setsansfont{NotoSans}[
-	  Ligatures={Common,Rare},
-		Path=./fonts/NotoSans/,
-		Scale=0.9,
-		Extension = .ttf,
-		UprightFont=*-Regular,
-		BoldFont=*-Bold,
-		ItalicFont=*-Italic,
-		BoldItalicFont=*-BoldItalic]
-
-\setmonofont{Inconsolata}[
-				Path=./fonts/Inconsolata/,
-				Scale=0.9,
-				Extension = .ttf,
-				UprightFont=*-Regular,
-				BoldFont=*-Bold]
-
-\setmainfont{LinLibertine}%
-   [Ligatures={Common,Rare}, Numbers=OldStyle,
-	 Path=./fonts/LinLibertine/,
-	 Scale=0.9,
-	 Extension = .otf,
-	 UprightFont=*_R,
-	 BoldFont=*_RB,
-	 ItalicFont=*_RI,
-	 BoldItalicFont=*_RBI]
-
-\RequirePackage[libertine]{newtxmath}
+\RequirePackage{newtxmath}
 
 \setkomafont{pagehead}{\sffamily}
 \setkomafont{pagenumber}{\sffamily}
