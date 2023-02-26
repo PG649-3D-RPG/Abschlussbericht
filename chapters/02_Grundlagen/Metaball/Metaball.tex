@@ -1,0 +1,21 @@
+\section{Metaball} \label{sec:metaball}
+Ein Ansatz zur Erzeugung von visuell ansprechender, natürlich wirkender Geometrie ist der Metaball \cite{metaballArticle}.
+Die grundlegende Idee dahinter ist es mehrere Kugeln im Raum zu platzieren und diese ineinander "verschmelzen" zu lassen, sodass sich daraus ein größeres Objekt ergibt (siehe \ref{fig:2dMetaball}).
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{chapters/02_Grundlagen/Metaball/metaball_2d}
+    \caption{2D Beispiel eines Metaballs bestehend aus drei Kugeln}\label{fig:2dMetaballl}
+\end{figure}
+
+Der Metaball $M$, bestehend aus $n$ Kugeln, ist durch eine Funktion gegeben, die jedem Punkt $\vec{x}$ im Raum einen Wert zuordnet.
+\[M(\vec{x})=\sum_{i=0}^{n}f_i(\vec{x})\]
+Diese setzt sich aus den Funktionen jeder der $n$ Kugeln zusammen. Für eine einzelne Kugel lässt sich dieser Wert als Abstand zu deren Zentrum interpretieren. \\
+Zusätzlich benötigt man einen Schwellenwert (typischerweise ist dieser 1), der beschreibt, welcher Wert für $M$ den Übergang zwischen innerhalb und außerhalb des Metaballs festlegt.
+Ist $M<Schwellenwert$ liegt der Punkt außerhalb des Metaballs, ist $M>Schwellenwert$ liegt er innerhalb. $M=Schwellenwert$ beschreibt somit die Oberfläche des Körpers.\\
+
+Eine mögliche Metaball-Funktion $f_i$ ist
+\[f_i(\vec{x}) = \frac{1}{||\vec{c_i}-\vec{x}||} = \frac{1}{r_i(\vec{x})}\]
+Wobei $\vec{c_i}$ das Zentrum von Kugel $i$ beschreibt und $r_i$ den Abstand zwischen $\vec{x}$ und $\vec{c_i}$.
+
+Um aus dieser Funktion ein diskretes Mesh zu erzeugen, lässt sich der Raum mit Hilfe des Marching-Cubes-Algorithmus Abtasten um die Oberfläche zu bestimmen.
