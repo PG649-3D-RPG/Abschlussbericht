@@ -22,13 +22,13 @@ Die glaubwürdigkeit und Variation der Kreaturen ist dadurch also auch stark von
 
 
 
-\subsection{L-System Creature}
+\subsection{L-System Creature}\label{L_System}
 \input{chapters/04_Fachliches_Vorgehen/02_Creature_Generation/L_System_Creature/L_System_Basics.tex}
 \input{chapters/04_Fachliches_Vorgehen/02_Creature_Generation/02_skeletonfromlsystem.tex}
 
 
 \subsection{Mesh-Generierung}
-\subsubsection{Metaball}
+\subsubsection{Metaball}\label{Metaball_Gen}
 Zur Generierung der Geometrie der Kreatur verwenden wir, angelehnt an den Ansatz von Madis Janno \cite{Janno20182dCG} (siehe Abschnitt \ref{sec:metaball}), eine modifizierte Form von Metaballs. Dabei werden genau so viele Bälle entlang eines Generierten Segments platziert wie benötigt werden um zu garantierten, dass dadurch in jedem Fall ein zusammenhängendes Mesh entsteht. Tatsächlich ist jedoch der Einfluss nahegelegener Kugeln aufeinander so groß, dass dadurch nicht nur die minimale Berührung der einzelnen Kugeln entsteht, sondern diese glatt ineinander übergehen. Wie auch bei Janno lässt sich unsere Methode mit beliebigen Metaball-Funktionen durchführen. Aufgrund der guten Ergebnisse haben wir uns jedoch vorerst auf die gleiche, zuerst von Ken Perlin beschriebene, Falloff-Funktion festgelegt.
 \[f_i(\vec{x}) = exp(B_i - \frac{B_ir_i^2(\vec(x))}{R_i^2})\]
 Für Metaball $i$ ist $R_i$ dessen Radius, $B_i$ ein Parameter zur Einstellung der "Blobbiness", welcher beeinflusst wie sehr sich Metaballs miteinander verbinden. Wir verwenden den Wert $B_i = 0.5$. $r_i(vec{x})$ ist der Abstand des Punktes $\vec{x}$ zum Zentrum $c_i$ von Metaball $i$, also: \[r_i(\vec{x})=||\vec{x}-\vec{c_i}||=\sqrt{(x_x-c_{ix})^2+(x_y-c_{iy})^2+(x_z-c_{iz})^2}\]
@@ -62,7 +62,7 @@ Da die Kapsel nur zylindrisch geformte Segmente darstellen lässt, die in alle R
 Dazu bestimmen wir bei der Berechnung von $r(\vec{x})$ zunächst den Vektor, der die kürzeste Verbindung von $\vec{x}$ und dem Segment darstellt, anstatt direkt dessen Länge auszuwerten. Diesen Vektor skalieren wir anschließend entlang der gewünschten Achse. Die Länge des skalierten Vektors ist dann die neue Distanz.
 
 
-\subsubsection{Marching Cubes}
+\subsubsection{Marching Cubes}\label{Marching_Cubes}
 TODO: wollen wir hier noch etwas genauer drauf eingehen, oder reicht der Teil von Jona???
 
 \subsubsection{Mesh Indexing}
