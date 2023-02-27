@@ -69,9 +69,13 @@ TODO: wollen wir hier noch etwas genauer drauf eingehen, oder reicht der Teil vo
 Zur weitere Verarbeitung des Meshes beim automatischen Rigging, ist es wichtig, dass das Mesh korrekt indiziert ist, sodass keine doppelten Vertices existieren. Außerdem können so die ausgehenden Kanten der Vertices bestimmt werden, welche ebenfalls später für das automatische Rigging benötigt werden. Während dem Marching Cubes Algorithmus werden die entstehende Dreiecke in eine gesonderte Datenstruktur hinzugefügt, welche für jeden Vertex prüft, ob dieser bereits im Vertex-Buffer existiert. Falls ja, wird kein neuer Vertex eingefügt, sondern das Dreieck referenziert den Vertex über den Index-Buffer. Neue Vertices werden dem Vertex-Buffer hinzugefügt und das entsprechende Dreieck referenziert den neuen Vertex. Die Anzahl der Vertices wird dadurch außerdem signifikant verringert, was Performance-Vorteile beim Rendering und bei der Weiterverarbeitung des Meshes ermöglicht.
 
 \subsubsection{Delaunay Triangulation}
-In der Entwicklung des automatischen Riggings des Modells wurde festgestellt, dass die Triangulierung, die durch Marching Cubes entsteht nicht geeignet ist, um mit der Bone-Heat Methode die Vertex-Gewichte zu berechnen. Für die Lösung des Matrix-Systems der Bone-Heat Methode ist es wichtig, dass die Triangulierung die Delaunay-Bedingung erfüllt.
+In der Entwicklung des automatischen Riggings des Modells wurde festgestellt, dass die Triangulierung des Meshes, welches durch Marching Cubes entsteht nicht numerisch stabil genug ist, um mit der Bone-Heat Methode die Vertex-Gewichte zu berechnen. Für die Lösung des Matrix-Systems der Bone-Heat Methode ist es wichtig, dass die Triangulierung die Delaunay-Bedingung erfüllt~\cite{laplace_beltrami_paper}.
 
-TODO: Delaunay Edge-flipping Algorthmus erklären
+Eine Delaunay-Triangulierung maximiert das Minimum von allen Winkeln in der Triangulierung~\cite{delaunay}. Diese Triangulierung vermeidet Dreiecke die extrem lang und dünn sind. Eine Triangulierung erfüllt die Delaunay-Bedingung genau dann wenn der Umkreis jedes Dreiecks leer ist.
+
+Die Triangulierung, die bereits durch den Marching Cubes Algorithmus entstanden ist, kann durch die `Edge-Flipping' Technik in eine Delaunay Triangulierung transformiert werden~\cite{delaunay}. Dazu iteriert der Algorithmus durch alle Kanten des Meshes und prüft für die beiden anliegenden Dreiecke der Kante, ob die gegenüberliegenden Winkel $\alpha$ und $\beta$ kleiner oder gleich $180\degree$ sind. Die Bedingung $\alpha+\beta \leq 180\degree$ ist equivalent zu der Delaunay-Bedingung der beiden Dreicke. Wenn die Delaunay-Bedingung nicht erfüllt ist, können die Dreiecke durch eine `flip' Operation korrigiert werden. Dabei die gemeinsame Kante $BD$ der Dreiecke $\triangle ABD$ and $\triangle BCD$ in eine Kante $AC$ mit Dreiecken $\triangle ABC$ and $\triangle ACD$ geändert. Für das gesamte Mesh kann einfach so lange die `flip' Operation ausgeführt werden, bis alle Dreiecke delaunay sind.
+
+Die `edge-flip' Operation ist auf der Mesh-Datenstruktur, welche in 3D-Engines wie Unity verwendet wird relativ aufwendig, da diese keine Möglichkeit bietet, um die Dreiecke einer Kante zu finden. In diesem Projekt wurde daher die Polygon Mesh Processing Bibliothek (PMP)~\cite{pmp-library} verwendet. Diese enthält bereits viele Methoden um 3D-Meshes auf komplexe Weise zu modifizieren. Insbesondere wird eine optimierte Datenstruktur für das Mesh genutzt, welche es erlaubt schnell über alle Kanten zu iterieren und diese ohne großen Aufwand zu flippen.
 
 \subsection{Automatisches Rigging}
 Um die Bone-Struktur des generierten Skelettes mit dem Mesh zu verknüpfen, muss bei der 3D-Modellierung der Prozess des Riggings durchlaufen werden. Dieser beschreibt wie sich jeder einzelne Vertex des Meshes mit den Bones in der Szene bewegt. Jeder Vertex kann an beliebig vielen Bones angehängt werden. Durch eine Gewichtung wird bestimmt wie sehr ein Vertex durch der Transformation eines Bones mitbewegt wird.
@@ -86,7 +90,7 @@ Für ein erfolgreiches Rigging ist es wichtig, dass das Skelett bereits sinnvoll
 	\label{fig:skeleton_embedding}
 \end{figure}
 
-Während der Entwickelung wurde zunächst eine triviale Methode als Zwischenlösung verwendet. Dabei wurden alle Vertices nur an den Bone mit der geringsten Distanz angehängt. Diese Methode ist jedoch visuell unbrauchbar, da bei Bewegung des Skeletts an den Gelenken zwischen den Bones Löcher und verschiedene andere Artefakte entstehen. Es wird also eine Lösung benötigt, die es ermöglicht Vertices an mehrere Bones anzuhängen und die Gewichte so bestimmt, dass das Mesh an den Übergängen zwischen den Bones möglichst natürlich deformiert wird.
+Während der Entwickelung wurde zunächst eine triviale Methode als Zwischenlösung verwendet. Dabei wurden alle Vertices nur an den Bone mit der geringsten Distanz angehängt. Diese Methode ist jedoch visuell nicht brauchbar, da bei Bewegung des Skeletts an den Gelenken zwischen den Bones Löcher und verschiedene andere Artefakte entstehen. Es wird also eine Lösung benötigt, die es ermöglicht Vertices an mehrere Bones anzuhängen und die Gewichte so bestimmt, dass das Mesh an den Übergängen zwischen den Bones möglichst natürlich deformiert wird.
 
 \subsubsection{Bone-Heat Methode}
 Ein bereits bekannter Algorithmus zur automatisch Gewichtsberechnung und Verknüpfung des Meshes ist die Bone-Heat Methode~\cite{bone_heat_paper}. Dieser berücksichtig mehrere zusätzliche Eigenschaften für die Gewichte. Zuerst sollen die Gewichte unabhängig von der Auflösung des Meshes sein. Außerdem müssen die Gewichte sich sanft über den Verlauf der Oberfläche verändern. Die Breite des Übergangs zwischen zwei Bones sollte ungefähr proportional zu der Distanz des Gelenks zur Oberfläche des Meshes sein.
@@ -99,7 +103,7 @@ Ein Algorithmus, welcher die Gewichte alleine aus der Distanz der Bones zu den V
 	\label{fig:bone_heat_equilibrium}
 \end{figure}
 
-Das Temperatur-Gleichgewicht des Volumens zu berechnen wäre sehr aufwändig und langsam, deswegen wird das Gleichgewicht nur über die Oberfläche des Meshes berechnet. Die Gewichte für Bone $i$ werden berechnet durch:
+Das Temperatur-Gleichgewicht des Volumens zu berechnen wäre sehr aufwändig und langsam, deswegen wird das Gleichgewicht nur über die Oberfläche des Meshes berechnet~\cite[S.~6]{bone_heat_paper}. Die Gewichte für Bone $i$ werden berechnet durch:
 
 \begin{equation}
     \label{eq:bone_heat}
@@ -112,7 +116,7 @@ Das Temperatur-Gleichgewicht des Volumens zu berechnen wäre sehr aufwändig und
 
 Dabei ist $\Delta$ der diskrete Laplace-Beltrami Operator auf der Oberfläche des Meshes, welcher mit der Kotangens-Methode approximiert wird~\cite{laplace_beltrami_paper}. $\mathbf{p}^i$ ist ein Vektor mit $p^i_j=1$ wenn der nächste Bone zum Vertex $j$ der Bone $i$ ist. Sonst ist $p^i_j=0$. $\mathbf{H}$ ist eine Diagonalmatrix wobei $H_{jj}$ die Hitze des nächsten Bones von Vertex $j$ ist. Sei $d(j)$ die Distanz zum nächsten Bone von Vertex $j$, dann wird $H_{jj}=c/d(j)^2$ gesetzt. Allerdings nur wenn das Geradensegment von dem Vertex zu dem Bone vollständig in dem Volumen des Modells enthalten ist. Wenn der Bone von dem Vertex aus also nicht sichtbar ist, wird $H_{jj}=0$ gesetzt. Dies verhindert, dass beispielsweise Vertices am Arm and den Torso angehängt werden. Wenn mehrere Bones nahezu die gleiche Distanz zu dem Vertex haben und sichtbar sind, werden ihre Anteile an der Temperaturverteilung gleich berücksichtigt. $p_j$ wird dann $1/k$ und $H_{jj} = kc/d(j)^2$
 
-Der benötigte Sichtbarkeits-Test wird durch ein Signed-Distance-Field (SDF) realisiert, welches wir vorab mit einem Geometry-Shader generieren. Damit werden effiziente Raycast-Operationen in dem Mesh möglich. (TODO: passendes Zitat finden)
+Der benötigte Sichtbarkeits-Test für die Vertices wurde in diesem Projekt durch ein Signed-Distance-Field (SDF) realisiert, welches wir vorab mit einem Geometry-Shader generieren~\cite{signed_distance_field}. Damit werden effiziente Raycast-Operationen in dem Mesh möglich.
 Der Parameter $c$ wird in dem Paper~\cite{bone_heat_paper} auf $1$ gesetzt, um natürlichere Ergebnisse zu erreichen. Für $c\approx0.22$ würde der Algorithmus Gewichte berechnen die ähnlicher zu dem Temperatur-Gleichgewicht über dem tatsächlichen Volumen des Meshes sind.
 
 \subsubsection{Lösen des Laplace-Beltrami Systems}
@@ -146,8 +150,6 @@ Aus den Kotangens-Gewichten aus Gleichung~\ref{eq:cotangent_weight} kann nun in 
     \end{cases}
 \end{equation}
 
-Da die Matrix $\textbf{H}$ eine Diagonalmatrix ist und der Operator $\Delta$ eines Vertex durch seine direkten Nachbarn lokal definiert ist, ist die zu lösende Matrix extrem dünn besetzt. Durch die Euler-Charakteristik für Dreiecks-Netze ergeben sich nur ungefähr $7$ Einträge in der Matrix pro Reihe~\cite{spd_solver_paper}. Ein solches System lässt sich, wie in~\cite{spd_solver_paper} gezeigt, sehr effizient lösen, wenn es sich um eine SPD-Matrix (symetrisch positiv definit) handelt. Die Matrix ist durch die Konstruktion symetrisch. 
+Da die Matrix $\textbf{H}$ eine Diagonalmatrix ist und der Operator $\Delta$ eines Vertex durch seine direkten Nachbarn lokal definiert ist, ist die zu lösende Matrix extrem dünn besetzt. Durch die Euler-Charakteristik für Dreiecks-Netze ergeben sich nur ungefähr $7$ Einträge in der Matrix pro Reihe~\cite{spd_solver_paper}. Ein solches System lässt sich, wie in~\cite{spd_solver_paper} gezeigt, sehr effizient lösen, wenn es sich um eine SPD-Matrix (symetrisch positiv definit) handelt. Die Matrix ist durch die Konstruktion in Gleichung~\ref{eq:laplace_beltrami} symetrisch. Für die Lösung dieses Systems wurde in diesem Projekt die Bibliothek Eigen~\cite{eigen} verwendet, welche zahlreiche Methoden zur Matrix-Berechnung bereitstellt. Es wurde der Matrix-Solver \texttt{SparseLU} verwendet, welcher auf dünn besetzte SPD-Matrizen spezialisiert ist.
 
-TODO: Delaunay Bedingung erklären und Verbindung zu Definitheit erklären
-
-TODO: Berechnung und Normalisierung der finale Vertex-Gewichte
+Durch die Lösung des Systems für jeden Bone $i$ erhalten wir einen Vektor $\textbf{w}^i$ aus Gleichung~\ref{eq:bone_heat}. Wir hängen jeden Vertex mit dem entsprechenden Gewicht an diesen Bone, falls das Gewicht größer als $0$ ist. Für die Verwendung der Gewichte in Unity mussten diese außerdem pro Vertex absteigend sortiert und normalisiert werden, sodass sie sich zu $1$ aufsummieren.
