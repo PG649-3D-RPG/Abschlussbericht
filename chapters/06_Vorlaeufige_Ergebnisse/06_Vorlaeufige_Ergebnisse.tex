@@ -69,25 +69,6 @@ Die Episodenlänge der Vierbeiner beim Laufen ist unbeschränkt, eine Episode wi
 
 Die Visuelle Evaluation in Unity zeigt, dass die Vierbeiner Kreatur mit beliebigen Policies ab ca. 500 Updates weitestgehend stabil läuft. Instabilität tritt insbesondere dann auf, wenn die Kreatur mit hoher Geschwindigkeit einen Wegpunkt erreicht und eine große Drehung in Richtung des nächsten Wegpunkts durchführen muss. 
 
-\subsubsection{Aufstehen}
-Abbildung \ref{fig:Standup4B_Reward} zeigt die Entwicklung des Rewards während der Updates des Trainingsdurchlaufs. Der Reward steigt in den ersten 250 Updates deutlich von 0 auf ca. 1700. Das Training stagniert für mehrere hundert Updates bei ca. 1700, bevor ein Performance Collapse eintritt, von dem sich die Policy nicht erneut erholt.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.5\linewidth]{resources/img/results/Standup4B_Reward.png}
-    \caption{Standup 4B Reward}\label{fig:Standup4B_Reward}
-\end{figure}
-
-Die Episodenlänge für das Aufstehen der Vierbeiner ist auf 1000 Schritte beschränkt und es gibt keine Bedingung, die den Start einer neuen Episode vor Ablauf der Schritte bedingt. Da alle 5 Schritte eine Aktion des Agenten angefordert wird, liegen die in Abbildung \ref{fig:Standup4B_Length} dargestellten Episodenlängen konstant bei 201 Schritten.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.5\linewidth]{resources/img/results/Standup4B_Length.png}
-    \caption{Standup 4B Length}\label{fig:Standup4B_Length}
-\end{figure}
-
-Die Visuelle Evaluation in Unity zeigt, dass beliebige Policies aus den Update-Bereichen, in denen der Reward bei ca. 1700 stagniert, in der Lage sind den Vierbeiner erfolgreich aus einer liegenden Startposition aufstehen zu lassen. Die Policies nach dem Performance Collapse führen nur minimal wahrnehmbare Aktionen aus und die Kreatur bleibt unbewegt liegen. 
-
 \begin{figure}
 	\centering
 	\begin{subfigure}[b]{0.3\textwidth}
@@ -112,6 +93,51 @@ Die Visuelle Evaluation in Unity zeigt, dass beliebige Policies aus den Update-B
 	\end{subfigure}
 	\caption{3 Schritte im Laufzyklus eines Vierbeiners.}
 	\label{fig:4BLaufen}
+\end{figure}
+
+\subsubsection{Aufstehen}
+Abbildung \ref{fig:Standup4B_Reward} zeigt die Entwicklung des Rewards während der Updates des Trainingsdurchlaufs. Der Reward steigt in den ersten 250 Updates deutlich von 0 auf ca. 1700. Das Training stagniert für mehrere hundert Updates bei ca. 1700, bevor ein Performance Collapse eintritt, von dem sich die Policy nicht erneut erholt.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{resources/img/results/Standup4B_Reward.png}
+    \caption{Standup 4B Reward}\label{fig:Standup4B_Reward}
+\end{figure}
+
+Die Episodenlänge für das Aufstehen der Vierbeiner ist auf 1000 Schritte beschränkt und es gibt keine Bedingung, die den Start einer neuen Episode vor Ablauf der Schritte bedingt. Da alle 5 Schritte eine Aktion des Agenten angefordert wird, liegen die in Abbildung \ref{fig:Standup4B_Length} dargestellten Episodenlängen konstant bei 201 Schritten.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{resources/img/results/Standup4B_Length.png}
+    \caption{Standup 4B Length}\label{fig:Standup4B_Length}
+\end{figure}
+
+Die Visuelle Evaluation in Unity zeigt, dass beliebige Policies aus den Update-Bereichen, in denen der Reward bei ca. 1700 stagniert, in der Lage sind den Vierbeiner erfolgreich aus einer liegenden Startposition aufstehen zu lassen. Die Policies nach dem Performance Collapse führen nur minimal wahrnehmbare Aktionen aus und die Kreatur bleibt unbewegt liegen. 
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/4B_Liegend.png}
+		\caption{Liegend}
+		\label{fig:4B_Liegend}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/4B_Im_Aufstehen.png}
+		\caption{während des Aufstehens}
+		\label{fig:4B_im_aufstehen}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.3\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/4B_Stehend.png}
+		\caption{Stehend}
+		\label{fig:4B_Stehend}
+	\end{subfigure}
+	\caption{3 Schritte im Aufstehzyklus eines Vierbeiners.}
+	\label{fig:4BAufstehen}
 \end{figure}
 
 \subsection{Zweibeiner Kreatur}
