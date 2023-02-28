@@ -36,16 +36,23 @@ Bei der Wahl der Parameter für das Generieren des Vierbeiners war es wichtig, d
 Da die Zweibeinerkreatuen am meisten Probleme bei der Stabilität haben, gab es keine genauen Erfahrungen zum Aufbau der Kreatur. Durch den symmetrischen Generierungsprozess und Vorüberlegungen der Kreaturen-Ersteller sollten möglichst alle generierbaren Zweibeiner im Gleichgewicht sein. Der Einstellungsprozess für die Beispielfigur reduziert sich daher auf das Reduzieren der Größe. Hierfür wurden Menschen im Raum als Vorlage genutzt, um Möglichst die Proportionen in dem Generator nachzuahmen. Die daraus resultierende Figur bestätigte sich in mehreren Vortest und wurde deshalb auch für die finale Abgabe verwendet
 
 \subsection{Konfiguration der Trainingsdurchläufe}
-Die Erfahrung während der Entwicklungsphase der Projektgruppe hat gezeigt, dass die verwendete PPO Implementierung weitestgehend robust gegenüber der verwendeten Hyperparameter ist, solange eine ausreichend große Batchgröße verwendet wird. Aufgrund der limitierten Rechenressourcen wurde deswegen auf eine Hyperparameteroptimierung verzichtet. Abbildung \ref{fig:evaluation_config} zeigt die für die Evaluation verwendete neroRL Konfigurationsdatei. 
+Die Erfahrung während der Entwicklungsphase der Projektgruppe hat gezeigt, dass die verwendete PPO Implementierung weitestgehend robust gegenüber der verwendeten Hyperparameter ist, solange eine ausreichend große Batchgröße verwendet wird. Aufgrund der limitierten Rechenressourcen wurde deswegen auf eine Hyperparameteroptimierung verzichtet und es werden die Hyperparameter aus der Konfigurationsdatei des Walkers von ml-Agents verwendet. Abbildung \ref{fig:evaluation_config} zeigt die für die Evaluation verwendete neroRL Konfigurationsdatei. 
 Für die Trainingsdurchläufe werden Unity Builds mit 16 Agenten verwendet, die auf 8 parallelen Workern ausgeführt werden. Dementsprechend werden die Daten parallel von 128 Agenten gesammelt. Jeder Agent führt bei jeder fünften Aktualisierung der Physikengine eine Aktion aus. Für das Training wird eine Batchgröße von 102400 verwendet, somit entsprechen 10 Updates etwa 1 Mio Schritten in der Umgebung.
-Die in Abschnitt \ref{} beschriebenen Reward-Funktionen für das Aufstehen und Laufen werden jeweils zwei Mal für die Vierbeiner Kreatur und zwei Mal für die Zweibeiner Kreatur trainiert. Dabei werden alle 100 Updates die Policies zwischengespeichert und zum Sammeln der Evaluationsdaten verwendet. Für die Evaluation werden mit den gespeicherten Policies jeweils 128 zufällige Episoden ausgeführt und dabei Reward und Episodenlänge gesammelt.
+Die in Abschnitt \ref{} beschriebenen Reward-Funktionen für das Aufstehen und Laufen werden jeweils zwei Mal für die Vierbeinige und zwei Mal für die Zweibeinige Kreatur trainiert. Dabei werden alle 100 Updates die Policies zwischengespeichert und zum Sammeln der Evaluationsdaten verwendet. Für die Evaluation werden mit den gespeicherten Policies jeweils 128 zufällige Episoden ausgeführt und dabei Reward und Episodenlänge gesammelt.
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.5\linewidth]{example-image-a}
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/konfig_1.png}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.4\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/konfig_2.png}
+	\end{subfigure}
     \caption{neroRL Konfigurationsdatei für die Evaluation}\label{fig:evaluation_config}
 \end{figure}
-
 
 \section{Ergebnisse}
 In diesem Abschnitt werden die Ergebnisse der Trainingsdurchläufe für die Vierbeiner und Zweibeiner Kreaturen beschrieben. Zunächst werden Daten bezüglich des Rewards und der Länge der Trainingsepisoden analysiert. Anschließend wird die Qualität der Trainingsergebnisse bei der visuellen Evaluation in Unity beschrieben.
@@ -60,7 +67,6 @@ Die Entwicklung des Rewards beim Trainieren des Laufens der Vierbeiner Kreatur i
     \includegraphics[width=0.5\linewidth]{resources/img/results/Walking4B_Reward.png}
     \caption{Walking 4B Reward}\label{fig:Walking4B_Reward}
 \end{figure}
-
 Die Episodenlänge der Vierbeiner beim Laufen ist unbeschränkt, eine Episode wird beendet, wenn die Kreatur mit einem Körperteil außer den Füßen den Boden berührt. Da alle 5 Physik-Aktualisierungen der Unity Umgebung eine Aktion des Agenten angefordert wird und die Unity Umgebung mit 120 Aktualisierungen pro Sekunde ausgeführt wird, entspricht eine Länge von 1000 ca. 41.5 Sekunden. Abbildung \ref{fig:Walking4B_Length} zeigt die Entwicklung der Episodenlänge während der Trainingsdurchläufe. Analog zum Reward steigt die durchschnittliche Episodenlänge in den ersten 1000 Updates deutlich an und stagniert danach bzw. fällt langsam ab. Das Maximum wird mit einer Episodenlänge von ca. 6000, umgerechnet ca. 4 Minuten und 9 Sekunden, erreicht.
 
 \begin{figure}[ht]
@@ -219,7 +225,74 @@ Die Episodenlänge für das Aufstehen der Zweibeiner ist auf 1000 Schritte besch
     \caption{Standup 2B Length}\label{fig:Standup2B_Length}
 \end{figure}
 
-Die Visuelle Evaluation in Unity zeigt, dass die besten Policies (nach 1400 und 1800 Updates) die Zweibeiner Kreatur schwungvoll aufstehen lassen, die Kreatur aber nicht in der aufrechten Position halten können, sodass die Kreatur erneut hinfällt. Die Policies nach dem Performance Collapse führen nur minimal wahrnehmbare Aktionen aus und die Kreatur bleibt unbewegt liegen. 
+Die Visuelle Evaluation in Unity zeigt, dass selbst die besten Policies (nach 1400 und 1800 Updates) nur in der Lage sind die Kreatur in einer schwungvollen Bewegung aufstehen zu lassen. Die Policies schaffen es allerdings nicht den benötigten Schwung richtig einzuschätzen und daher tritt bei jedem Versuch einer der folgenden Fälle ein.
+\begin{itemize}
+	\item Sie nimmt zu wenig Schwung und die Kreatur fällt zurück bevor sie aufrecht steht
+	\item Sie nimmt zu viel Schwung und schafft es nicht zu stoppen, wodurch die Kreatur wieder umfällt
+\end{itemize}
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.2\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/2BAufstehen/Fall1_spawn}
+		\caption{Spawn}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.2\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/2BAufstehen/Fall1_hoch}
+		\caption{Abdrücken}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.2\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/2BAufstehen/Fall1_zenit}
+		\caption{Zenit}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.2\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/2BAufstehen/Fall1_fallen}
+		\caption{Umfallen}
+	\end{subfigure}
+	\caption{Aufstehen des Zweibeiners: Fall 1}
+	\label{fig:2BAufstehen1}
+\end{figure}
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/2BAufstehen/Fall2_spawn}
+		\caption{Spawn}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/2BAufstehen/Fall2_hoch}
+		\caption{Abdrücken}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/2BAufstehen/Fall2_stehen}
+		\caption{Stehen}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.18\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{resources/img/2BAufstehen/Fall2_uber}
+		\caption{Umfallen 1}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.18\textwidth}
+	\centering
+	\includegraphics[width=\textwidth]{resources/img/2BAufstehen/Fall2_umfallen}
+	\caption{Umfallen 2}
+\end{subfigure}
+	\caption{Aufstehen des Zweibeiners: Fall 2}
+	\label{fig:2BAufstehen2}
+\end{figure}
+Selbst diese Policies erfüllen also nicht das Ziel eines stabilen Aufstehens der Kreatur.
+Die Policies nach dem Performance Collapse führen nur minimal wahrnehmbare Aktionen aus und die Kreatur bleibt unbewegt liegen. 
 
 
 \input{chapters/06_Vorlaeufige_Ergebnisse/01_Diskussion/01_Diskussion}
