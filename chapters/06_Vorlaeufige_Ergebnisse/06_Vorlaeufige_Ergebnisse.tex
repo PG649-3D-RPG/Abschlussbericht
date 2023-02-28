@@ -75,7 +75,8 @@ Die Episodenlänge der Vierbeiner beim Laufen ist unbeschränkt, eine Episode wi
     \caption{Walking 4B Length}\label{fig:Walking4B_Length}
 \end{figure}
 
-Die Visuelle Evaluation in Unity zeigt, dass die Vierbeiner Kreatur mit beliebigen Policies ab ca. 500 Updates weitestgehend stabil läuft. Instabilität tritt insbesondere dann auf, wenn die Kreatur mit hoher Geschwindigkeit einen Wegpunkt erreicht und eine große Drehung in Richtung des nächsten Wegpunkts durchführen muss. 
+Die Visuelle Evaluation in Unity zeigt, dass die Vierbeiner Kreatur mit beliebigen Policies ab ca. 500 Updates weitestgehend stabil läuft. Instabilität tritt insbesondere dann auf, wenn die Kreatur mit hoher Geschwindigkeit einen Wegpunkt erreicht und eine große Drehung in Richtung des nächsten Wegpunkts durchführen muss.\newline
+In Abbildung \ref{fig:4BLaufen} werden die 3 Schritte des Laufzyklus eines Vierbeiners dargestellt. Am Anfang des Zyklus springt der Vierbeiner ab (siehe \ref{fig:4B_Absprung}) und streckt während des Sprungs seine Vorderbeine nach vorne und breitet seine Hinterbeine aus (siehe \ref{fig:4B_Schritt}). Abschließend landet der Vierbeiner wieder auf seinen Beinen (siehe \ref{fig:4B_Landen}) und bereitet sich auf den nächsten Absprung vor. Das Springen des Vierbeiners beim Laufen trägt zu der oben genannten Instabilität bei.
 
 \begin{figure}
 	\centering
@@ -120,7 +121,8 @@ Die Episodenlänge für das Aufstehen der Vierbeiner ist auf 1000 Schritte besch
     \caption{Standup 4B Length}\label{fig:Standup4B_Length}
 \end{figure}
 
-Die Visuelle Evaluation in Unity zeigt, dass beliebige Policies aus den Update-Bereichen, in denen der Reward bei ca. 1700 stagniert, in der Lage sind den Vierbeiner erfolgreich aus einer liegenden Startposition aufstehen zu lassen. Die Policies nach dem Performance Collapse führen nur minimal wahrnehmbare Aktionen aus und die Kreatur bleibt unbewegt liegen. 
+Die Visuelle Evaluation in Unity zeigt, dass beliebige Policies aus den Update-Bereichen, in denen der Reward bei ca. 1700 stagniert, in der Lage sind den Vierbeiner erfolgreich aus einer liegenden Startposition aufstehen zu lassen. Die Policies nach dem Performance Collapse führen nur minimal wahrnehmbare Aktionen aus und die Kreatur bleibt unbewegt liegen.\newline
+Die Abbildung \ref{fig:4BAufstehen} zeigt drei Schritte des Aufstehzyklus eines Vierbeiners. In der Abbildung \ref{fig:4B_Liegend} befindet sich die Vierbeinerkreatur in der liegenden Startposition auf dem Boden. Die Kreatur richtet sich über die Seite auf (siehe \ref{fig:4B_im_aufstehen}) und bleibt abschließend relativ stabil auf den Beinen stehen (siehe \ref{fig:4B_Stehend}).
 
 \begin{figure}
 	\centering
