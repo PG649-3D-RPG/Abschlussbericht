@@ -79,8 +79,7 @@ Die Werte anfangs zu generieren erleichtert es außerdem die Symmetrie der Kreat
 Um die Kreaturen später trainieren zu können, müssen sie mehrfach generierbar sein.
 Beide Generatoren akzeptieren deshalb einen Seed für den Zufallsgenerator. Dabei ist zu beachten, dass der selbe Seed in der selben Version des Packages die selbe Kreatur erzeugen wird. Der Aufwand die Stabilitäts-Garantie auch über Package Versionen hinweg zu garantieren, wurde für nicht nötig gehalten und wurde nicht betrieben.
 
-Nachdem die Parameter der Knochen finalisiert wurden, konstruieren beide Generatoren einen Baum aus \texttt{BoneDefinition}s.
-\todo{Explain tree structure if not done in chapter 5}
+Nachdem die Parameter der Knochen finalisiert wurden, konstruieren beide Generatoren einen Baum aus \texttt{BoneDefinition}s, wie in Kapitel \ref{sec:parametricGeneration} beschrieben.
 
 \subsection{Skeleton Definition}
 Die Ausgabe der Parametrischen-Generatoren ist eine \texttt{Skeleton\-Definition}, bestehend aus dem \texttt{Bone\-Definition}-Baum, der Einstellungs-Instanz, und einem \texttt{Limit\-Table}.
