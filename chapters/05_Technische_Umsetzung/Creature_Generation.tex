@@ -95,8 +95,15 @@ In einem ersten Durchgang wird für jede \texttt{Bone\-Definition} des Baumes ei
 \begin{itemize}
     \item ein \texttt{Rigidbody}, damit physikalische Kräfte auf den Knochen wirken können
     \item ein \texttt{Collider}, damit der Knochen mit anderen Objekten kollidieren kann. Die Form des \texttt{Colliders} hängt vom Typen des Knochen ab.
-    \item ein \texttt{Bone}, der Metadaten, wie z.B. Länge oder Kategorie des Knochens, enthält
+    \item ein \texttt{Bone}, der Metadaten, wie z.B. Länge oder Kategorie des Knochens, enthält, aber auch die Farbe des Knochens für die spätere Darstellung im Spiel
 \end{itemize}
+Die Farbe des Knochens wird zufällig im HSV Farbraum generiert und dann in das in der Computergrafik übliche RGB Format konvertiert.
+Der HSV Farbraum erleichtert es zufällig Farben in bestimmten Farbtönen und Helligkeiten zu generieren, in unserem Fall zombieartige Grüntöne.
+
+Die Masseberechnung für den Rigidbody verdient ebenfalls besonderes Augenmerk.
+Der \texttt{SkeletonAssembler} berechnet die Masse des \texttt{Rigidbodies} grundsätzlich aus dem Volumen des an dem ihm angebrachten \texttt{Colliders} und der Dichte des Knochens, die der \texttt{SkeletonAssembler} einem \texttt{DensityTable} entnimmt.
+In der Praxis führen zu große Unterschiede in der Masse von zwei durch einen \texttt{ConfigurableJoint} verbundenen \texttt{Rigidbodies} zu numerischer Instabilität in der Physiksimulation, weshalb der \texttt{SkeletonAssembler} optional in jedem \texttt{Rigidbody} die selbe fixe Masse setzen kann.
+
 Der Wurzel-Knochen wird zusätzlich mit einer \texttt{Skeleton}-Komponente ausgestattet, die weitere Metadaten über das Skelett als ganzes enthält und einfaches iterieren über alle Knochen erlaubt.
 
 Die Nicht-Wurzel Knochen werden entsprechend ihres \texttt{Attachment\-Hint}s positioniert.
