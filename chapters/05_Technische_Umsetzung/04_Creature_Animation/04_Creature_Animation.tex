@@ -95,14 +95,14 @@ Als eine Erweiterung der \texttt{Agent}-Klasse von ML-Agents stellt die \texttt{
 
 \subsubsection{GenericAgent}
 
-Die kontrollende Instanz einer konkreten Trainingsumgebung ist die \texttt{GenericAgent}-Klasse. Diese ist dazu in der Lage, mit dem Modell des ML-Frameworks zu interagieren, also sowohl Beobachtungen der Trainingsumgebung weiterzugeben also auch die Ausgaben des Modells anzunehmen (und zu verarbeiten). Außerdem ist die Klasse f"ur die Instandhaltung der Trainingsumgebung verantwortlich, indem sie Events der Umgebung verarbeitet (z.B. das Erreichen des Targets oder das Verlassen des zugänglichen Bereiches) und ggf. spezifizierte Routinen wie das Zur"ucksetzen der Umgebung durf"uhrt.
-Schließlich muss die \texttt{GenericAgent}-Klasse noch die Rewards f"ur die Trainingsumgebung verteilen. Zu diesem Zweck ist die Klasse als \textit{abstract} definiert, da diese Rewardfunktionen stark von der Aufgabe des Agents abhängig sind. So benötigt zum Beispiel ein Agent, welcher ein bestimmtest Ziel möglichst schnell erreichen soll eine andere Reward-Funktion als ein Agent, welcher sich möglichst gut vor dem Spieler verstecken soll. Verschiedene Agents können so ohne Redundanz einfach als eine Erweiterung der \texttt{GenericAgent}-Klasse implementiert werden.
+Die kontrollierende Instanz einer konkreten Trainingsumgebung ist die \texttt{GenericAgent}-Klasse. Diese ist dazu in der Lage, mit dem Modell des ML-Frameworks zu interagieren, also sowohl Beobachtungen der Trainingsumgebung weiterzugeben also auch die Ausgaben des Modells anzunehmen (und zu verarbeiten). Außerdem ist die Klasse f"ur die Instandhaltung der Trainingsumgebung verantwortlich, indem sie Events der Umgebung verarbeitet (z.B. das Erreichen des Targets oder das Verlassen des zugänglichen Bereiches) und ggf. spezifizierte Routinen wie das Zur"ucksetzen der Umgebung durf"uhrt.
+Schließlich muss die \texttt{GenericAgent}-Klasse noch die Rewards f"ur die Trainingsumgebung verteilen. Zu diesem Zweck ist die Klasse als \textit{abstract} definiert, da diese Rewardfunktionen stark von der Aufgabe des Agents abhängig sind. So benötigt zum Beispiel ein Agent, welcher ein bestimmtest Ziel möglichst schnell erreichen soll eine andere Reward-Funktion als ein Agent, welcher sich möglichst gut vor dem Spieler verstecken soll. Verschiedene Agents können so ohne Redundanz einfach als eine Erweiterung der \texttt{GenericAgent}-Klasse implementiert werden. In Abschnitt \ref{sec:konkretAgents} findet sich eine Auswahl von konkreten Erweiterungen dieser abstrakten Klasse, welche wir im Laufe des Projekts verwendet haben.
 
 \todo{Mehr auf Reward-Funktionen eingehen oder erst bei konkreten Agents?}
 
 \subsubsection{JointDriveController und BodyPart}
 
-Um die Ingame-Repräsentation (also die generierte Creature) des Agents zu kontrollieren, besitzt der \texttt{GenericAgent} einen \texttt{JointDriveController}. Bei der Initialisierung der Trainingsumgebung wrappt der \texttt{JointDriveController} die verschiedenen Unity-Transforms der Creature in Instanzen der Hilfsklasse \texttt{BodyPart}. Die Klasse \texttt{BodyPart} gibt uns leichten Zugang zu häufig benötigten Funktionalitäten, wie zum Beispiel das Zur"ucksetzen oder Steuern des Transform. Auch besitzt ein \texttt{BodyPart} n"utzliche Informationen "uber das jeweilige Transform, welche dem ML-Modell weitergegeben werden können. Nach der Initialisierung stellt der \texttt{JointDriveController} nur noch das Verbindungsst"uck zwischen der \texttt{GenericAgent}-Klasse und der verschiedenen \texttt{BodyPart}-Instanzen dar.
+Um die Ingame-Repräsentation (also die generierte Creature) des Agents zu kontrollieren, besitzt der \texttt{GenericAgent} einen \texttt{JointDriveController}. Bei der Initialisierung der Trainingsumgebung wrappt der \texttt{JointDriveController} die verschiedenen Unity-Transforms der Creature in Instanzen der Hilfsklasse \texttt{BodyPart}. Die Klasse \texttt{BodyPart} gibt uns leichten Zugang zu häufig benötigten Funktionalitäten, wie zum Beispiel das Zur"ucksetzen oder Steuern des Transform. Auch besitzt ein \texttt{BodyPart} n"utzliche Informationen "uber das jeweilige Transform, welche dem ML-Modell weitergegeben werden können. Nach der Initialisierung stellt der \texttt{JointDriveController} nur noch das Verbindungsst"uck zwischen der \texttt{GenericAgent}-Klasse und der verschiedenen \texttt{BodyPart}-Instanzen dar. 
 
 
 \subsubsection{OrientationCubeController}
@@ -113,6 +113,31 @@ Da sich das Target des Agenten potentiell "uberall innerhalb einer großen (und 
 \subsubsection{WalkTargetScript}
 
 Größtenteils unabhängig vom Agenten agiert das Target mithilfe des \texttt{WalkTargetScript}. Die Hauptaufgabe des Scripts ist es, das Target zu steuern (sowohl Neuplatzierung bei einem Reset, als auch normale Bewegungen innerhalb einer Episode) und beim Eintreten eines CollisionEvents zwischen dem Target und dem Agenten den Agenten zu notifizieren. Da zurzeit das Target nur aus einer Kugel besteht, ist komplizierteres Verhalten nicht notwendig.
+
+\subsection{Konkrete Implementationen der Agents}
+\label{sec:konkretAgents}
+
+Um eine bessere Vorstellung von den tatsächlich benutzten Agents zu bekommen, wird in diesem Abschnitt eine Auswahl solcher Agents vorgestellt. 
+
+\subsubsection{AgentWalker}
+
+Der \texttt{AgentWalker} stellt den Startpunkt unserer Entwicklung eigener Agents dar. Die Aufgabe dieses Agents ist es, in die Richtung eines \texttt{Targets} zu laufen, am besten aufrecht auf zwei Beinen. Zu diesem Zwecke besteht die Reward-Funktion grundsätlich aus zwei Teilen: Einerseits sollte der Agent (beispielhaft representiert durch sein Torso-Element) möglichst gut in Richtung des Targets orientiert sein. Andererseits sollte der Agent nat"urlich auch vorwärts laufen. Wenn der Agent beide diese Aufgaben zusammen bewältigen kann, bewegt der Agent sich auf einer geraden Linie in Richtung des Targets. Entsprechen wird eine Belohnung bestehend aus dem Produkt dieser beiden Teilbelohnungen vergeben.
+
+Basierend auf dieser Reward-Funktion lassen sich jetzt kleine Anpassungen vornehmen, um Overfitting zu vermeiden oder bestimmtes Verhalten zu fördern. Zum Beispiel kann die Reward-Funktion eine bestimmte Laufgeschwindigkeit fordern, an die sich der Agent möglich gut anpassen soll. Wenn nun im Laufe des Trainings diese gew"unschte Laufgeschwindigkeit ge"andert wird, kann so gegen Overfitting vorgegangen werden. Auch k"onnen weitere Komponenten in das Produkt der Reward-Funktion aufgenommen werden, wie zum Beispiel eine Teilbelohnung, die der Kopfh"ohe entspricht, um so einen aufrechten Gang anzuregen.
+
+Ein offensichtliche Limitation dieses Ansatzes ist es, dass der Agent sich nur in eine gerade Linie zum Target bewegen kann. Sollten sich Hindernisse auf diesem Weg befinden, kann der Agent damit erst einmal nicht umgehen, da ihm Informationen "uber solche Aspekte der Umgebung fehlen.
+
+\subsubsection{AgentNavMesh mit Varianten}
+\label{subsubsec:agentnavmesh}
+
+Anstatt dem Agent mehr Informationen "uber die Umgebungen zu geben, ist es auch möglich, eine Reihe von Targets f"ur den Agenten zu erstellen, dass es immer einen geraden Weg ohne Hindernisse von einem dieser Targets (bzw. dem Agent) zum nächsten gibt. Des letzte Target dieser Reihe soll dann das urspr"ungliche Target sein (ab jetzt: End-Target). Eine solche Reihe von Targets l"asst sich gut mit \enquote{NavMeshes} berechnen. Alle weiteren Eigenschaften "ubernimmt der \texttt{AgentNavMesh} vom \texttt{AgentWalker}.
+
+Ein großer Vorteil dieses Vorgehens ist es, dass die gew"unschte Aufgabe in kleinere Teilprobleme aufgeteilt wird, die individuell betrachtet deutlich einfacher zu lösen sind. Obwohl unsere Umgebungen viele Hindernisse und Kurven an zuf"alligen Positionen beinhalten kann, bestehen die Teilprobleme immer noch aus dem verhältnismäßig simplen Problem, geradeaus in eine Richtung zu laufen.
+
+Diese Implementation des Agents ist die Basis aller im Endprodukt enthaltenen Agents. Einige der benutzten Reward-Funktionen werden in der folgenden Tabelle zusammengefasst.
+
+\todo{Tabelle mit Varianten und deren Reward-Funktionen}
+
 
 \subsection{RL-Framework}
 % Jannik
