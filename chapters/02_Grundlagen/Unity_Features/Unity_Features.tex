@@ -17,7 +17,6 @@ Zu Beginn m"ussen wir der Komponente einige Informationen "uber unseren Agent mi
 	\item Die \textit{Step Height}, welche den maximalen H"ohenunterschied mit beliebiger Steigung beschreibt, die der Agent unanhängig von der angegebenen \textit{Max Slope} bewältigen kann. Dies ist dazu notwendig, damit der Agent zum Beispiel eine Treppe hochlaufen kann, da die einzelnen Treppenstufen meistens eine Steigung von $90\deg$ besitzen.
 \end{itemize}
 \todo{Bild mit Ausschnitt aus Settings-Panel der NavMeshSurface einf"ugen}
-\\
 Im nächsten Schritt sammelt das Skript sämtliche geometrischen \texttt{GameObjects} der Szene, um zusammen mit den Informationen "uber den Agent die begehbare Fläche zu approximieren (auch \textit{Baking} genannt).
 \\
 Ein \texttt{NavMesh} lässt sich auch gut während der Laufzeit des Programmes generieren. In unserem Anwendungsfall ist dies essentiell, da wir die Umgebung "uberhaupt erst zur Laufzeit prozedual erstellen. Eine Vorabgenerierung des \texttt{NavMeshes} wäre daher unmöglich.
