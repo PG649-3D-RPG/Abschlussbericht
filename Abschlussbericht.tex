@@ -1,34 +1,37 @@
-\documentclass{scrbook}
-\usepackage[utf8]{inputenc}			% Zeichensatzkodierung
-\usepackage[T1]{fontenc}
+% !TeX document-id = {d7247aab-0d3b-456c-a2ca-7facee9734c0}
+% !TeX encoding = utf8
+% !TeX TXS-program:compile = txs:///latexmk/[--shell-escape --xelatex]
+% !BIB program = bibtex
+
+\documentclass[german,pg]{tudo-sse-thesis}
 \usepackage{amsmath}				% Mathematischer Formelsatz AMS
 \usepackage{amsfonts}
-\usepackage{amssymb}
-\usepackage[autostyle,german=guillemets,german=quotes]{csquotes}
-\usepackage{todonotes}
-\usepackage[english, main=ngerman]{babel}
-\usepackage[backend=biber]{biblatex}
+\usepackage{mathtools}
+%\usepackage{anyfontsize}
 
 \usepackage{tikz-qtree}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows,arrows.meta,automata,positioning,fit,calc,matrix,backgrounds}
+
+\usepackage[german]{algorithm2e}				% Algorithmen Umgebung mit Algorithmenverzeichnis
 \usepackage{algorithmic}
-\usepackage{subcaption}
 \renewcommand{\algorithmicrequire}{\textbf{Eingabe:}}
 \renewcommand{\algorithmicensure}{\textbf{Ausgabe:}}
-\usepackage{mathtools}
-\usepackage{gensymb}
-\usepackage{siunitx}
-\addbibresource{literature/literature.bib}
-\usepackage[german]{algorithm2e}				% Algorithmen Umgebung mit Algorithmenverzeichnis
 \renewcommand{\listalgorithmcfname}{Algorithmenverzeichnis}
+
+\newcommand{\fup}{\mbox{}\\}
 \usepackage{listings}
 \usepackage{graphicx}				% Einbinden von Bildern
 \usepackage{ulem}					% Unterstreichen von Text
-\usepackage{fancyhdr}
-\usepackage{color}					% Farben wenn es sein muß
 \usepackage{hyperref}				% Klickbare Verweise und \autoref{label}
 \usepackage{booktabs}				% "Schöne" Tabellen	
+\usepackage{subcaption}
+
+
+\usepackage{siunitx}
+\usepackage{minted}
+\usepackage{gensymb}
+\usepackage{todonotes}
 
 % Custom-Liste für Themenallokation
 \usepackage{enumitem}
@@ -36,17 +39,30 @@
 \setlist[thallok]{label*=\arabic*.}
 
 
-\setcounter{tocdepth}{3}
-\setcounter{secnumdepth}{3}
+%\setcounter{tocdepth}{3}
+%\setcounter{secnumdepth}{3}
+
+\usepackage{scrhack} 
+\usepackage[autostyle,german=guillemets,german=quotes]{csquotes}
+
+% Provide your title
+\title{Entwicklung eines 3D RPG Videospiels mittels prozeduraler Inhaltsgenerieung und Deep Reinforcement Learning}
+
+% Provide your name
+\author{Jan Beier, Nils Dunker, Leonard Fricke, Niklas Haldorn, Kay Heider, \linebreak Jona Lukas Heinrichs, Carsten Kellner, Markus Mügge, Thomas Rysch, Jannik Stadtler, Tom Voellmer}
+
+\firstexaminer{Prof. Dr. Günter Rudolph}
+\secondexaminer{Nicolas Fischöder}
+\thirdexaminer{Marco Pleines}
+
 
 \begin{document}
-	
-	\include{chapters/Titelseite/Titelseite}
-	
-	\cleardoublepage
-	\tableofcontents			% Inhaltsverzeichnis ... nicht für kurze Dokumente!
-	\cleardoublepage
+	\maketitle
+	\pagenumbering{roman}
 
+	\tableofcontents
+	\cleardoublepage
+	
 	\pagenumbering{arabic}
 	
 	\include{chapters/01_Einleitung/01_Einleitung}
@@ -55,7 +71,7 @@
 	
 	\include{chapters/03_Verwandte_Arbeiten/03_Verwandte_Arbeiten}
 	
-	\include{chapters/04_Fachliches_Vorgehen/04_Fachliches_Vorgehen}
+	\include{chapters/04_Projektorganisation/04_Projektorganisation}
 	
 	\include{chapters/05_Technische_Umsetzung/05_Technische_Umsetzung}
 	
@@ -71,11 +87,11 @@
 	\cleardoublepage
 	\listofalgorithms
 	\cleardoublepage
-	%\setcounter{page}{4}
-	\cleardoublepage				
-	% \bibliographystyle{IEEEtran}	% Das Literaturverzeichnis; ieeetran verwenden, damit auch URLs angezeigt werden
-	% \bibliography{seminar-lit}
-	\printbibliography[title={Literatur}]
+
+	% Bibliography
+	\bibliographystyle{ACM-Reference-Format}
+	\bibliography{bibliography/references}
+	\addcontentsline{toc}{chapter}{\bibname}
 	
 	
 \end{document}

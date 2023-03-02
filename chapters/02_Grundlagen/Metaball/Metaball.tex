@@ -5,7 +5,7 @@ Die grundlegende Idee dahinter ist es mehrere Kugeln im Raum zu platzieren und d
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.5\linewidth]{chapters/02_Grundlagen/Metaball/metaball_2d}
-    \caption{2D Beispiel eines Metaballs bestehend aus drei Kugeln}\label{fig:2dMetaballl}
+    \caption{2D Beispiel eines Metaballs bestehend aus drei Kugeln}\label{fig:2dMetaball}
 \end{figure}
 
 Der Metaball $M$, bestehend aus $n$ Kugeln, ist durch eine Funktion gegeben, die jedem Punkt $\vec{x}$ im Raum einen Wert zuordnet.
@@ -18,4 +18,4 @@ Eine mögliche Metaball-Funktion $f_i$ ist
 \[f_i(\vec{x}) = \frac{1}{||\vec{c_i}-\vec{x}||} = \frac{1}{r_i(\vec{x})}\]
 Wobei $\vec{c_i}$ das Zentrum von Kugel $i$ beschreibt und $r_i$ den Abstand zwischen $\vec{x}$ und $\vec{c_i}$.
 
-Um aus dieser Funktion ein diskretes Mesh zu erzeugen, lässt sich der Raum mit Hilfe des Marching-Cubes-Algorithmus Abtasten um die Oberfläche zu bestimmen.
+Um aus dieser Funktion ein diskretes Mesh zu erzeugen, lässt sich der Raum mit Hilfe des Marching-Cubes-Algorithmus Abtasten \cite{marching_cubes} um die Oberfläche zu bestimmen.

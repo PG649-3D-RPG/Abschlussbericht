@@ -27,10 +27,10 @@
 
 Im folgenden Kapitel wird zuerst eine organisatorische Übersicht über die Themengebiete des PG649 Creature Generators gegeben, die anschließend im technischen Detail erläutert werden. Ziel des Kapitels ist es zuerst eine Verständnisgrundlage zu schaffen, damit die nachfolgenden technischen Merkmale, Design-Entscheidungen und Kompromisse nachvollziehbar sein werden.
 
-\subsection{Organisation}
+\subsection{Fachliche Umsetzung}
 
 \subsubsection{Parametrische Kreatur}\label{param_method}
-Als Grundlage für die parametrische Generierung der Kreaturen dient das von Jon Hudson in seiner Thesis \cite{Hudson2013CreatureGU} beschriebene Modell, welches in Abschnitt TODO \ref{} näher beschrieben wird.\\
+Als Grundlage für die parametrische Generierung der Kreaturen dient das von Jon Hudson in seiner Thesis \cite{Hudson2013CreatureGU} beschriebene Modell, welches in Abschnitt \ref{parametrsiche_generatoren} näher beschrieben wird.\\
 Die Kreatur besteht aus mehreren Körperteilen, die separat generiert werden und jeweils ihre eigenen Parameter besitzen. Diese Körperteile sind Torso, Beine, Arme, Hals, Füße und Kopf, die jeweils aus einem oder mehreren Knochen bestehen. Alle in diesem Abschnitt erwähnten Zufallsvariablen entstammen einer Kombination aus Gleich- und Normalverteilungen.
 
 \paragraph{Knochen Koordinaten}
@@ -123,10 +123,6 @@ Da dies nur eine Erweiterung der Metaball-Funktion ist, lassen sich diese Kapsel
 Da die Kapsel nur zylindrisch geformte Segmente darstellen lässt, die in alle Richtungen den gleichen Radius besitzen, haben wir eine weitere Modifikation vorgenommen, die es erlaubt die Metakapsel entlang der ventralen oder lateralen Achse zu strecken beziehungsweise zu stauchen. Dadurch ist es uns möglich Körperteile mit unterschiedlichen Abmessungen entlang der verschiedenen Achsen darzustellen und dennoch unnatürlich wirkende Formen wie beispielsweise einen Quader zu vermeiden.
 Dazu bestimmen wir bei der Berechnung von $r(\vec{x})$ zunächst den Vektor, der die kürzeste Verbindung von $\vec{x}$ und dem Segment darstellt, anstatt direkt dessen Länge auszuwerten. Diesen Vektor skalieren wir anschließend entlang der gewünschten Achse. Die Länge des skalierten Vektors ist dann die neue Distanz.
 
-
-\subsubsection{Marching Cubes}\label{Marching_Cubes}
-TODO: wollen wir hier noch etwas genauer drauf eingehen, oder reicht der Teil von Jona???
-
 \paragraph{Mesh Indexing}
 Zur weitere Verarbeitung des Meshes beim automatischen Rigging, ist es wichtig, dass das Mesh korrekt indiziert ist, sodass keine doppelten Vertices existieren. Außerdem können so die ausgehenden Kanten der Vertices bestimmt werden, welche ebenfalls später für das automatische Rigging benötigt werden. Während dem Marching Cubes Algorithmus werden die entstehende Dreiecke in eine gesonderte Datenstruktur hinzugefügt, welche für jeden Vertex prüft, ob dieser bereits im Vertex-Buffer existiert. Falls ja, wird kein neuer Vertex eingefügt, sondern das Dreieck referenziert den Vertex über den Index-Buffer. Neue Vertices werden dem Vertex-Buffer hinzugefügt und das entsprechende Dreieck referenziert den neuen Vertex. Die Anzahl der Vertices wird dadurch außerdem signifikant verringert, was Performance-Vorteile beim Rendering und bei der Weiterverarbeitung des Meshes ermöglicht.
 
@@ -216,7 +212,7 @@ Da die Matrix $\textbf{H}$ eine Diagonalmatrix ist und der Operator $\Delta$ ein
 
 Durch die Lösung des Systems für jeden Bone $i$ erhalten wir einen Vektor $\textbf{w}^i$ aus Gleichung~\ref{eq:bone_heat}. Wir hängen jeden Vertex mit dem entsprechenden Gewicht an diesen Bone, falls das Gewicht größer als $0$ ist. Für die Verwendung der Gewichte in Unity mussten diese außerdem pro Vertex absteigend sortiert und normalisiert werden, sodass sie sich zu $1$ aufsummieren.
 
-\subsubsection{Skinning}
+\subsubsection{Skinning}\label{skinning}
 Nachdem das Mesh durch den Prozess des Riggings mit den Vertex-Gewichten an das Skelett angehängt wurde, muss noch definiert werden, wie das Mesh die Transformationen des Skeletts umsetzt. Für diesen Prozess des `Skinnings' existieren im allgemeinen zwei unterschiedliche Ansätze.
 
 Die einfachere Technik ist das Linear Blend Skinning (LBS). Hier werden die Vertices durch wie in Formel~\ref{eq:lbs_skinning} transformiert. Der Vertex $\textbf{v}$ wird zunächst mit allen Bone-Transformationen $\textbf{C}^j$ transformiert und dann wird der gewichtete Durchschnitt mit den entsprechenden Vertex-Gewichten $w^j$ verwendet um $\textbf{v'}$ zu bestimmen.
@@ -282,7 +278,7 @@ Es gibt drei Gründe das lokale Koordinatensystem eines jeden Knochens explizit 
     \item es erlaubt unterschiedlichen parametrischen Generatoren eigene Konventionen für ihre Koordinatensysteme zu wählen.
 \end{itemize}
 
-\subsubsection{Parametrische Generatoren}
+\subsubsection{Parametrische Generatoren}\label{parametrsiche_generatoren}
 Parametrische Generatoren haben die Aufgabe anhand der \texttt{Parametric\-Creature\-Settings} \texttt{Bone\-Definition}-Bäume zu generieren.
 Das Package enthält momentan Generatoren für zwei verschiedene Typen von Kreaturen: \texttt{BipedGenerator} und \texttt{QuadrupedGenerator}.
 Einstiegspunkte in die Generatoren sind jeweils die \texttt{BuildCreature} Methoden.
