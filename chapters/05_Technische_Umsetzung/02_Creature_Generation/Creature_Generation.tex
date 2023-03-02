@@ -216,6 +216,25 @@ Da die Matrix $\textbf{H}$ eine Diagonalmatrix ist und der Operator $\Delta$ ein
 
 Durch die Lösung des Systems für jeden Bone $i$ erhalten wir einen Vektor $\textbf{w}^i$ aus Gleichung~\ref{eq:bone_heat}. Wir hängen jeden Vertex mit dem entsprechenden Gewicht an diesen Bone, falls das Gewicht größer als $0$ ist. Für die Verwendung der Gewichte in Unity mussten diese außerdem pro Vertex absteigend sortiert und normalisiert werden, sodass sie sich zu $1$ aufsummieren.
 
+\subsubsection{Skinning}
+Nachdem das Mesh durch den Prozess des Riggings mit den Vertex-Gewichten an das Skelett angehängt wurde, muss noch definiert werden, wie das Mesh die Transformationen des Skeletts umsetzt. Für diesen Prozess des `Skinnings' existieren im allgemeinen zwei unterschiedliche Ansätze.
+
+Die einfachere Technik ist das Linear Blend Skinning (LBS). Hier werden die Vertices durch wie in Formel~\ref{eq:lbs_skinning} transformiert. Der Vertex $\textbf{v}$ wird zunächst mit allen Bone-Transformationen $\textbf{C}^j$ transformiert und dann wird der gewichtete Durchschnitt mit den entsprechenden Vertex-Gewichten $w^j$ verwendet um $\textbf{v'}$ zu bestimmen.
+\begin{equation}
+	\label{eq:lbs_skinning}
+	\textbf{v'} = \sum_{j=0}^n w^{j} \textbf{C}^j \textbf{v}
+\end{equation}
+LBS hat allerdings den Nachteil, dass einige Transformationen an den Gelenken unnatürlich `aufrollen'. Dieser sogenannte `Candy-Wrapper' Effekt ist in Abbildung~\ref{fig:dqs} (links) zu erkennen.
+
+Um dieses Problem zu beheben kann alternativ die Dual Quaternion Technik verwendet werden. Hier wird anstatt einer Linear-Kombination über die transformierten Vertices eine Linear-Kombination über duale Quaternionen berechnet~\cite{dqs}. Diese erlauben es bei der Transformation der Vertices die Skalierung des Mesh-Volumens beizubehalten, da duale Quaternionen sowohl Rotation, als auch Verschiebung gleichzeitig zu kodieren. Die Implementierung des DQ-Skinnings ist mit kleinen Anpassungen aus dem Projekt~\cite{dqs_github} entstanden. In Abbilfung~\ref{fig:dqs} kann man auf der rechten Seite erkennen, das DQS die Probleme von LBS erfolgreich verhindert.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.7\linewidth]{resources/img/dqs.png}
+	\caption{Vergleich von Linear Blend Skinning (links) und Dual Quaternion Skinning (rechts)~\cite{dqs}.}
+	\label{fig:dqs}
+\end{figure}
+
 
 
 
