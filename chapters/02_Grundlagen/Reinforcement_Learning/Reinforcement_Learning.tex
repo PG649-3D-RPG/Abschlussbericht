@@ -1,24 +1,52 @@
 \section{Reinforcement Learning}
-Mit Reinforcement Learning (RL, deutsch: verstärkendes Lernen) werden bestimmte Varianten des maschinellen Lernens bezeichnet. Allgemein lernt beim Reinforcement Learning ein Agent eine Policy (deutsch: Strategie), um ein sequentielle Entscheidungen umfassendes Problem zu lösen. Reinforcement Learning ist ein breites Forschungsgebiet. In diesem Grundlagenkapitel werden nur die Grundlagen des Reinforcement Learning beschrieben, die im Rahmen der Projektgruppe eingesetzt wurden. Eine Übersicht über weitere Varianten des Reinforcement Learning findet sich z.B. in den Büchern von \citeauthor{FoundationsDeepRL} und \citeauthor{deepRL-2020}.\newline
+Mit Reinforcement Learning (RL, deutsch: verstärkendes Lernen) werden bestimmte Varianten des maschinellen Lernens bezeichnet. Allgemein lernt beim Reinforcement Learning ein Agent (d.h. ein kontrollierbarer Akteur) eine Policy (deutsch: Strategie), um in einer Umgebung ein Problem zu lösen, das sequentielle Entscheidungen umfasst. Reinforcement Learning ist ein breites Forschungsgebiet. In diesem Grundlagenkapitel werden nur die Grundlagen des Reinforcement Learning beschrieben, die im Rahmen der Projektgruppe relevant sind. Eine Übersicht über weitere Varianten des Reinforcement Learning findet sich z.B. in den Büchern von \citeauthor{FoundationsDeepRL} und \citeauthor{deepRL-2020}.
+
+\subsection{Begriffe des Reinforcement Learning}
+
+\subsubsection{Agent und Umgebung}
 \begin{figure}
     \centering
     \includegraphics{resources/img/Reinforcement_Learning/RL Control Loop.png}
     \caption{Reinforcement Learning Kontrollfluss \cite{FoundationsDeepRL}}
     \label{fig:rl_control_loop}
 \end{figure}
-\noindent Abbildung \ref{fig:rl_control_loop} stellt den allgemeinen Markov Entscheidungsprozess (MDP) eines Reinforcement Learning Prozesses dar. Der Agent ist in einer Umgebung (Environment) aktiv. In regelmäßigen Schritten erhält der Agent von der Umgebung einen aktuellen Zustand (State), sowie eine Belohnung (Reward), die entweder Null (d.h. keine Belohnung im aktuellen Schritt), oder ein positiver oder negativer Wert sein kann. Die durch den Agent gelernte Policy bildet den State auf eine Aktion ab. Die Aktion wird in der Umgebung ausgeführt. Danach übergibt die Umgebung den neuen State und die neue Belohnung an den Agenten.\cite{FoundationsDeepRL}
 
-\subsection{Episoden und Trajektorien}
-Eine Episode beschreibt die Zeitspanne von der Initialisierung bis zur Terminierung der Umgebung. Eine Trajektorie beschreibt eine Reihe von Tupeln aus State, Aktion und Reward aus den einzelnen Schritten einer Episode. Die Gleichung \ref{eq:trajectory} stellt die mathematische Schreibweise einer Trajektorie dar. Auf Basis gesammelter Trajektorien kann der Agent einen Lernvorgang durchführen und die Policy aktualisieren.\cite{FoundationsDeepRL}
+Abbildung \ref{fig:rl_control_loop} stellt den allgemeinen Markov Entscheidungsprozess (MDP) eines Reinforcement Learning Prozesses dar. Der Agent ist in einer Umgebung (Environment) aktiv. In regelmäßigen Schritten sammelt der Agent in der Umgebung Observationen, bestehend aus einem aktuellen Zustand (State) $s_t$, sowie einer Belohnung (Reward) $r_t$, die entweder Null (d.h. keine Belohnung im aktuellen Schritt), oder ein positiver oder negativer Wert sein kann. Die durch den Agent gelernte Policy bildet den State auf eine Aktion $a_t$ ab. Die Aktion wird in der Umgebung ausgeführt. Danach übergibt die Umgebung den neuen State $s_{t+1}$ und die neue Belohnung $r_{t+1}$ an den Agenten \cite{FoundationsDeepRL}.
+
+\subsubsection{Episoden und Trajektorien}
+Eine Episode beschreibt die Zeitspanne von der Initialisierung bis zur Terminierung der Umgebung. Eine Trajektorie beschreibt eine Reihe von Tupeln aus State, Aktion und Reward aus den einzelnen Schritten einer Episode. Die Gleichung \ref{eq:trajectory} stellt die mathematische Schreibweise einer Trajektorie dar. Eine Trajektorie enthält durch die Zeitschritte $[0;t]$ indizierte Tupel. Jedes Tupel beinhaltet den Ausgangszustand $s_t$, die ausgeführte Aktion $a_t$ und den dadurch erhaltenen Reward $r_t$ zum Zeitpunkt $t$. Gleichung \ref{eq:return} zeigt die Definition des Returns einer Trajektorie. Der Return ist der summierte Reward der Trajektorie. Auf Basis gesammelter Trajektorien kann der Agent einen Lernvorgang durchführen und die Policy aktualisieren \cite{FoundationsDeepRL}.
 \begin{equation}
     \tau = (s_0,a_0,r_0), (s_1,a_1,r_1), \dots, (s_t,a_t,r_t)
     \label{eq:trajectory}
 \end{equation}
 
-\subsection{Policy-basierte \& Value-basierte Algorithmen}
-Grundsätzlich wird im Reinforcement Learning zwischen Policy-basierten und Value-basierten Algorithmen unterschieden. Diese werden in den folgenden Abschnitten genauer beschrieben.
+\begin{equation}
+    R(\tau)=\sum_{0}^{t} r_t
+    \label{eq:return}
+\end{equation}
 
-\subsubsection{Policy-basierte Algorithmen}
+
+\subsection{Policy-basierte \& Value-basierte Algorithmen}
+Grundsätzlich wird im Reinforcement Learning zwischen Policy-basierten und Value-basierten Algorithmen unterschieden. Diese werden in den folgenden Abschnitten genauer beschrieben. Beide Verfahren haben das grundlegende Ziel, die maximale kumulative Belohnung (Return) zu erhalten.
+Es existieren weitere Unterscheidungen zwischen RL-Methoden. Dazu gehört unter anderem die Unterscheidung zwischen modellbasiertem RL und RL ohne Modell. Bei komplexen Umgebungen eignet sich primär das RL ohne Modell, wobei der Agent keine Kenntnisse über Zustandstransitions- und Belohnungsfunktion besitzt, da die Erstellung eines präzisen Modells zu komplex ist. Im Folgenden wird deswegen von modellfreiem RL ausgegangen \cite{deepRL-2020}.
+
+\subsubsection{Value-basierte Algorithmen}\label{sec:value}
+Bei Value-basierten Algorithmen wird eine Funktion zum Schätzen der Wertung eines Zustands bzw. eines Zustand-Aktion Tupels gelernt. Aus der Bewertung wird dann eine Policy generiert. Es gibt zwei grundlegende Value-Funktionen.
+
+\begin{equation}
+    V^\pi (s)=\mathbb{E}_{s_0=s, \tau \sim \pi} \left[ \sum_{t=0}^T \gamma^t r_t \right]
+    \label{eq:v_function}
+\end{equation}
+\begin{equation}
+    Q^\pi (s,a) = \mathbb{E}_{s_0=s,a_0=a,\tau\sim\pi} \left[ \sum_{t=0}^T \gamma^t r_t\right]
+    \label{eq:q_function}
+\end{equation}
+Die V-Funktion (''Value-Function'', siehe Gleichung \ref{eq:v_function}) schätzt den Wert eines Zustandes anhand der diskontierten kumulativen Belohnung einer in diesem Zustand startenden Trajektorie, unter der Annahme, dass der aktuellen Policy gefolgt wird. 
+Die Q-Funktion (''Action-Value-Function'', siehe Gleichung \ref{eq:q_function}) schätzt den Wert eines Zustandes unter Durchführung einer Aktion anhand der diskontierten Rewards einer in diesem Zustand startenden Trajektorie, die zuerst die gewählte Aktion durchführt. 
+Bei reinen Value-basierten Algorithmen, wird bevorzugt die Action-Value-Funktion $Q^\pi$ verwendet, da sich diese leichter in eine Policy umwandeln lässt \cite{FoundationsDeepRL}. Bei der intuitiven Umwandlung verwendet der Agent als nächste Aktion die Aktion mit dem maximalen Wert der Action-Value-Funktion. Die Berechnung des maximalen Wertes der Action-Value-Funktion ist in kontinuierlichen Aktionsräumen sehr aufwändig, sodass 
+Value-basierte Algorithmen sind Proben-effizienter als Policy-based Algorithmen und haben eine niedrigere Varianz. Allerdings kann eine Konvergenz zu einem lokalen Optimum nicht garantiert werden und die Berechnung des maximalen Wertes der Action-Value-Funktion ist bei kontinuierlichen Aktionsräumen sehr aufwändig, sodass Value-basierte Algorithmen bei kontinuierlichen Aktionsräumen schlechter geeignet sind \cite{grokking}.
+
+\subsubsection{Policy-basierte Algorithmen}\label{sec:policy_gradient}
 Bei Policy-basierten Algorithmen wählt eine Policy ($\pi$) die nächste Aktion ($a \sim \pi(s)$) aus, die in der Umgebung umgesetzt wird. Diese Policy bzw. ihre Parameter werden direkt durch den Algorithmus gelernt. Es können zwei Arten von Policies verwendet werden. Eine deterministische Policy bildet deterministisch einen Zustand $s$ auf eine Aktion $a$ ab (siehe Gleichung \ref{eq:deterministic_policy}). \cite{FoundationsDeepRL}
 \begin{equation}
     \pi(s) = a
@@ -32,24 +60,8 @@ In der Praxis werden fast ausschließlich stochastische Policies (siehe Gleichun
 Eine stochastische Policy ordnet für jede Aktion $a$ eine Wahrscheinlichkeit unter Bedingung des Zustands $s$ zu. Aus der entstehenden Verteilung wird dann die Aktion $a$ gesamplet. Policy-basierte Algorithmen lernen die Funktion $\pi$, sodass das Objective maximiert wird.
 Policy-basierte Algorithmen können grundsätzlich auf beliebige Aktionstypen angewendet werden, kontinuierliche Aktionsräume sind möglich. Policy-basierte Algorithmen konvergieren garantiert zu einer lokalen, optimalen Policy. Allerdings sind Policy-basierte Algorithmen Proben-ineffizient und haben eine hohe Varianz. \cite{deepRL-2020}
 
-\subsubsection{Value-basierte Algorithmen}
-Bei Value-basierten Algorithmen wird eine Funktion zum Schätzen der Wertung eines Zustands bzw. eines Zustand-Aktion Tupels gelernt. Aus der Bewertung wird dann eine Policy generiert. Es gibt zwei grundlegende Value-Funktionen.
-
-\begin{equation}
-    V^\pi (s)=\mathbb{E}_{s_0=s, \tau \sim \pi} \left[ \sum_{t=0}^T \gamma^t r_t \right]
-    \label{eq:v_function}
-\end{equation}
-\begin{equation}
-    Q^\pi (s,a) = \mathbb{E}_{s_0=s,a_0=a,\tau\sim\pi} \left[ \sum_{t=0}^T \gamma^t r_t\right]
-    \label{eq:q_function}
-\end{equation}
-Die V-Funktion (''Value-Function'', siehe Gleichung \ref{eq:v_function}) schätzt den Wert eines Zustandes anhand der diskontierten kumulativen Belohnung einer in diesem Zustand startenden Trajektorie, unter der Annahme, dass der aktuellen Policy gefolgt wird. 
-Die Q-Funktion (''Action-Value-Function'', siehe Gleichung \ref{eq:q_function}) schätzt den Wert eines Zustandes unter Durchführung einer Aktion anhand der diskontierten Rewards einer in diesem Zustand startenden Trajektorie, die zuerst die gewählte Aktion durchführt. 
-Bei reinen Value-basierten Algorithmen, wird bevorzugt die Action-Value-Funktion $Q^\pi$ verwendet, da sich diese leichter in eine Policy umwandeln lässt \cite{FoundationsDeepRL}. 
-Value-basierte Algorithmen sind Proben-effizienter als Policy-based Algorithmen und haben eine niedrigere Varianz. Allerdings kann eine Konvergenz zu einem lokalen Optimum nicht garantiert werden.
-
-\subsection{REINFORCE}
-Der Lernvorgang eines Reinforcement Learning Systems erfolgt über den Policy Gradient.
+\paragraph{REINFORCE}
+Ein Beispiel für einen Policy-basierten Algorithmus ist REINFORCE. Der REINFORCE Algorithmus wird hier verwendet, um die Grundlagen der Policy Optimierung per Policy Gradient einzuführen.
 \begin{equation}
     \vartheta \leftarrow \vartheta + \alpha \nabla_\vartheta J(\pi_\vartheta)
     \label{eq:policy_optimization}
@@ -63,7 +75,7 @@ Gleichung \ref{eq:policy_optimization} zeigt die Optimierung einer Policy. Die o
 Dabei werden die Parameter $\pi_\vartheta(a_t\vert s_t)$ der Policy angepasst. Ungünstige Aktionen ($R_t(\tau) < 0$) werden weniger wahrscheinlich. Günstige Aktionen ($R_t(\tau) > 0$) werden wahrscheinlicher. \cite{FoundationsDeepRL}
 
 \subsection{Actor-Critic}
-Die Actor-Critic Methode ist eine Methode des Reinforcement Learning. Die Actor-Critic Methode kombiniert die Policy-Gradient und die Value-Function Methoden. Der Actor lernt eine Policy (Policy Gradient Methode) und nutzt für das Lernsignal eine durch den Critic gelernte Value-Function (Value-Function Methode). Durch den Critic wird so eine dichte Bewertungsfunktion erzeugt, auch wenn die echten Rewards aus dem Environment nur selten (d.h. an wenigen Zeitpunkten) vorkommen. 
+Die Actor-Critic Methode ist eine Methode des Reinforcement Learning. Die Actor-Critic Methode kombiniert die Policy-Gradient und die Value-Function Methoden, die in den Abschnitten \ref{sec:policy_gradient} und \ref{sec:value} beschrieben wurden. Der Actor lernt eine Policy (Policy Gradient Methode) und nutzt für das Lernsignal eine durch den Critic gelernte Value-Function (Value-Function Methode). Durch den Critic wird so eine dichte Bewertungsfunktion erzeugt, auch wenn die echten Rewards aus dem Environment nur selten (d.h. an wenigen Zeitpunkten) vorkommen. Der Agent kann dadurch mit gesammelten Teilstücken von Episoden lernen, statt zwingend vollständige Episoden zu benötigen. 
 
 \subsubsection{Advantage-Actor-Critic (A2C)}
 Advantage-Actor-Critic ist eine Variante der Actor-Critic Methode, bei der statt einer Value-Funktion eine Advantage-Funktion verwendet wird.
@@ -110,8 +122,8 @@ Ein Problem von Reinforcement Learning Algorithmen ist der Performance Collapse 
 % Gleichung \ref{eq:surrogate_objective} zeigt das sogenannte Surrogate Objective $J_\pi^{CPI}$, das von TRPO verwendet wird um die 
 
 \subsubsection{Clipping}
-Es gibt zwei theoretische Varianten des PPO Algorithmus. Die erste Variante baut direkt auf dem Trust Region Policy Optimization Algorithmus (TRPO) \cite{trpoPaper} auf und verwendet eine adaptive KL Penalty, um die Schrittgröße einzuschränken. In der Praxis wird jedoch nur die zweite Variante von PPO verwendet, da diese in Tests bessere Ergebnisse erzielt und leichter zu implementieren ist.
-Die zweite Variante nutzt ein Clipped Surrogate Objective.
+Es gibt zwei theoretische Varianten des PPO Algorithmus. Die erste Variante baut direkt auf dem Trust Region Policy Optimization Algorithmus (TRPO) \cite{trpoPaper} auf und verwendet eine adaptive KL Penalty, um die Schrittgröße einzuschränken. Diese wird hier nicht weiter beschrieben, da in der Praxis nur die zweite Variante von PPO verwendet wird, weil diese in Tests bessere Ergebnisse erzielt und leichter zu implementieren ist.
+Die zweite PPO Variante nutzt ein Clipped Surrogate Objective.
 \begin{equation}
     J^{CLIP}(\vartheta) = \mathbb{E}_t\left[ \min(r_t(\vartheta)A_t,clip(r_t(\vartheta),1-\epsilon,1+\epsilon)A_t \right]
     \label{eq:clipped_surrogate_objective}
