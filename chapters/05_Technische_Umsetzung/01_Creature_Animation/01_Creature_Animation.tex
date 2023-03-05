@@ -110,8 +110,6 @@ Als eine Erweiterung der \texttt{Agent}-Klasse von ML-Agents stellt die \texttt{
 Die kontrollierende Instanz einer konkreten Trainingsumgebung ist die \texttt{GenericAgent}-Klasse. Diese ist dazu in der Lage, mit dem Modell des ML-Frameworks zu interagieren, also sowohl Beobachtungen der Trainingsumgebung weiterzugeben also auch die Ausgaben des Modells anzunehmen (und zu verarbeiten). Außerdem ist die Klasse f"ur die Instandhaltung der Trainingsumgebung verantwortlich, indem sie Events der Umgebung verarbeitet (z.B. das Erreichen des Targets oder das Verlassen des zugänglichen Bereiches) und ggf. spezifizierte Routinen wie das Zur"ucksetzen der Umgebung durf"uhrt.
 Schließlich muss die \texttt{GenericAgent}-Klasse noch die Rewards f"ur die Trainingsumgebung verteilen. Zu diesem Zweck ist die Klasse als \textit{abstract} definiert, da diese Rewardfunktionen stark von der Aufgabe des Agents abhängig sind. So benötigt zum Beispiel ein Agent, welcher ein bestimmtest Ziel möglichst schnell erreichen soll eine andere Reward-Funktion als ein Agent, welcher sich möglichst gut vor dem Spieler verstecken soll. Verschiedene Agents können so ohne Redundanz einfach als eine Erweiterung der \texttt{GenericAgent}-Klasse implementiert werden. In Abschnitt \ref{sec:konkretAgents} findet sich eine Auswahl von konkreten Erweiterungen dieser abstrakten Klasse, welche wir im Laufe des Projekts verwendet haben.
 
-\todo{Mehr auf Reward-Funktionen eingehen oder erst bei konkreten Agents?}
-
 \paragraph{JointDriveController und BodyPart}
 
 Um die Ingame-Repräsentation (also die generierte Creature) des Agents zu kontrollieren, besitzt der \texttt{GenericAgent} einen \texttt{JointDriveController}. Bei der Initialisierung der Trainingsumgebung wrappt der \texttt{JointDriveController} die verschiedenen Unity-Transforms der Creature in Instanzen der Hilfsklasse \texttt{BodyPart}. Die Klasse \texttt{BodyPart} gibt uns leichten Zugang zu häufig benötigten Funktionalitäten, wie zum Beispiel das Zur"ucksetzen oder Steuern des Transform. Auch besitzt ein \texttt{BodyPart} n"utzliche Informationen "uber das jeweilige Transform, welche dem ML-Modell weitergegeben werden können. Nach der Initialisierung stellt der \texttt{JointDriveController} nur noch das Verbindungsst"uck zwischen der \texttt{GenericAgent}-Klasse und der verschiedenen \texttt{BodyPart}-Instanzen dar. 
@@ -142,14 +140,33 @@ Ein offensichtliche Limitation dieses Ansatzes ist es, dass der Agent sich nur i
 \paragraph{AgentNavMesh mit Varianten}
 \label{subsubsec:agentnavmesh}
 
-Anstatt dem Agent mehr Informationen "uber die Umgebungen zu geben, ist es auch möglich, eine Reihe von Targets f"ur den Agenten zu erstellen, dass es immer einen geraden Weg ohne Hindernisse von einem dieser Targets (bzw. dem Agent) zum nächsten gibt. Des letzte Target dieser Reihe soll dann das urspr"ungliche Target sein (ab jetzt: End-Target). Eine solche Reihe von Targets l"asst sich gut mit \enquote{NavMeshes} berechnen. Alle weiteren Eigenschaften "ubernimmt der \texttt{AgentNavMesh} vom \texttt{AgentWalker}.
+Anstatt dem Agent mehr Informationen "uber die Umgebungen zu geben, ist es auch möglich, eine Reihe von Targets f"ur den Agenten zu erstellen, dass es immer einen geraden Weg ohne Hindernisse von einem dieser Targets (bzw. dem Agent) zum nächsten gibt. Des letzte Target dieser Reihe soll dann das urspr"ungliche Target sein. Eine solche Reihe von Targets l"asst sich gut mit \enquote{NavMeshes} berechnen. Alle weiteren Eigenschaften "ubernimmt der \texttt{AgentNavMesh} vom \texttt{AgentWalker}.
 
 Ein großer Vorteil dieses Vorgehens ist es, dass die gew"unschte Aufgabe in kleinere Teilprobleme aufgeteilt wird, die individuell betrachtet deutlich einfacher zu lösen sind. Obwohl unsere Umgebungen viele Hindernisse und Kurven an zuf"alligen Positionen beinhalten kann, bestehen die Teilprobleme immer noch aus dem verhältnismäßig simplen Problem, geradeaus in eine Richtung zu laufen.
 
-Diese Implementation des Agents ist die Basis aller im Endprodukt enthaltenen Agents. Einige der benutzten Reward-Funktionen werden in der folgenden Tabelle zusammengefasst.
+Diese Implementation des Agents ist die Basis aller im Endprodukt enthaltenen Agents. Einige der benutzten Reward-Funktionen werden in Tabelle \ref{tab:rewardfunctions} zusammengefasst.
 
-\todo{Tabelle mit Varianten und deren Reward-Funktionen}
-
+\begin{table}
+	\begin{tabularx}{\textwidth}{|l|X|}
+		\hline
+		Walking & $(1 - (\frac{\texttt{currentSpeed}}{\texttt{desiredSpeed}})^2)^2 \cdot (\frac{1}{2}(\texttt{currentDir} \cdot \texttt{desiredDir} + 1))$ 
+		\\
+		\hline 
+		WalkingAvg & Der Geschwindkeitsteil der Rewardfunktion von \texttt{Walking} wird "uber die komplette Episode gemittelt. \\ 
+		\hline
+		WalkingAvgDiscrete & Ähnlich zu \texttt{WalkingAvg}, allerdings werden die Geschwindigkeiten nicht jedes Update erfasst, sondern nur in regelmäßigen Abständen (hier: alle 7200 Updates). \\
+		\hline
+		WalkingGoal & ? (Nils fragen) \\
+		\hline
+		WalkingSpeedScaling & $(1 - \frac{\texttt{currentSpeed}}{\texttt{desiredSpeed}}) \cdot (\frac{1}{2}(\texttt{currentDir} \cdot \texttt{desiredDir} + 1))$  \\
+		\hline
+		WalkingSurvive & Die Funktion von \texttt{Walking} erhält einen weiteren Faktor, bestehend aus dem Verhältnis der aktuellen Episodenlänge und der Länge der bisher am längsten andauernden Episode. \\
+		\hline
+	\end{tabularx}
+	\caption{Varienten des \texttt{AgentNavMesh} mit Reward-Funktionen}
+	\label{tab:rewardfunctions}
+\end{table}
+\todo{Auf Variablennamen eingehen? Oder ist die Bedeutung mithilfe des vorhergehenden Textes offensichtlich?}
 
 \subsubsection{RL-Framework}
 % Jannik
@@ -180,8 +197,7 @@ Zum Analysieren und Bewerten erhebt neroRL während des Trainings verschiedene K
 Beide vorgestellten Frameworks verfügen im Hinblick auf dieses Projekt über Vor- und Nachteile.
 
 \paragraph{ml-Agents}\fup
-ml-Agents unterstützt bereits von sich aus kontinuierliche Aktionsräume, welche zum Bewegen der Kreaturen benötigt werden. Außerdem erlaubt es mehrere Agenten in einer Szene zu platzieren, im folgenden als Multi-Agent-Szene bezeichnet, und so das Trainieren zu beschleunigen. 
-Die vorherigen Tests mit der Walker Testumgebung in Unity \cite{walkerEnv} haben gezeigt, dass selbst eine zum Laufen optimierte zweibeinige Kreatur recht lange braucht, bis sie stabil und ohne umfallen laufen kann.
+ml-Agents unterstützt bereits von sich aus kontinuierliche Aktionsräume, welche zum Bewegen der Kreaturen benötigt werden. Außerdem erlaubt es mehrere Agenten in einer Szene zu platzieren, im folgenden als Multi-Agent-Szene bezeichnet, und so das Trainieren zu beschleunigen. jewilsDie vorherigen Tests mit der Walker Testumgebung in Unity \cite{walkerEnv} haben gezeigt, dass selbst eine zum Laufen optimierte zweibeinige Kreatur recht lange braucht, bis sie stabil und ohne umfallen laufen kann.
 Bei einer prozedural generierten Kreatur ist zu erwarten, dass der Prozess länger dauert und darum sollten alle Möglichkeiten das Training zu beschleunigen verwendet werden.
 Ein Problem mit ml-Agents liegt in der Auswertung von den Ergebnisse der Projektgruppe. Im Rahmen dieser Ausarbeitung ist es notwendig sich kritisch mit den Ergebnissen auseinander zu setzten und für den Teil der CreatureAnimation sind vor allem die Statistiken des Trainings relevant. Ml-Agents erhebt zwar im Rahmen des Trainingsvorgangs Statistiken und speichert diese in einem Tensorboard ab, allerdings werden nur wenige Statistiken erhoben. Zusätzlich speichert das Framework nicht direkt die erhobenen Werte ab, sondern in jedem Schritt nur den Durchschnitt der Werte. Für eine Analyse würde dies bedeuten, dass die verwendeten Daten bereits Durchschnitte sind und daher am Ende der Durchschnitt des Durchschnittes betrachtet wird, was keine guten Ergebnisse liefert. 
 Ein weiterer Punkt ist, dass in der Konfiguration von ml-Agents eine maximale Anzahl von Checkpoints angegeben werden muss. Sollten im Laufe des Trainings mehr angelegt werden als dieses Limit erlaubt, überschreibt das Programm stattdessen die ältesten.
