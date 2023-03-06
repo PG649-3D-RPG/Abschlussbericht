@@ -1,7 +1,7 @@
-\subsection{Dungeon Generierung mittels Space Partitioning}\label{WG:SpacePartitioning}
+\section{Dungeon Generierung mittels Space Partitioning}\label{WG:SpacePartitioning}
 In diesem Abschnitt wird eine Methode beschrieben Dungeons mithilfe von Space Partitioning prozedural zu generieren. Dungeons sind Level, die aus mehreren Räumen bestehen, die durch Korridore miteinander verbunden sind. Die Räume haben eine rechteckige Grundfläche, deren Breite und Tiefe durch Space Partitioning Algorithmen bestimmt sind. Das hier beschriebene Vorgehen orientiert sich an dem Buch \textit{Procedural Content Creation in Games} \cite{Shaker2016}.
 
-\subsubsection*{Space Partitioning}
+\subsection{Space Partitioning}
 Ein Space Partitioning Algorithmus unterteilt einen Raum in Partitionen. In der Regel handelt es sich bei den Ausgangsräumen um zwei- oder dreidimensionale Räume. Hier wird angenommen, dass der zu partitionierende Raum eine rechteckige (zweidimensionale) Fläche ist. Die Partitionierung der Räume erfolgt mithilfe von $k$-d-Bäumen oder Quadtrees. Beide Algorithmen speichern die Partitionierung des Raumes in einer Baumstruktur und arbeiten rekursiv.
 
 Bei der Partitionierung eines zweidimensionalen Raumes mit einem $k$-d-Baum wird in jedem Schritt eine Achse zufällig ausgewählt, an der die Eingabefläche in zwei Teile partitioniert wird. Anschließend wird ein Punkt ausgewählt, der die Grenze zwischen den beiden Partitionen bestimmt. Dabei stellt die Eingabefläche einen Knoten im Baum dar, an den zwei Kindknoten für die Partitionen angehangen werden. So entsteht ein Binärbaum, in dem die Wurzel die Ausgangsfläche enthält und ein innerer Knoten oder Blattknoten eine der zwei Partitionen des Elternknotens enthält. Der Algorithmus wird so lange rekursiv angewandt, bis ein Abbruchkriterium erfüllt ist. Als Abbruchkriterium kann z.B. eine minimale Größe einer Partition gefordert werden. Alternativ kann die Höhe des Baumes durch einen maximalen Wert beschränkt werden. Die Blätter des Baumes enthalten die Partitionen der Ausgangsfläche. Abbildung \ref{04spdgkdtree} illustriert die Partitionierung einer quadratischen Fläche mit einem $k$-d-Baum. Als Abbruchkriterium wurde hier eine minimale Größe der Partitionen gewählt, daher wurden die Partitionen $4$ und $5$ nicht weiter unterteilt und der Baum ist nicht vollständig. 
@@ -76,7 +76,7 @@ Für beide Algorithmen lassen sich weitere Methoden zur Partitionierung der Ausg
     \label{04spdgquadtree}      
 \end{figure}
 
-\subsubsection*{Platzierung der Räume und Korridore}
+\subsection{Platzierung der Räume und Korridore}
 Ausgehend von einer in einer mittels Space Partitioning erstellten Baumstruktur vorliegenden Partitionierung einer rechteckigen Fläche können nun Räume in den Partitionen platziert werden. Da die Partitionen zunächst direkt aneinander anliegen, werden die Räume mit einem durch Parameter beschränkten, zufällig gewählten Abstand zu der linken, rechten, oberen und unteren Begrenzung platziert. Nach der Platzierung der Räume wird der Baum traversiert, um Räume durch Korridore miteinander zu verbinden. Dazu wird in jedem Knoten ein Korridor generiert, der zwei Räume in den Partitionen der Teilbäume der Kinder miteinander verbindet. Der Korridor verläuft dabei durch eine in dem Knoten gespeicherte Unterteilungsebene, wodurch sichergestellt wird, dass Korridore sich nicht überschneiden. Ein Beispiel für einen prozedural generierten Dungeon mit zugehörigem $k$-d-Baum ist in Abbildung \ref{04spdgdungeon} gegeben. Der blau markierte Korridor wurde beispielsweise im Knoten $0$ platziert.
 \begin{figure}[h]
     \centering
