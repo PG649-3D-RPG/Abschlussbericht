@@ -1,5 +1,5 @@
 %  Grundlagen L-System: Allgemein, Theoretischer Hintergrund, 2D, 3D
-\section{L-System}
+\section{L-System}\label{sec:L-System}
 Eine zentrale Eigenschaft in der Natur ist die Selbstähnlichkeit von Strukturen auf makroskopischer und mikroskopischer Ebene~\cite{Shaker2016}.
 Das heißt, es lassen sich dieselben geometrischen Strukturen in verschiedenen Größenordnungen wiederfinden.
 Beispielsweise ähneln die Knospen eines Blumenkohls auch seiner äußeren Struktur, wie in Abbildung~\ref{fig:Blumenkohl}\footnote{Quelle: \url{https://commons.wikimedia.org/wiki/File:Blumenkohl-1.jpg}, Autor: Rainer Zenz, CC BY-SA 3.0 \url{http://creativecommons.org/licenses/by-sa/3.0/}, via Wikimedia Commons} zu sehen ist.
@@ -51,33 +51,33 @@ Ein Beispiel für eine Art von Strauch kann mittels dieses L-Systems erzeugt wer
     \item Terminalsymbole $T=\{\texttt{+},\texttt{-},\texttt{[},\texttt{]}\}$
     \item Startstring $S=F$
     \item Produktionen:
-    \begin{align*}
-        F\rightarrow~F\texttt{[+}F\texttt{]}F\texttt{[-}F\texttt{]}\texttt{[}F\texttt{]}
-    \end{align*}
+          \begin{align*}
+              F\rightarrow~F\texttt{[+}F\texttt{]}F\texttt{[-}F\texttt{]}\texttt{[}F\texttt{]}
+          \end{align*}
 \end{itemize}
 
 Hierbei beschreibt das Nicht-Terminalsymbol $F$ eine Fortbewegung, \texttt{+} und \texttt{-} jeweils eine Drehung um \ang{30} nach links bzw. rechts in 2D und \texttt{[}, \texttt{]} beschreiben die \texttt{push} und \texttt{pop} Operationen.
 Für die ersten drei Ableitungsschritte sind die generierten Strukturen in Abbildung~\ref{fig:Bracketed} dargestellt.
 
 \begin{figure}[ht]
-   \begin{subfigure}[t]{.3\textwidth}
-       \centering
-       \input{chapters/02_Grundlagen/L_System/bracketed-1.tex}
-       \caption*{Ein Ableitungsschritt}
-   \end{subfigure}
-   \hfill
-   \begin{subfigure}[t]{.3\textwidth}
-       \centering
-       \input{chapters/02_Grundlagen/L_System/bracketed-2.tex}
-       \caption*{Zwei Ableitungsschritte}
-   \end{subfigure}
-   \hfill
-   \begin{subfigure}[t]{.3\textwidth}
-       \centering
-       \input{chapters/02_Grundlagen/L_System/bracketed-3.tex}
-       \caption*{Drei Ableitungsschritte}
-   \end{subfigure}
-   \caption{Darstellung der ersten drei Ableitungsschritte eines Bracketed L-Systems}\label{fig:Bracketed}
+    \begin{subfigure}[t]{.3\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/bracketed-1.tex}
+        \caption*{Ein Ableitungsschritt}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{.3\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/bracketed-2.tex}
+        \caption*{Zwei Ableitungsschritte}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{.3\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/bracketed-3.tex}
+        \caption*{Drei Ableitungsschritte}
+    \end{subfigure}
+    \caption{Darstellung der ersten drei Ableitungsschritte eines Bracketed L-Systems}\label{fig:Bracketed}
 \end{figure}
 
 
@@ -95,32 +95,32 @@ Im Folgenden ist ein Beispiel für ein stochastisches Bracketed L-System gegeben
     \item Terminalsymbole $T=\{\texttt{+},\texttt{-},\texttt{[},\texttt{]}\}$
     \item Startstring $S=F$
     \item Produktionen:
-    \begin{align*}
-        F\xrightarrow{0.33} & ~F\texttt{[+}F\texttt{]}F\texttt{[-}F\texttt{]} F \\
-        F\xrightarrow{0.33} & ~F\texttt{[+}F\texttt{]} F                         \\
-        F\xrightarrow{0.34} & ~F\texttt{[-}F\texttt{]} F
-    \end{align*}
+          \begin{align*}
+              F\xrightarrow{0.33} & ~F\texttt{[+}F\texttt{]}F\texttt{[-}F\texttt{]} F \\
+              F\xrightarrow{0.33} & ~F\texttt{[+}F\texttt{]} F                        \\
+              F\xrightarrow{0.34} & ~F\texttt{[-}F\texttt{]} F
+          \end{align*}
 \end{itemize}
 
 Hier gibt es für das Nicht-Terminal $F$ drei Produktionen, zwei Produktionen werden mit einer Wahrscheinlichkeit von \SI{33}{\percent} gewählt und eine Produktion wird mit \SI{34}{\percent} gewählt.
 Drei resultierende Bilder dieses L-Systems sind in Abbildung~\ref{fig:Stochastic} gegeben.
 Es ist gut erkennbar wie aus einem L-System deutlich unterschiedliche Strukturen generiert werden können, die jedoch alle ähnliche Grundstrukturen aufweisen.
 \begin{figure}[ht]
-   \begin{subfigure}[t]{.25\textwidth}
-       \centering
-       \input{chapters/02_Grundlagen/L_System/r-1.tex}
-   \end{subfigure}
-   \hfill
-   \begin{subfigure}[t]{.25\textwidth}
-       \centering
-       \input{chapters/02_Grundlagen/L_System/r-2.tex}
-   \end{subfigure}
-   \hfill
-   \begin{subfigure}[t]{.25\textwidth}
-       \centering
-       \input{chapters/02_Grundlagen/L_System/r-3.tex}
-   \end{subfigure}
-   \caption{Drei Resultate desselben stochastischen L-Systems}\label{fig:Stochastic}
+    \begin{subfigure}[t]{.25\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/r-1.tex}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{.25\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/r-2.tex}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{.25\textwidth}
+        \centering
+        \input{chapters/02_Grundlagen/L_System/r-3.tex}
+    \end{subfigure}
+    \caption{Drei Resultate desselben stochastischen L-Systems}\label{fig:Stochastic}
 \end{figure}
 
 
@@ -137,10 +137,10 @@ Ein Beispiel\footnote{L-System adaptiert von: \url{https://www.sidefx.com/docs/h
     \item Terminalsymbole $T=\{\texttt{+},\texttt{-},\texttt{\&},\texttt{\textasciicircum},\texttt{/},\texttt{\textbackslash},\texttt{[},\texttt{]}\}$
     \item Startstring $S=FFFA$
     \item Produktionen:
-    \begin{align*}
-        A\rightarrow &~\texttt{[}B\texttt{]////[}B\texttt{]////}B \\
-        B\rightarrow &~\texttt{\&}FFFA
-    \end{align*}
+          \begin{align*}
+              A\rightarrow & ~\texttt{[}B\texttt{]////[}B\texttt{]////}B \\
+              B\rightarrow & ~\texttt{\&}FFFA
+          \end{align*}
 \end{itemize}
 
 Mit diesem L-System kann ein dreidimensionaler Baum wie in Abbildung~\ref{fig:L-System 3D Unity} in Unity erzeugt werden.
@@ -149,7 +149,7 @@ Es wurden 7 Ableitungsschritte durchgeführt und es wurde jeweils \ang{28} um di
 \begin{figure}[ht]
     \centering
     % \resizebox{\linewidth-3cm}{!}{%
-        
+    
     % }
     \includegraphics[width=0.5\linewidth]{chapters/02_Grundlagen/L_System/L_System_3D_Tree.png}
     \caption{L-System 3D Baum}\label{fig:L-System 3D Unity}

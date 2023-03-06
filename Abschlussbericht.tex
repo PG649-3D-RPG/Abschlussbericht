@@ -25,6 +25,7 @@
 \usepackage{ulem}					% Unterstreichen von Text
 \usepackage{booktabs}				% "Schöne" Tabellen	
 \usepackage{subcaption}
+\usepackage{tabularx}
 
 
 \usepackage{siunitx}
@@ -40,6 +41,25 @@
 
 %\setcounter{tocdepth}{3}
 %\setcounter{secnumdepth}{3}
+
+\usepackage{pgf}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+% plots
+\pgfplotsset{compat=1.18,
+			show sum on top/.style={
+				/pgfplots/scatter/@post marker code/.append code={%
+					\node[
+						at={(normalized axis cs:%
+								\pgfkeysvalueof{/data point/x},%
+								\pgfkeysvalueof{/data point/y})%
+						},
+						anchor=south,xshift=\pgfkeysvalueof{/pgf/bar shift}
+					]
+					{\pgfmathprintnumber[precision=1]{\pgfkeysvalueof{/data point/y}}};
+				},
+			},
+			}
 
 \usepackage{scrhack} 
 \usepackage[autostyle,german=guillemets,german=quotes]{csquotes}
@@ -58,51 +78,51 @@
 
 
 \begin{document}
-	\maketitle
-	\pagenumbering{roman}
+\maketitle
+\pagenumbering{roman}
 
-	\tableofcontents
-	\cleardoublepage
-	
-	\pagenumbering{arabic}
-	
-	\include{chapters/01_Einleitung/01_Einleitung}
-	
-	\include{chapters/02_Grundlagen/02_Grundlagen}
-	
-	\include{chapters/03_Verwandte_Arbeiten/03_Verwandte_Arbeiten}
-	
-	\include{chapters/04_Projektorganisation/04_Projektorganisation}
-	
-	\include{chapters/05_Technische_Umsetzung/05_Technische_Umsetzung}
-	
-	\include{chapters/06_Vorlaeufige_Ergebnisse/06_Vorlaeufige_Ergebnisse}
-	
-	\include{chapters/07_Ausblick/07_Ausblick}
-	
-	\include{chapters/Themenallokation/Themenallokation}
-	\cleardoublepage
+\tableofcontents
+\cleardoublepage
 
-	\phantomsection
-	\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
-	\listoffigures				% Abbildungsverzeichnis ... nicht für kurze Dokumente
-	\cleardoublepage
+\pagenumbering{arabic}
 
-	\phantomsection
-	\addcontentsline{toc}{chapter}{Tabellenverzeichnis}
-	\listoftables				% Tabellenverzeichnis
-	\cleardoublepage
+\include{chapters/01_Einleitung/01_Einleitung}
 
-	\phantomsection
-	\addcontentsline{toc}{chapter}{Algorithmenverzeichnis}
-	\listofalgorithms
-	\cleardoublepage
+\include{chapters/02_Grundlagen/02_Grundlagen}
 
-	\phantomsection
-	% Bibliography
-	\addcontentsline{toc}{chapter}{\bibname}
-	\bibliographystyle{ACM-Reference-Format}
-	\bibliography{bibliography/references}
-	
-	
+\include{chapters/03_Verwandte_Arbeiten/03_Verwandte_Arbeiten}
+
+\include{chapters/04_Projektorganisation/04_Projektorganisation}
+
+\include{chapters/05_Technische_Umsetzung/05_Technische_Umsetzung}
+
+\include{chapters/06_Vorlaeufige_Ergebnisse/06_Vorlaeufige_Ergebnisse}
+
+\include{chapters/07_Ausblick/07_Ausblick}
+
+\include{chapters/Themenallokation/Themenallokation}
+\cleardoublepage
+
+\phantomsection
+\addcontentsline{toc}{chapter}{Abbildungsverzeichnis}
+\listoffigures				% Abbildungsverzeichnis ... nicht für kurze Dokumente
+\cleardoublepage
+
+\phantomsection
+\addcontentsline{toc}{chapter}{Tabellenverzeichnis}
+\listoftables				% Tabellenverzeichnis
+\cleardoublepage
+
+\phantomsection
+\addcontentsline{toc}{chapter}{Algorithmenverzeichnis}
+\listofalgorithms
+\cleardoublepage
+
+\phantomsection
+% Bibliography
+\addcontentsline{toc}{chapter}{\bibname}
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{bibliography/references}
+
+
 \end{document}

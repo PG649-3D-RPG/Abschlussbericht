@@ -110,8 +110,6 @@ Als eine Erweiterung der \texttt{Agent}-Klasse von ML-Agents stellt die \texttt{
 Die kontrollierende Instanz einer konkreten Trainingsumgebung ist die \texttt{GenericAgent}-Klasse. Diese ist dazu in der Lage, mit dem Modell des ML-Frameworks zu interagieren, also sowohl Beobachtungen der Trainingsumgebung weiterzugeben also auch die Ausgaben des Modells anzunehmen (und zu verarbeiten). Außerdem ist die Klasse f"ur die Instandhaltung der Trainingsumgebung verantwortlich, indem sie Events der Umgebung verarbeitet (z.B. das Erreichen des Targets oder das Verlassen des zugänglichen Bereiches) und ggf. spezifizierte Routinen wie das Zur"ucksetzen der Umgebung durf"uhrt.
 Schließlich muss die \texttt{GenericAgent}-Klasse noch die Rewards f"ur die Trainingsumgebung verteilen. Zu diesem Zweck ist die Klasse als \textit{abstract} definiert, da diese Rewardfunktionen stark von der Aufgabe des Agents abhängig sind. So benötigt zum Beispiel ein Agent, welcher ein bestimmtest Ziel möglichst schnell erreichen soll eine andere Reward-Funktion als ein Agent, welcher sich möglichst gut vor dem Spieler verstecken soll. Verschiedene Agents können so ohne Redundanz einfach als eine Erweiterung der \texttt{GenericAgent}-Klasse implementiert werden. In Abschnitt \ref{sec:konkretAgents} findet sich eine Auswahl von konkreten Erweiterungen dieser abstrakten Klasse, welche wir im Laufe des Projekts verwendet haben.
 
-\todo{Mehr auf Reward-Funktionen eingehen oder erst bei konkreten Agents?}
-
 \paragraph{JointDriveController und BodyPart}
 
 Um die Ingame-Repräsentation (also die generierte Creature) des Agents zu kontrollieren, besitzt der \texttt{GenericAgent} einen \texttt{JointDriveController}. Bei der Initialisierung der Trainingsumgebung wrappt der \texttt{JointDriveController} die verschiedenen Unity-Transforms der Creature in Instanzen der Hilfsklasse \texttt{BodyPart}. Die Klasse \texttt{BodyPart} gibt uns leichten Zugang zu häufig benötigten Funktionalitäten, wie zum Beispiel das Zur"ucksetzen oder Steuern des Transform. Auch besitzt ein \texttt{BodyPart} n"utzliche Informationen "uber das jeweilige Transform, welche dem ML-Modell weitergegeben werden können. Nach der Initialisierung stellt der \texttt{JointDriveController} nur noch das Verbindungsst"uck zwischen der \texttt{GenericAgent}-Klasse und der verschiedenen \texttt{BodyPart}-Instanzen dar. 
@@ -142,14 +140,50 @@ Ein offensichtliche Limitation dieses Ansatzes ist es, dass der Agent sich nur i
 \paragraph{AgentNavMesh mit Varianten}
 \label{subsubsec:agentnavmesh}
 
-Anstatt dem Agent mehr Informationen "uber die Umgebungen zu geben, ist es auch möglich, eine Reihe von Targets f"ur den Agenten zu erstellen, dass es immer einen geraden Weg ohne Hindernisse von einem dieser Targets (bzw. dem Agent) zum nächsten gibt. Des letzte Target dieser Reihe soll dann das urspr"ungliche Target sein (ab jetzt: End-Target). Eine solche Reihe von Targets l"asst sich gut mit \enquote{NavMeshes} berechnen. Alle weiteren Eigenschaften "ubernimmt der \texttt{AgentNavMesh} vom \texttt{AgentWalker}.
+Anstatt dem Agent mehr Informationen "uber die Umgebungen zu geben, ist es auch möglich, eine Reihe von Targets f"ur den Agenten zu erstellen, dass es immer einen geraden Weg ohne Hindernisse von einem dieser Targets (bzw. dem Agent) zum nächsten gibt. Des letzte Target dieser Reihe soll dann das urspr"ungliche Target sein. Eine solche Reihe von Targets l"asst sich gut mit \enquote{NavMeshes} berechnen. Alle weiteren Eigenschaften "ubernimmt der \texttt{AgentNavMesh} vom \texttt{AgentWalker}.
 
 Ein großer Vorteil dieses Vorgehens ist es, dass die gew"unschte Aufgabe in kleinere Teilprobleme aufgeteilt wird, die individuell betrachtet deutlich einfacher zu lösen sind. Obwohl unsere Umgebungen viele Hindernisse und Kurven an zuf"alligen Positionen beinhalten kann, bestehen die Teilprobleme immer noch aus dem verhältnismäßig simplen Problem, geradeaus in eine Richtung zu laufen.
 
-Diese Implementation des Agents ist die Basis aller im Endprodukt enthaltenen Agents. Einige der benutzten Reward-Funktionen werden in der folgenden Tabelle zusammengefasst.
+Diese Implementation des Agents ist die Basis aller im Endprodukt enthaltenen Agents. Einige der benutzten Reward-Funktionen werden in Tabelle \ref{tab:rewardfunctions} zusammengefasst.
 
-\todo{Tabelle mit Varianten und deren Reward-Funktionen}
+\begin{table}
+	\begin{tabularx}{\textwidth}{|l|X|}
+		\hline
+		Walking & $(1 - (\frac{\texttt{currentSpeed}}{\texttt{desiredSpeed}})^2)^2 \cdot (\frac{1}{2}(\texttt{currentDir} \cdot \texttt{desiredDir} + 1))$ 
+		\\
+		\hline 
+		WalkingAvg & Der Geschwindkeitsteil der Rewardfunktion von \texttt{Walking} wird "uber die komplette Episode gemittelt. \\ 
+		\hline
+		WalkingAvgDiscrete & Ähnlich zu \texttt{WalkingAvg}, allerdings werden die Geschwindigkeiten nicht jedes Update erfasst, sondern nur in regelmäßigen Abständen (hier: alle 7200 Updates). \\
+		\hline
+		WalkingGoal & ? (Nils fragen) \\
+		\hline
+		WalkingSpeedScaling & $(1 - \frac{\texttt{currentSpeed}}{\texttt{desiredSpeed}}) \cdot (\frac{1}{2}(\texttt{currentDir} \cdot \texttt{desiredDir} + 1))$  \\
+		\hline
+		WalkingSurvive & Die Funktion von \texttt{Walking} erhält einen weiteren Faktor, bestehend aus dem Verhältnis der aktuellen Episodenlänge und der Länge der bisher am längsten andauernden Episode. \\
+		\hline
+		Standup & $\begin{aligned}[t]
+			&r_{hhr}+r_{hhp}+r_{thr}+r_{trr}\\
+			&r_{hhr}=\left\{\begin{array}{lr} clamp(hh_n/hh_s,0,1)^2 & if\; hh_n>hh_{max}\vee \vert hh_s-hh_n\vert < 0.25\\ 0 & else \end{array}\right.\\
+			&r_{hhp}=\left\{\begin{array}{lr} -0.1 & if\;hh_n<hh_{n-1} \wedge \vert hh_s-hh_n\vert > 0.25\\ 0 & else \end{array}\right.\\
+			&r_{thr}=\left\{\begin{array}{lr} clamp(0.2^{\delta_{th}},0,1) & if\;\delta_{th}<\delta_{thmin} \vee \delta_{th}<0.125\\ 0 & else \end{array}\right.\\
+			&\delta_{th}=\vert th_s-th_n\vert\\
+			&r_{trr}=\left\{\begin{array}{lr} clamp(0.2^{\delta_{tr}},0,1) & if\;\delta_{tr}<\delta_{trmin} \vee \delta_{tr} < 0.4\\ 0 & else  \end{array}\right.\\
+			&\delta_{tr}=\left\vert \left(\begin{array}{c} (tr_s-tr_n).x\%360 \\ 0 \\ (tr_s-tr_n).z \%360 \end{array}\right) \right\vert
+		\end{aligned}$	\\
+		\hline
+	\end{tabularx}
+	\caption{Varienten des \texttt{AgentNavMesh} mit Reward-Funktionen}
+	\label{tab:rewardfunctions}
+\end{table}
+\todo{Auf Variablennamen eingehen? Oder ist die Bedeutung mithilfe des vorhergehenden Textes offensichtlich?}
 
+Die Standup Reward-Funktion wird verwendet, um das Aufstehen aus einer liegenden Position zu trainieren. Die Funktion besteht aus vier Komponenten, die unter bestimmten Bedingungen einen Wert annehmen. 
+$r_{hhr}$ bezeichnet den Reward für die Kopfhöhe (HeadHeight). Dieser ergibt sich aus der Differenz der aktuellen Kopfhöhe $hh_n$ und der Kopfhöhe im stehenden Ausgangszustand $hh_s$. Der Reward wird nur vergeben, wenn die aktuelle Kopfhöhe größer ist als die maximale Kopfhöhe der aktuellen Episode $hh_{max}$, oder die aktuelle Kopfhöhe nah an der stehenden Kopfhöhe ist. Dadurch wird sichergestellt, dass durch wiederholtes Heben und Senken des Kopfes im nicht-stehenden Zustand kein hoher Reward verteilt wird.
+$r_{hhp}$ bezeichnet eine Bestrafung (negativer Reward) von $-0.1$ für die Kopfhöhe. Diese wird verteilt, wenn die aktuelle Kopfhöhe $hh_n$ die Kopfhöhe des vorherigen Zeitschritts $hh_{n-1}$ unterschreitet und die aktuelle Kopfhöhe nicht nah an der stehenden Kopfhöhe ist. Dies motiviert den Agenten, den Kopf nicht zu senken und stabil zu stehen. 
+$r_{thr}$ bezeichnet den Reward für die Höhe des obersten Knochens in der Hierarchie des Skeletts des Agents (TopTransform, Rücken). Dieser ergibt sich aus der Skalierung der Abweichung $\delta_{th}$ der aktuellen Höhe des Knochens $th_n$ von dessen Startzustand $th_s$. Der Reward wird nur verteilt, wenn die aktuelle Differenz kleiner ist, als die minimale Differenz in der aktuellen Episode $\delta_{thmin}$, oder die aktuelle Differenz sehr gering ist, der Knochen also nah der Ausgangshöhe ist.
+$r_{trr}$ bezeichnet den Reward für die Rotation des obersten Knochens in der Hierachie des Skeletts des Agents. Dieser wird analog zum Reward für die Höhe des Knochens $r_{thr}$ berechnet. Die aktuelle Abweichung der Rotation $\delta_{tr}$ betrachtet die Rotation des Knochens entlang der $x$ und $z$ Achsen, die $y$ Achse wird ignoriert, da diese die Blickrichtung kodiert. Die Abweichung entlang der $x$ und $z$ Achse zwischen aktueller Rotation $tr_n$ und Startrotation $tr_s$ wird jeweils auf den Bereich von 0 bis 360 Grad skaliert. Der Reward wird nur verteilt, wenn die aktuelle Rotation geringer ist, als die minimale Rotation der aktuellen Episode $\delta_{trmin}$, oder die Rotation nah an der Ausgangsrotation ist.
+Durch die beiden Reward für den Rückenknochen des Skeletts wird der Agent dazu motiviert, seine aufrechte Ausgangssituation wiederherzustellen. Indem die Rewards jeweils nur dann verteilt werden, wenn eine Verbesserung im Vergleich zum Minimum der aktuellen Episode entsteht, oder der Ausgangszustand annähernd erreicht ist, wird verhindert, dass für wiederholtes Heben und Senken des Rückenknochens ein großer Reward verteilt wird. Dadurch wird ein stabiles Halten der Ausgangsposition ermutigt, sobald diese wieder erreicht wurde.
 
 \subsubsection{RL-Framework}
 % Jannik
@@ -180,8 +214,7 @@ Zum Analysieren und Bewerten erhebt neroRL während des Trainings verschiedene K
 Beide vorgestellten Frameworks verfügen im Hinblick auf dieses Projekt über Vor- und Nachteile.
 
 \paragraph{ml-Agents}\fup
-ml-Agents unterstützt bereits von sich aus kontinuierliche Aktionsräume, welche zum Bewegen der Kreaturen benötigt werden. Außerdem erlaubt es mehrere Agenten in einer Szene zu platzieren, im folgenden als Multi-Agent-Szene bezeichnet, und so das Trainieren zu beschleunigen. 
-Die vorherigen Tests mit der Walker Testumgebung in Unity \cite{walkerEnv} haben gezeigt, dass selbst eine zum Laufen optimierte zweibeinige Kreatur recht lange braucht, bis sie stabil und ohne umfallen laufen kann.
+ml-Agents unterstützt bereits von sich aus kontinuierliche Aktionsräume, welche zum Bewegen der Kreaturen benötigt werden. Außerdem erlaubt es mehrere Agenten in einer Szene zu platzieren, im folgenden als Multi-Agent-Szene bezeichnet, und so das Trainieren zu beschleunigen. jewilsDie vorherigen Tests mit der Walker Testumgebung in Unity \cite{walkerEnv} haben gezeigt, dass selbst eine zum Laufen optimierte zweibeinige Kreatur recht lange braucht, bis sie stabil und ohne umfallen laufen kann.
 Bei einer prozedural generierten Kreatur ist zu erwarten, dass der Prozess länger dauert und darum sollten alle Möglichkeiten das Training zu beschleunigen verwendet werden.
 Ein Problem mit ml-Agents liegt in der Auswertung von den Ergebnisse der Projektgruppe. Im Rahmen dieser Ausarbeitung ist es notwendig sich kritisch mit den Ergebnissen auseinander zu setzten und für den Teil der CreatureAnimation sind vor allem die Statistiken des Trainings relevant. Ml-Agents erhebt zwar im Rahmen des Trainingsvorgangs Statistiken und speichert diese in einem Tensorboard ab, allerdings werden nur wenige Statistiken erhoben. Zusätzlich speichert das Framework nicht direkt die erhobenen Werte ab, sondern in jedem Schritt nur den Durchschnitt der Werte. Für eine Analyse würde dies bedeuten, dass die verwendeten Daten bereits Durchschnitte sind und daher am Ende der Durchschnitt des Durchschnittes betrachtet wird, was keine guten Ergebnisse liefert. 
 Ein weiterer Punkt ist, dass in der Konfiguration von ml-Agents eine maximale Anzahl von Checkpoints angegeben werden muss. Sollten im Laufe des Trainings mehr angelegt werden als dieses Limit erlaubt, überschreibt das Programm stattdessen die ältesten.
