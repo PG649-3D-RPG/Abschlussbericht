@@ -71,7 +71,12 @@
 
 \begin{document}
     \begin{tikzpicture}[auto,rotate=90,transform shape]
-        \pic at (3.25pt,4pt) {crwban={black}{10pt}};
+        % \pic at (3.25pt,4pt) {crwban={black}{10pt}};
+  %       \node[isosceles triangle,
+	% draw,
+	% fill=red,
+	% minimum size =0.001cm] (T) at (0,0pt){};
+  \path[-stealth,semithick,red] (0pt,0pt) edge (10pt,0pt);
         \begin{scope}[on background layer]
             \path[-Latex] (0pt,0pt) edge (40pt,0pt);
             \path[-Latex] (0pt,0pt) edge (-45:40pt);
