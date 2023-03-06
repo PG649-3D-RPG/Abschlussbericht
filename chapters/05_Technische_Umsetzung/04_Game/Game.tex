@@ -32,12 +32,12 @@ Der Spieler bekommt dafür zwei Werkzeuge
 Der Spieler muss das Gewehr nutzen um die ihn verfolgenden Kreaturen zu Fall zu bringen, zum Beispiel indem er genügend Kugeln auf die Kreatur schießt, dass diese unter dem Gewicht der Kugeln zusammenbricht.
 
 Gefallene Kreaturen die sich einige Zeit lang nicht mehr nennenswerte Bewegen können sterben und werden aus dem Spiel entfernt.
-Genauso entfernt das Spiel Kreaturen, die zu Weit vom Spieler entfernt sind um noch Einfluss auf das Spiel zu haben.
+Genauso entfernt das Spiel Kreaturen, die zu weit vom Spieler entfernt sind um noch Einfluss auf das Spiel zu haben.
 Dafür werden an bestimmten, vom Terrain Generator festgelegten, Punkten regelmäßig neue Kreaturen erstellt, wobei das Spiel die Kreaturen möglichst nah am Spieler platziert, so dass der Spieler immer in Gefahr ist.
 
 Das Gewehr nutzt elegant das Alleinstellungsmerkmal des Spiels aus, dass die Kreaturen durch ein neuronales Netz animiert werden.
 Eine Kugel am Bein einer Kreatur zu platzieren ändert sichtlich ihr Bewegungsverhalten, da die Kreatur weiterhin versucht sich normal zu bewegen, was aber durch die zusätzliche Masse am Bein nicht gelingt.
-Eine normale Animation würde dieses verhalten nicht aufweisen.
+Eine normale Animation würde dieses Verhalten nicht aufweisen.
 Der Spieler kann also experimentieren, wie er sein Gewehr am effizientesten verwenden kann.
 
 \subsubsection{Steuerung}
@@ -103,7 +103,7 @@ Dies ist die einzige Kamera im Spiel.
 Alle weiteren Szenen werden Additiv zur \texttt{EntryPoint} Szene geladen und enthalten jeweils nur virtuelle Kameras.
 So ist \texttt{Cinemachines} Invariante, dass nur eine nicht-virtuelle Kamera existieren darf, gesichert.
 
-Das \texttt{Debug} Objekt enthält eine simple \texttt{DebugActions} Komponente, die das erstellen von Screenshots mittels der F12 Taste ermöglicht.
+Das \texttt{Debug} Objekt enthält eine simple \texttt{DebugActions} Komponente, die das Erstellen von Screenshots mittels der F12 Taste ermöglicht.
 
 Das \texttt{Init} Objekt enthält eine \texttt{Init} Komponente, die in ihrer Start-Methode den Szenenübergang zur \texttt{Level} Szene auslöst.
 Der Übergang wird von der \texttt{SceneTransition} Klasse geleitet, die ebenfalls an dem \texttt{Init} Objekt anhängt.
@@ -154,10 +154,10 @@ Das oberste Objekt des Prefabs muss jeweils ein Skript besitzen, dass das \textt
 Das Interface besitzt die 4 Methoden \texttt{OnPrimary}, \texttt{OnSecondary}, \texttt{OnEquip}, und \texttt{OnUnequip}, die vom \texttt{FPSController} aufgerufen werden.
 Mit diesen Methoden können die Werkzeuge darauf reagieren, dass die linke, bzw. rechte, Maustaste gedrückt wurde, dass sie ausgerüstet wurden, und dass ein anderes Werkzeug ausgerüstet wurde.
 
-Die Taschenlampe enthält ein \texttt{Spotlight}, dass beim drücken der linken Maustaste an- und ausgeschaltet wird.
+Die Taschenlampe enthält ein \texttt{Spotlight}, dass beim Klicken der linken Maustaste an- und ausgeschaltet wird.
 
 Das Gewehr enthält ebenfalls ein \texttt{Spotlight} für den Lichtkegel des Gewehrs.
-Beim drücken der Linken Maustaste führt das Gewehr einen Raycast von der momentanen Kamera aus und platziert ein \texttt{BallGunProjectile} an der so gefundenen Stelle.
+Beim Klicken der Linken Maustaste führt das Gewehr einen Raycast von der momentanen Kamera aus und platziert ein \texttt{BallGunProjectile} an der so gefundenen Stelle.
 Das \texttt{BallGunProjectile} spielt dann selbstständig seine Animationen ab und entfernt sich nach einiger Zeit selbst wieder aus der Szene.
 
 Beide Werkzeuge reagieren auf \texttt{OnEquip}, \texttt{OnUnequip} damit sich selbst An- und Abzuschalten.
