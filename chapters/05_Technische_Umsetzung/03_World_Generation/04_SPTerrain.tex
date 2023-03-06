@@ -161,7 +161,7 @@ In der Spielwelt sollen während des Spielverlaufs Kreaturen platziert werden. D
 
 \subsection{Generierung des Terrains}
 Die Spielwelt ist ein Unity Terrain quadratischer Größe. Dem Terrain ist eine Heightmap zugeordnet, über die die Höhe eines Punktes auf dem Terrain gesetzt werden kann. Die Heightmap hat den Wertebereich $[0,1]$ und wird um einen festgelegten Wert skaliert. Abhängig von der Ausgabe des zuvor beschriebenen Space Partitioning Algorithmus werden Masken in der Größe des Terrains generiert. Die Masken wählen Bereiche in der Spielwelt aus, die mit verschiedenen Operationen modifiziert werden, um eine Abgrenzung zwischen Levels, Korridoren und Zwischenräumen zu erhalten.
-\subsubsection{Masken}
+\subsubsection{Masken}\label{sec:terrainmask}
 Die Spielwelt besteht aus Levels, Korridoren und Zwischenräumen. Das Spiel findet in den Levels und Korridoren statt. Die Zwischenräume werden mit Bergen gefüllt, wobei nicht vorgesehen ist, dass der Spieler die Zwischenräume betritt. Die Oberfläche des Terrains muss entsprechend modifiziert werden. Dazu werden Masken generiert, die Levels, Korridore und Zwischenräume auf dem Terrain maskieren. Die Masken sind zweidimensionale \texttt{bool} Arrays, die die gleiche Größe wie das Terrain haben. Damit ist jedem ganzzahligen Punkt auf der Oberfläche des Terrains ein Wert vom Typ \texttt{bool} zugeordnet. Grundlegend werden drei Masken generiert. \begin{itemize}
     \item Die Maske \texttt{levels} wird aus der unmittelbaren Ausgabe des Space Partitioning Algoritmus generiert und maskiert alle Positionen auf dem Terrain, die in einem Level liegen.
     \item Die Maske \texttt{corridors} maskiert alle Positionen durch die ein Korridor führt.
@@ -191,7 +191,7 @@ Weitere Masken können durch Invertierung, Addition, Subtraktion und weitere Ope
     \label{fig:wgmasks}
 \end{figure}
 
-\subsubsection{Heightmap Operationen}
+\subsubsection{Heightmap Operationen}\label{sec:heightopt}
 Zur Modifizierung der Heightmap stehen die Operationen \texttt{SetByMask}, \texttt{AverageFilter}, \texttt{PerlinNoise} und \texttt{Power} zur Verfügung. Die Operationen modifizieren die Höhen der Heightmap an den Positionen, die von einer als Eingabe geforderten Maske ausgewählt sind.
 \begin{itemize}
     \item \texttt{SetByMask} wird mit einem Parameter vom Typ \texttt{float} aufgerufen. Die Operation ersetzt an maskierten Positionen die Höhe der Heightmap durch den gegebenen Parameter. Alle nicht maskierten Positionen bleiben erhalten, bzw. können durch einen optionalen Parameter vom Typ \texttt{float} auf einen Wert gesetzt werden.

@@ -68,6 +68,33 @@ Beispielsweise ist es einfach, unterschiedlich lange Körperteile zufällig zu g
 Allgemein ist es auch möglich eine zufällige Anzahl an Armen und Beinen zu erzeugen, womit direkt sehr unterschiedliche Kreaturen erzeugt werden können, die aber stets die gleiche Grundstruktur haben.
 Der Entwurf der einzelnen Körperteile wird durch die Produktionen des L-Systems definiert.
 
+Das Skelett einer Kreatur die durch ein L-System erzeugt wurde, ist in Abbildung~\ref{skeletonlsystemex} dargestellt.
+Das L-System, aus dem diese Skelettstruktur entstanden ist, ist im Folgenden gegeben:
+\begin{itemize}
+    \item Startstring:
+	\begin{equation*}
+		S=[|C]+(90)[AH]-(180)[AH]+(90)T+(90)[G-(90)L]-(180)[G+(90)L]
+	\end{equation*}
+	\item Iterationen: 2
+    \item Produktionen:
+          \begin{align*}
+			A\rightarrow & ~F(0.25)F(0.25)&\text{Arme} \\
+              L\rightarrow & ~F(0.35)F(0.3)\texttt{\textasciicircum}V&\text{Beine} \\
+              T\rightarrow & ~F(0.4)F(0.4)&\text{Torso}\\
+              C\rightarrow & ~F(0.3)&\text{Kopf}\\
+              G\rightarrow & ~F(0.2)&\text{Hüfte}\\
+              V\rightarrow & ~F(0.2)&\text{Füße}\\
+              H\rightarrow & ~F(0.15)&\text{Hände}
+          \end{align*}
+\end{itemize}
+\begin{figure}[h]
+	\begin{center}
+		\includegraphics[width = 0.5\textwidth]{resources/img/skeletonlsystemex.png}
+	\end{center}
+	\caption{Mittels L-System generiertes Skelett}
+	\label{skeletonlsystemex}
+\end{figure}
+
 Der resultierende String des L-Systems wird von der Turtle von links nach rechts, den Regeln entsprechend, durchlaufen.
 Die Turtle bewegt sich dabei im dreidimensionalen Raum, wie in Abschnitt~\ref{subsub: L-System 3D} beschrieben.
 Für jede Fortbewegung der Turtle wird jeweils ihre Startposition und die Endposition im dreidimensionalen Raum als ein Tupel gespeichert.
@@ -80,13 +107,6 @@ Ausgehend von dieser Liste werden die Knochen erstellt und mit den Joints zu ein
 \paragraph*{Skelett aus L-System generieren}\label{sec:lsystemskel}
 Ausgehend von einer Liste von Tupeln, die jeweils Start und Endpunkte einer von der Turtle gezeichneten Strecke enthalten wird das Skelett mit Unity Klassen generiert. Zunächst wird die Liste in eine Baumstruktur überführt. Dabei entspricht ein Knoten im Baum einem Knochen im Skelett. Zwei Knoten stehen in einer Eltern-Kind-Beziehung im Baum, wenn die zugehörigen Strecken sich schneiden. Dabei wird gefordert, dass der Endpunkt der zum Elternknoten gehörigen Strecke dem Startpunkt der zum Kindknoten gehörigen Strecke gleicht. Da angenommen wird, dass es zu jedem Startpunkt eines Tupels in der Liste ein weiteres Tupel gibt, dessen Endpunkt dem Startpunkt gleicht lässt sich der Baum so definieren. Der Baum wird traversiert und zu jedem Knoten wird ein GameObject erstellt.  Dieses wird mit einem Rigidbody, einem CapsuleCollider und einem primitiven Mesh versehen. Die Knochen werden in Kategorien, wie zum Beispiel Arm, Bein oder Kopf eingeteilt. Zwei Knochen werden mit einem Joint verbunden, wenn sie im Baum in einer Eltern-Kind-Beziehung stehen. Für die erlaubten Rotationen der Joints wurden Standardwerte je nach Kategorie festgelegt. Abbildung \ref{skeletonlsystemex} zeigt ein über ein L-System generiertes Skelett.
 
-\begin{figure}[h]
-	\begin{center}
-		\includegraphics[width = 0.5\textwidth]{resources/img/skeletonlsystemex.png}
-	\end{center}
-	\caption{Mittels L-System generiertes Skelett}
-	\label{skeletonlsystemex}
-\end{figure}
 
 
 \subsubsection{Mesh-Generierung}

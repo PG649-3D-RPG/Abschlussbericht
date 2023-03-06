@@ -1,21 +1,21 @@
 \subsection{Terrain-Transformationen}
-Nachdem das Layout der Welt mittels Space-Partitioning~\ref{WG:SpacePartitioning} berechnet wurde und dieses anschließend in entsprechende Terrain Masken\todo{add ref to section} unterteilt wurde, muss die Welt nun in Unity generiert werden.
+Nachdem das Layout der Welt mittels Space-Partitioning~\ref{WG:SpacePartitioning} berechnet wurde und dieses anschließend in entsprechende Terrain Masken~\ref{sec:terrainmask} unterteilt wurde, muss die Welt nun in Unity generiert werden.
 Die Basis dafür bildet das Unity Terrain Objekt.
-Um das Terrain aus dem Welt-Layout prozedural zu generieren, werden sukzessive die verschiedenen Operationen\todo{add ref} auf den Teilen der Heightmap ausgeführt, die durch die Terrain-Masken vorgegeben werden.
+Um das Terrain aus dem Welt-Layout prozedural zu generieren, werden sukzessive die verschiedenen, in~\ref{sec:heightopt} beschriebenen, Operationen auf den Teilen der Heightmap ausgeführt, die durch die Terrain-Masken vorgegeben werden.
 Die folgenden Transformationen werden in dieser Reihenfolge auf Teilen der Heightmap ausgeführt:
 \begin{enumerate}
     \item \texttt{SetByMask}: Die Räume und Korridore des Space-Partitioning werden in der Heightmap umgesetzt. Dies geschieht einmalig am Anfang und bildet die Grundlage für das Welt-Layout. %, indem an den Koordinaten wo ein Raum oder ein Korridor platziert wurde
     \item \texttt{AverageFilter}: Ausgehend von Schritt 1 ist die Trennung vom begehbaren Bereich (Räume und Korridore) und den Bergen im Terrain eine scharfe Kante.
-          Die Heightmap springt an den Begrenzungen von 0 auf 1, was im Spiel unnatürlich aussieht.
+          Die Heightmap springt an den Begrenzungen von 0 auf 1, was im Spiel unnatürlich wirkt.
           Um diese Übergänge zu glätten wird der \texttt{AverageFilter} 600-mal auf den nicht-begehbaren Bereich angewandt.
           Dies sorgt dafür, dass eine glatte Kante zwischen den Räumen und Korridoren und den Bergen entsteht.
     \item \texttt{PerlinNoise}: Damit die Berge eine natürliche Struktur erhalten, wird auf diesen Bereichen 3-mal ein Perlin Noise angewandt.
           Diese Anwendung des Perlin Noise lässt die hohen Berge entstehen.
-    \item \texttt{Power}: Um die Höhenunterschiede in den Bergen zu verstärken, wird an jedem Punkt der Wert der Heightmap einmal mit $3$ potenziert.
+    \item \texttt{Power}: Um die Höhenunterschiede in den Bergen natürlicher wirken zu lassen, wird an jedem Punkt der Wert der Heightmap einmal mit $3$ potenziert.
     \item \texttt{PerlinNoise}: Ausgehend davon, wird nochmals auf den Bergen 2-mal ein Perlin Noise angewandt, welches Berge entstehen lässt, die etwas kleiner sind.
     \item \texttt{AverageFilter}: Um die Korridore und Räume herum, wird ein 6 Einheiten breiter Bereich geglättet.
           Um dies zu erreichen, wird der \texttt{AverageFilter} 15-mal dort angewandt.
-    \item \texttt{SetByMask}: Zum Schluss wird um die Korridore und Räume ein 1 Einheiten breiter Bereich leicht erhöht, um die Berge besser zu trennen.
+    \item \texttt{SetByMask}: Zum Schluss wird um die Korridore und Räume ein 1 Einheiten breiter Bereich leicht erhöht. Dies trennt die Berge besser von der begehbaren Spielwelt.
 \end{enumerate}
 
 Eine Herausforderung bei der Umsetzung dieser Idee ist, dass diese Operationen auf allen, von der jeweiligen Maske vorgegebenen, Punkten ausgeführt werden müssen.
@@ -33,15 +33,15 @@ Insgesamt wurden fünf Versionen der Terrain-Transformationen implementiert:
 Um die Ideen der verschiedenen Transformations-Operationen auszuprobieren, wurden zunächst Funktionen implementiert, die nahezu beliebige Operationen auf Punkten der Heightmap ausführen, die von einer Maske vorgegeben werden.
 Diese Funktionen iterieren über alle Punkte der Heightmap und prüfen dabei, ob der aktuelle Punkt in der Maske liegt.
 Ist dies der Fall, wird die Operation auf dem Punkt ausgeführt.
-Eine Besonderheit ist, dass in dieser Version die Implementation des \texttt{AverageFilter}, nicht auf den 3x3 \texttt{AverageFilter} beschränkt ist, sondern dass die Funktion, Filter beliebiger Größe und Form auf die Heightmap anwenden kann.
+Eine Besonderheit ist, dass in dieser Version die Implementation des \texttt{AverageFilter}, nicht auf den 3x3 \texttt{AverageFilter} beschränkt ist, sondern dass die Funktion, Faltungsfilter beliebiger Größe und Form auf die Heightmap anwenden kann.
 Diese Implementation wurde genutzt um herauszufinden, welche Transformationen sinnvoll sind.
 Die Ausführung dieser Version der Operationen erfolgt stets sequenziell und ausschließlich auf der CPU.
 
-Nachdem die gewünschten Transformationen identifiziert und implementiert wurden, musste der \texttt{AverageFilter} effizient implementiert werden, da dieser die meiste Rechenzeit in Anspruch nimmt.
+Nachdem die gewünschten Transformationen identifiziert und implementiert wurden, musste der \texttt{AverageFilter} effizienter werden, da dieser die meiste Rechenzeit in Anspruch nimmt.
 Da diese Operation sehr häufig (bis zu 600-mal) wiederholt wird und vollständig parallelisiert werden kann, ist es naheliegend für den \texttt{AverageFilter} einen ComputeShader für die Ausführung auf einer Grafikkarte zu schreiben.
 Ein ComputeShader ist eine Funktion, die beispielsweise auf einer Grafikkarte ausgeführt werden kann.
 Hierbei wird pro Funktionsaufruf jeweils ein Datenpunkt übergeben und auf einer Recheneinheit der Grafikkarte ausgeführt.
-Es werden stets Gruppen von Datenpunkten übergeben, die gleichzeitig ausgeführt werden.
+Es werden der Grafikkarte stets Gruppen von Datenpunkten übergeben, die gleichzeitig ausgeführt werden.
 Zusätzlich zur Implementation des \texttt{AverageFilter} in einem ComputeShader, müssen die Daten, auf die die Grafikkarte zugreifen soll, erst noch so vorbereitet werden, dass diese in den Speicher der Grafikkarte geladen werden können.
 \begin{listing}
     \begin{minted}[linenos,tabsize=2,breaklines,fontsize=\small]{hlsl}
@@ -72,8 +72,8 @@ Listing~\ref{WG:averagefiltershader} zeigt den Programmcode des ComputeShaders f
 Da häufige Fallunterscheidungen auf einer Grafikkarte ineffizient sein können, wird hier die Terrain-Maske nicht übergeben und für jeden Datenpunkt überprüft, sondern es werden direkt nur die Punkte der Heightmap bearbeitet, die auch in der Maske enthalten sind.
 Zudem wird die zweidimensionale Heightmap in ein eindimensionales Array umgewandelt und dementsprechend anders adressiert.
 Diese Umwandlungen und das Laden der linearisierten Heightmap auf die Grafikkarte müssen einmalig zum Start der \texttt{AverageFilter} Operation ausgeführt werden.
-Da der Filter häufiger nacheinander ausgeführt wird und nicht jedes Mal die Daten konvertiert werden sollen, kann der \texttt{AverageFilter} Funktion direkt die Anzahl an Wiederholungen übergeben werden.
-Damit das Ergebnis-Array nicht nach jeder Ausführung von der Grafikkarte zurück in den Hauptspeicher kopiert werden muss, werden im Speicher der Grafikkarte für Platz für ein Eingabe-Array und ein Ausgabe-Array alloziert.
+Da der Filter häufiger nacheinander ausgeführt wird und nicht jedes Mal die Daten konvertiert werden sollen, kann der \texttt{AverageFilter} Funktion, direkt die Anzahl an Wiederholungen übergeben werden.
+Damit das Ergebnis-Array nicht nach jeder Ausführung von der Grafikkarte zurück in den Hauptspeicher kopiert werden muss, werden im Speicher der Grafikkarte Platz für ein Eingabe-Array und ein Ausgabe-Array alloziert.
 In jeder Iteration werden die Ein- und Ausgabe-Arrays vertauscht, sodass die Daten der Heightmap zwischen den Iterationen nie den Speicher der Grafikkarte verlassen müssen.
 Dies würde die Laufzeit erheblich verlängern.
 
@@ -83,8 +83,8 @@ Der Programmcode für die einzelnen Operationen verändert sich hier nicht stark
 Hierdurch werden die zu verarbeitenden Daten in Gruppen unterteilt und auf der CPU parallel verarbeitet.
 
 Ein Problem, bei der Nutzung eines ComputeShaders ist, dass dieser eine geeignete Grafikkarte voraussetzt.
-Im Laufe des Projekts ist es aufgefallen, dass beispielsweise beim Trainieren der Kreaturen auf dem LiDO3, die Grafikkarte nicht zum Generieren der Welt verwendet werden konnte.
-Wenn Unity ohne Bildschirm gestartet wurde (headless), trat dieses Problem auch auf.
+Im Laufe des Projekts ist es aufgefallen, dass beispielsweise beim Trainieren der Kreaturen auf dem LiDO3 die Grafikkarte nicht zum Generieren der Welt verwendet werden konnte.
+Wenn Unity ohne Bildschirm gestartet wurde (headless mode), trat dieses Problem auch auf.
 Aus diesem Grund musste auch eine performante Version des \texttt{AverageFilter} implementiert werden, der nur auf der CPU ausgeführt wird.
 Dazu wurde zunächst der Programmcode der ursprünglichen Filter-Operation mittels \texttt{Parallel.For} Konstrukten auf der CPU parallelisiert.
 Diese Funktion dient als Ersatz für den ComputeShader, falls keine Grafikkarte verfügbar ist, oder diese den ComputeShader nicht unterstützt.
@@ -92,13 +92,13 @@ Die Laufzeit dieser Implementation war zwar für das Training akzeptabel, aber s
 Die aktuelle Implementation des \texttt{AverageFilter} verwendet den Unity \textit{Burst}-Compiler, um hochoptimierten Programmcode für den Filter zu erzeugen.
 Der \textit{Burst}-Compiler verwendet das Unity Job System, indem einzelne Funktionen als Jobs definiert und als Gruppen parallel auf der CPU ausgeführt werden können.
 Das Vorgehen ist hier ähnlich wie bei den ComputeShadern.
-Der große Vorteil des \textit{Burst}-Compilers ist, dass dieser aus einem Job hochoptimierten code generieren kann, der zudem automatische Vektorisierung auf der CPU unterstützt.
-Der Compiler erzeugt automatisch Maschinencode, welcher Vektorinstruktionen der CPU verwendet, um mehrere Datenpunkte gleichzeitig auf einem Kern zu verarbeiten.
+Der große Vorteil des \textit{Burst}-Compilers ist, dass dieser aus einem Job hochoptimierten Maschinencode generieren kann, der zudem automatische Vektorisierung auf der CPU unterstützt.
+Das heißt, der Compiler erzeugt automatisch Maschinencode, welcher Vektorinstruktionen der CPU verwendet, um mehrere Datenpunkte gleichzeitig auf einem Kern zu verarbeiten.
 Dies erfolgt zusätzlich zur Parallelisierung auf mehreren Kernen der CPU.
 
 \subsubsection{Laufzeitmessungen}
 Um die einzelnen Implementationen zu vergleichen und zu evaluieren, ob die Optimierungen auch wirklich zu einer verbesserten Laufzeit führen, wurden Messungen für alle Implementationen durchgeführt.
-Die folgenden Messungen wurden alle auf einem PC durchgeführt, der über $\SI{32}{\giga\byte}$ RAM verfügt und einen Intel Core i7-5820k (6 Kerne/12 Threads) sowie eine NVIDIA GTX 780 Ti enthält.
+Die folgenden Messungen wurden auf einem PC durchgeführt, der über $\SI{32}{\giga\byte}$ RAM verfügt und einen Intel Core i7-5820k (6 Kerne/12 Threads) sowie eine NVIDIA GTX 780 Ti enthält.
 Die Größe der Heightmap der generierten Welt ist 1024x1024, was einer Fläche von ungefähr ${\SI{1}{\kilo\meter}}^2$ entspricht.
 Dies ist auch die Größe der Welt im Spiel.
 Die Messungen sind in Abbildung~\ref{fig:WG::Shader} dargestellt.
@@ -167,13 +167,13 @@ Diese Version ist ungeeignet um die Welt beim Start des Spiels in einem Ladebild
 Sobald der \texttt{AverageFilter} auf der Grafikkarte ausgeführt wird (GPU), ist die Laufzeit mit $\SI{1.3}{\second}$ allerdings sehr gut.
 Die weitere Parallelisierung der anderen Operatoren (GPU+MT) sorgt für die kürzeste Generierungsdauer von nur $\SI{1}{\second}$.
 Die Ausführungszeit für den naiv parallelisierten \texttt{AverageFilter} auf der CPU (CPU+MT), ist mit $\SI{3.9}{\second}$ akzeptabel, aber erheblich langsamer als die Version die ComputeShader verwendet.
-Mit einer Laufzeit von $\SI{1.8}{\second}$ ist die Implementation die den \textit{Burst}-Compiler verwendet (Burst+MT) schnell genug, um als Ersatz für die ComputeShader zu dienen, falls diese nicht unterstützt werden.
+Mit einer Laufzeit von $\SI{1.8}{\second}$ ist die Implementation, die den \textit{Burst}-Compiler verwendet (Burst+MT), schnell genug, um als Ersatz für die ComputeShader zu dienen, falls diese nicht unterstützt werden.
 Die Messungen der Laufzeiten zeigen, dass die Optimierungen der Terrain-Transformationen es erlauben, die Welt stets prozedural beim Start des Spiels zu generieren.
 
 \subsection{L-System Vegetation}
 Das in~\ref{sec:L-System} beschriebene L-System wird verwendet um die Welt mit prozedural generierten Pflanzen zu befüllen.
 Diese dienen als Hindernisse für den Spieler und die Kreaturen.
-Die Pflanzen werden zur Laufzeit aus vordefinierten L-Systemen zur Laufzeit erzeugt und in der Welt platziert.
+Die Pflanzen werden zur Laufzeit aus vordefinierten L-Systemen erzeugt und in der Welt platziert.
 Für jedes Objekt wird zunächst das L-System ausgewertet, sodass eine Liste von Tupeln mit Start- und Endpunkten der Segmente entsteht.
 Ähnlich wie in Abschnitt~\ref{sec:lsystemskel} beschrieben, wird nun für jedes Segment ein primitives Mesh erzeugt, welche zusammen die Pflanze darstellen.
 Eine Auswahl an Bäumen die durch L-Systeme erzeugt werden, ist in Abbildung~\ref{fig:Trees} zu sehen.
@@ -302,7 +302,7 @@ Gut zu beobachten ist hier, dass die reduzierte Komplexität der einzelnen Pflan
 Damit pro Pflanze nicht mehr hunderte Kind-Objekte erstellt werden müssen, werden nun die \texttt{CylinderMeshes} der einzelnen Segmente zu einem großen Mesh kombiniert.
 Das zusammengesetzte Mesh des großen Baums besteht nun aus 9680 Dreiecken und das Mesh des Tannenbaums aus 55680 Dreiecken.
 Die einzelnen Meshes der Pflanzen sind also erheblich komplexer geworden, jedoch muss Unity nun nicht mehr jedes einzelne Segment als eigenes GameObject verarbeiten.
-Diese Optimierung (+combine) löst die Bilder pro Sekunde Probleme, da nun 154 Bilder pro Sekunde erreicht werden.
+Diese Optimierung (+combine) löst das Bilder-pro-Sekunde-Problem, da nun 154 Bilder pro Sekunde erreicht werden.
 Es ergibt sich nun jedoch ein neues Problem, da die Gesamtdauer der Generierung nun auf inakzeptable $\SI{42.1}{\second}$ steigt.
 Zu erkennen ist, dass die Berechnung des NavMeshes nun ungefähr $\SI{25}{\second}$ benötigt und auch das Erzeugen der GameObjects nun länger dauert.
 Die deutlich komplexeren Meshes der Pflanzen sind also ein Problem, wenn jede Pflanze ein unabhängiges GameObject ist, obwohl diese gleich aufgebaut sind.

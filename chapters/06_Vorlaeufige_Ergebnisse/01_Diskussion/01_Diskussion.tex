@@ -4,6 +4,14 @@
 Dieser Abschnitt diskutiert die zuvor beschriebenen Ergebnisse der Projektgruppe im Bezug zur initialen Zielsetzung \ref{Zielsetzung_und_Vorgehensweise}.
 
 \paragraph{Die Generierung von Spielleveln}
+Die Ziele bezüglich der Generierung von Spielleveln wurden erfolgreich umgesetzt.
+Das Layout des Spiellevels wird prozedural mittels Space-Partitioning generiert und anschließend durch Terrain Transformationen in eine natürlich wirkende Welt verwandelt.
+Die Welt besteht aus Räumen und Korridoren, die durch Gebirge voneinander getrennt werden.
+Anders als bei einer typischen Generierung von Dungeons mittels Space-Partitioning, wird hierbei auf die Decke des Dungeons verzichtet, sodass die Welt aus offenen Arenen besteht, die durch Korridore miteinander verbunden sind.
+In der Welt werden Spawn-Punkte für den Spieler, Kreaturen und Hindernisse platziert.
+Die Hindernisse bestehen aus Pflanzen, die zur Laufzeit aus L-Systemen erzeugt werden.
+Allgemein ist es möglich die Größe der Welt, die Anzahl an Räumen und die Anzahl an Spawn-Punkten für Hindernisse und Kreaturen einzustellen.
+Der Schwierigkeitsgrad lässt sich durch kleinere Räume mit mehr Spawn-Punkten erhöhen.
 
 \paragraph{Generierung der Monster}
 
