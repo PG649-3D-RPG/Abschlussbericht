@@ -151,16 +151,16 @@ Diese Implementation des Agents ist die Basis aller im Endprodukt enthaltenen Ag
 		\hline
 		Walking & $(1 - (\frac{\texttt{currentSpeed}}{\texttt{desiredSpeed}})^2)^2 \cdot (\frac{1}{2}(\texttt{currentDir} \cdot \texttt{desiredDir} + 1))$ 
 		\\
-		\hline 
-		WalkingAvg & Der Geschwindkeitsteil der Rewardfunktion von \texttt{Walking} wird "uber die komplette Episode gemittelt. \\ 
-		\hline
-		WalkingAvgDiscrete & Ähnlich zu \texttt{WalkingAvg}, allerdings werden die Geschwindigkeiten nicht jedes Update erfasst, sondern nur in regelmäßigen Abständen (hier: alle 7200 Updates). \\
-		\hline
-		WalkingGoal & ? (Nils fragen) \\
-		\hline
-		WalkingSpeedScaling & $(1 - \frac{\texttt{currentSpeed}}{\texttt{desiredSpeed}}) \cdot (\frac{1}{2}(\texttt{currentDir} \cdot \texttt{desiredDir} + 1))$  \\
-		\hline
-		WalkingSurvive & Die Funktion von \texttt{Walking} erhält einen weiteren Faktor, bestehend aus dem Verhältnis der aktuellen Episodenlänge und der Länge der bisher am längsten andauernden Episode. \\
+%		\hline 
+%		WalkingAvg & Der Geschwindkeitsteil der Rewardfunktion von \texttt{Walking} wird "uber die komplette Episode gemittelt. \\ 
+%		\hline
+%		WalkingAvgDiscrete & Ähnlich zu \texttt{WalkingAvg}, allerdings werden die Geschwindigkeiten nicht jedes Update erfasst, sondern nur in regelmäßigen Abständen (hier: alle 7200 Updates). \\
+%		\hline
+%		WalkingGoal & ? (Nils fragen) \\
+%		\hline
+%		WalkingSpeedScaling & $(1 - \frac{\texttt{currentSpeed}}{\texttt{desiredSpeed}}) \cdot (\frac{1}{2}(\texttt{currentDir} \cdot \texttt{desiredDir} + 1))$  \\
+%		\hline
+%		WalkingSurvive & Die Funktion von \texttt{Walking} erhält einen weiteren Faktor, bestehend aus dem Verhältnis der aktuellen Episodenlänge und der Länge der bisher am längsten andauernden Episode. \\
 		\hline
 		Standup & $\begin{aligned}[t]
 			&r_{hhr}+r_{hhp}+r_{thr}+r_{trr}\\
