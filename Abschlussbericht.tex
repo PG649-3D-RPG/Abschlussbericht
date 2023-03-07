@@ -8,7 +8,6 @@
 \usepackage{amsfonts}
 \usepackage{mathtools}
 %\usepackage{anyfontsize}
-
 \usepackage{tikz-qtree}
 \usepackage{tikz}
 \usetikzlibrary{shapes,arrows,arrows.meta,automata,positioning,fit,calc,matrix,backgrounds}
@@ -66,6 +65,12 @@
 
 \usepackage{hyperref}				% Klickbare Verweise und \autoref{label}
 
+\usepackage{etoolbox}
+\AtBeginEnvironment{thebibliography}{\interlinepenalty=10000}
+\setcounter{biburllcpenalty}{7000}
+\setcounter{biburlucpenalty}{8000}
+\addbibresource{bibliography/references}
+
 % Provide your title
 \title{Entwicklung eines 3D RPG Videospiels mittels prozeduraler Inhaltsgenerieung und Deep Reinforcement Learning}
 
@@ -121,8 +126,7 @@
 \phantomsection
 % Bibliography
 \addcontentsline{toc}{chapter}{\bibname}
-\bibliographystyle{ACM-Reference-Format}
-\bibliography{bibliography/references}
+\printbibliography
 
 
 \end{document}
