@@ -1,7 +1,7 @@
 % !TeX document-id = {d7247aab-0d3b-456c-a2ca-7facee9734c0}
 % !TeX encoding = utf8
 % !TeX TXS-program:compile = txs:///latexmk/[--shell-escape --xelatex]
-% !BIB program = bibtex
+% !BIB program = biber
 
 \documentclass[german,pg]{tudo-sse-thesis}
 \usepackage{amsmath}				% Mathematischer Formelsatz AMS
@@ -69,7 +69,7 @@
 \AtBeginEnvironment{thebibliography}{\interlinepenalty=10000}
 \setcounter{biburllcpenalty}{7000}
 \setcounter{biburlucpenalty}{8000}
-\addbibresource{bibliography/references}
+\addbibresource{bibliography/references.bib}
 
 % Provide your title
 \title{Entwicklung eines 3D RPG Videospiels mittels prozeduraler Inhaltsgenerieung und Deep Reinforcement Learning}

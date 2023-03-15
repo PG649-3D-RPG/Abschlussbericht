@@ -14,7 +14,7 @@
 \RequirePackage{textpos}
 \RequirePackage{babel}
 \RequirePackage{multicol}
-\RequirePackage[firstinits=true,
+\RequirePackage[giveninits=true,
 uniquename=false,
 uniquelist=false,
 hyperref=auto,
@@ -24,7 +24,7 @@ style=trad-abbrv,
 citestyle=numeric,
 backref=false,
 natbib=true,
-backend=bibtex]{biblatex}
+backend=biber]{biblatex}
 \RequirePackage{xcolor}
 \RequirePackage[quiet]{fontspec}
 \RequirePackage{pdfpages}
