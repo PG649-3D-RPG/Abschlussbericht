@@ -8,7 +8,7 @@ Als Grundlage für die eigene Trainingsumgebung diente die Trainingsumgebung des
 
 Zunächst wurde der ML-Agents Walker zum Testen der neuen Trainingsumgebung verwendet, damit die Kreatur als Fehlerquelle ausgeschlossen werden konnte. Nachdem die Tests mit dem ML-Agents Walker erfolgreich waren, wurde der ML-Agents Walker durch eine neue Kreatur ersetzt, welche mit Hilfe des L-Systems zuvor generiert wurde. Die neue Kreatur wurde ausgiebig in der neuen Trainingsumgebung getestet und mit dem ML-Agents Walker verglichen. Durch das dadurch gewonnene Feedback konnte die Creature Generator Gruppe Anpassungen und Verbesserungen an der Kreatur vornehmen.
 
-Trotz den vielen Änderungen an der Kreatur war es nicht möglich, die Kreatur aus dem L-System zum Laufen zu bringen. Aus diesem Grund ersetzte eine andere Methode, welche von Jona und Markus umgesetzt wurde, das L-System. Mit der neuen Methode wurde auch der Creature-Generator direkt in die Trainingsumgebung eingebunden. Dies ermöglichte es, schnell verschiedene Kreaturen zu testen. Die Bugreports und Featurerequests zum Generator werden direkt als Issue in das entsprechende GitHub Repository geschrieben und werden gegebenenfalls im Jour Fixe oder über Discord besprochen.
+Trotz den vielen Änderungen an der Kreatur war es nicht möglich, die Kreatur aus dem L-System zum Laufen zu bringen. Aus diesem Grund ersetzte eine andere Methode, welche von Jona und Markus umgesetzt wurde, das L-System. Mit der neuen Methode wurde auch der Creature-Generator direkt in die Trainingsumgebung eingebunden. Dies ermöglichte es, schnell verschiedene Kreaturen zu testen. 
 
 \subsection{Technische Umsetzung}
 
@@ -74,7 +74,7 @@ Im Fall, dass das Spiel ohne Editor gestartet wird, was meist beim Training der 
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.4\linewidth]{resources/img/DEGConfig}
+	\includegraphics[width=0.5\linewidth]{resources/img/DEGConfig}
 	\caption[Konfigurationsmöglichkeiten des \texttt{DynamicEnviormentGenerator}]{Konfigurationsmöglichkeiten des \texttt{DynamicEnviormentGenerator} im Unity-Editor.} 
 	\label{bspDEGOptionen}
 \end{figure}
@@ -83,17 +83,17 @@ Im Fall, dass das Spiel ohne Editor gestartet wird, was meist beim Training der 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\linewidth]{resources/img/AEGArena.png}
-	\caption[Konfigurationsmöglichkeiten des \texttt{AdvancedEnviormentGenerator}]{Ansicht der generierten Arena durch den \texttt{AdvancedEnviormentGenerator}.} 
+	\caption[Konfigurationsmöglichkeiten des \texttt{AdvancedEnviormentGenerator}]{Ansicht der generierten Arena durch den \texttt{AdvancedEnvironmentGenerator}.} 
 	\label{bspAEGArena}
 \end{figure}
 
-Über den Produktzyklus des \texttt{DynamicEnviormentGenerator} sind insbesondere gegen Ende der Projektgruppe mehre Probleme aufgefallen. Da durch häufige Updates die Codequalität nachlässt und einige zuvor bedachte Optionen durch Zeitmangel nicht mehr relevant waren wurde entschieden, die Umgebung durch eine neue zu ersetzen. Dabei wurde insbesondere auf eine starke nähe zum Spiel geachtet, damit nur wenige Modifikationen für dieses erstellt werden müssen.
+Über den Produktzyklus des \texttt{DynamicEnvironmentGenerator} sind insbesondere gegen Ende der Projektgruppe mehre Probleme aufgefallen. Da durch häufige Updates die Codequalität nachlässt und einige zuvor bedachte Optionen durch Zeitmangel nicht mehr relevant waren wurde entschieden, die Umgebung durch eine neue zu ersetzen. Dabei wurde insbesondere auf eine starke nähe zum Spiel geachtet, damit nur wenige Modifikationen für dieses erstellt werden müssen.
 
-Die neue Umgebung wird im folgenden als \texttt{AdvancedEnviormentGenerator} bezeichnet und befindet sich in einer neuen Szene mit den Namen \enquote{AdvancedMovementScene}. Bedingt durch die konzeptionelle Weiterentwicklung der vorherigen Versionen mussten in den restlichen Skripten kaum Anpassungen durchgeführt werden. Eine Hauptänderung ist der geringeren Anzahl an verweisen auf den neuen Generator. Da der \texttt{DynamicEnviormentGenerator} in seinen ersten Versionen eine Art Gottklasse war, verwiesen die meisten andere Skripte darauf. Dies führte schnell zu unübersichtlichen Abhängigkeiten.
+Die neue Umgebung wird im folgenden als \texttt{AdvancedEnvironmentGenerator} bezeichnet und befindet sich in einer neuen Szene mit den Namen \enquote{AdvancedMovementScene}. Bedingt durch die konzeptionelle Weiterentwicklung der vorherigen Versionen mussten in den restlichen Skripten kaum Anpassungen durchgeführt werden. Eine Hauptänderung ist die geringere Anzahl an Verweise auf den neuen Generator. Da der \texttt{DynamicEnvironmentGenerator} in seinen ersten Versionen eine Art Gottklasse war, verwiesen die meisten andere Skripte darauf. Dies führte schnell zu unübersichtlichen Abhängigkeiten.
 
 Die Generator-Klasse selbst konnte deutlich gekürzt werden, da eine Generierung von Arenen nicht mehr benötigt wird. Zu dem Zeitpunkt der Erstellung existierte bereits der \texttt{TerrainGenerator} für das finale Spiel, welche ab dieser Version für die Trainingsumgebung verwendet wird. Weiterhin ermöglichte dies eine Entfernung von vielen Einstellungen für das Terrain aus dem Generator-Objekt.
 
-In der Abbildung \ref{bspAEGArena} ist das Endergebnis des \texttt{AdvancedEnviormentGenerator} dargestellt. Da es im realen Spiel zu Kollisionen zwischen verschiedenen Kreaturen kommen kann, wurde für die Trainingsumgebung nur eine zusammenhängende Arena verwendet. Insgesamt stimmen die Bedingungen für das Lernen und dem Spiel somit überein, da wie im Spiel kleine Korridore und Arenen mit ggf. mehreren Kreaturen genutzt werden.
+In der Abbildung \ref{bspAEGArena} ist das Endergebnis des \texttt{AdvancedEnvironmentGenerator} dargestellt. Da es im realen Spiel zu Kollisionen zwischen verschiedenen Kreaturen kommen kann, wurde für die Trainingsumgebung nur eine zusammenhängende Arena verwendet. Insgesamt stimmen die Bedingungen für das Lernen und dem Spiel somit überein, da wie im Spiel kleine Korridore und Arenen mit ggf. mehreren Kreaturen genutzt werden.
 \subsubsection{Erweiterung der Agent-Klasse}
 \todo{texttt im Titel?}
 
@@ -334,7 +334,7 @@ srun python -m neroRL.train --config /work/<Username>/games/config/Nero.yaml --r
 	\caption{Änderung des ML-Agents-Skripts für die Ausführung von NeroRL.}
 	\label{prog:neroRlChanges}
 \end{listing}
-Im späteren Verlauf der PG wurde die Umstellung auf NeroRL durchgeführt. Dies bedeutet auf LIDO3 nur geringe Anpassungen, mit den Erfahrungen von ML-Agents der Aufrufprozess möglichst vereinfacht werden konnte. Eine Anleitung für die Installation steht im Github-Wiki\footnote{https://github.com/PG649-3D-RPG/neroRL/wiki}, des für diese Projektgruppe genutzten Forks, zur Verfügung.
+Im späteren Verlauf der PG wurde die Umstellung auf NeroRL durchgeführt, welche nur geringe Anpassungen an den Skripten bedeutete. Eine Anleitung für die Installation steht im Github-Wiki\footnote{https://github.com/PG649-3D-RPG/neroRL/wiki}, des für diese Projektgruppe genutzten Forks, zur Verfügung.
 
 
 
