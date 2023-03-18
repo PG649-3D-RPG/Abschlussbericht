@@ -21,9 +21,9 @@ Das festgelegte minimal Ziel für die Fortbewegung der Monster war, dass die Ani
 Stattdessen sollte mit Deep Reinforcement Learning ein Agent trainiert werden, der lernt die Monster zu bewegen, indem er Kräfte auf deren Joints ausübt.
 Bei dem Versuch die ursprünglichen Vorstellung der Fortbewegung der Kreaturen umzusetzen traten allerdings einige Probleme auf.\\
 
-Zum einen war das Trainieren der Fortbewegung von vollständig zufällige erstellten Kreaturen nicht möglich. 
+Zum einen war das Trainieren der Fortbewegung von vollständig zufällig erstellten Kreaturen nicht möglich. 
 In den ersten Trainingsdurchläufen wurde schnell klar, dass einige Kreaturen durch die Struktur ihres Körpers nicht dazu in der Lage waren sich stabil zu bewegen oder aufzustehen.
-Ein Grund dafür kann zum Beispiel sein, dass die Bewegung einiger Joints zu weit eingeschränkt waren und die Agenten deswegen die mit diesen Joints verbundenen Körperteile nicht auf eine Art bewegen, welche eine stabile Fortbewegung ermöglicht. Das selbe Problem trat auf, wenn eine Kreatur am Boden lag und im Zweifel ihre Arme und Beine nicht genug Freiheit hatten, um aus dieser Position herauszukommen.
+Ein Grund dafür kann zum Beispiel sein, dass die Bewegung einiger Joints zu weit eingeschränkt sind und die Agenten deswegen die mit diesen Joints verbundenen Körperteile nicht auf eine Art bewegen können, welche eine stabile Fortbewegung ermöglicht. Das selbe Problem trat auf, wenn eine Kreatur am Boden lag und im Zweifel ihre Arme und Beine nicht genug Freiheit hatten, um aus dieser Position herauszukommen.
 Das entgegengesetzte Problem konnte auch Auftreten, wenn die Freiheitsgrade zu hoch waren, da die Bewegungen dann nichts mehr mit der Fortbewegung von realen Tieren gemein hatten. Es war also notwendig die Parameter zur Generierung der Kreaturen einzuschränken, damit Fortbewegung möglich war.\\
 
 Ein anderes Problem war die Stabilität der Fortbewegung. Die Vierbeinige Kreatur, deren Trainingsergebnisse in dem Abschnitt \ref{ErgebnisseTraining} vorgestellt werden, ist nach dem Training in der Lage stabil zu Laufen und auch wieder Aufzustehen und kann deswegen in dem Spiel verwendet werden. 
