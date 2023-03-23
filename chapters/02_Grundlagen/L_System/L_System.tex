@@ -1,7 +1,6 @@
-%  Grundlagen L-System: Allgemein, Theoretischer Hintergrund, 2D, 3D
 \section{L-System}\label{sec:L-System}
-Eine zentrale Eigenschaft in der Natur ist die Selbstähnlichkeit von Strukturen auf makroskopischer und mikroskopischer Ebene~\cite{Shaker2016}.
-Das heißt, es lassen sich dieselben geometrischen Strukturen in verschiedenen Größenordnungen wiederfinden.
+In der Natur folgt der Aufbau vieler Pflanzen dem Prinzip der Selbstähnlichkeit.
+Das heißt, es lassen sich dieselben geometrischen Strukturen auf makroskopischer und mikroskopischer Ebene wiederfinden~\cite{Shaker2016}.
 Beispielsweise ähneln die Knospen eines Blumenkohls auch seiner äußeren Struktur, wie in Abbildung~\ref{fig:Blumenkohl} zu sehen ist.
 \begin{figure}[ht]
     \centering
@@ -9,6 +8,7 @@ Beispielsweise ähneln die Knospen eines Blumenkohls auch seiner äußeren Struk
     \caption[Blumenkohl]{Blumenkohl\footnotemark}\label{fig:Blumenkohl}
 \end{figure}
 \footnotetext{Quelle: \url{https://commons.wikimedia.org/wiki/File:Blumenkohl-1.jpg}, Autor: Rainer Zenz, CC BY-SA 3.0 \url{http://creativecommons.org/licenses/by-sa/3.0/}, via Wikimedia Commons}
+
 Um diese Eigenschaften präzise und strukturell darzustellen kann ein Lindenmayer-System (L-System)~\cite{lindenmayer1990} eingesetzt werden.
 Die Basis eines L-Systems bildet eine kontextfreie Grammatik $G=(N,T,S,P)$ mit einer Menge von Nicht-Terminalsymbolen $N$, einer Menge von Terminalsymbolen $T$, einem Startsymbol $S$ und einer Menge von Produktionen $P$.
 Der Unterschied zwischen einem L-System und einer üblichen kontextfreien Grammatik~\cite{Wegener2005} besteht darin, dass in einem Ableitungsschritt eines L-Systems parallel alle Nicht-Terminale ersetzt werden.
@@ -19,6 +19,7 @@ Der resultierende String einer Ableitung kann grafisch als Zeichenvorschriften f
 In \textit{Turtle graphics} gibt es eine \textit{Turtle}, oder Zeichenkopf, der initial in eine Richtung zeigt und sich in zwei oder drei Dimensionen fortbewegen kann.
 Bei jeder Fortbewegung wird entlang der aktuellen Richtung der Turtle und der hinterlegten Distanz, eine Strecke gezeichnet.
 Die Symbole der Grammatik werden hierbei als Fortbewegung um eine gewisse Distanz oder eine Drehung interpretiert.
+Für die Drehung der Turtle werden die Terminalsymbole \texttt{+} und \texttt{-} verwendet.
 In Abbildung~\ref{fig:L-System 2D Rotation} ist eine Visualisierung dieses Konzeptes zu sehen.
 Hier ist die Turtle initial nach oben gerichtet.
 
@@ -27,8 +28,7 @@ Hier ist die Turtle initial nach oben gerichtet.
     \includegraphics[width=0.5\linewidth]{chapters/02_Grundlagen/L_System/L_System_2D.pdf}
     \caption{L-System 2D Rotation. Der rote Pfeil zeigt in die Richtung der Turtle.}\label{fig:L-System 2D Rotation}
 \end{figure}
-
-Ohne Erweiterungen entstehen hierbei immer zusammenhängende Strukturen, die an einem Stück gezeichnet werden müssen; die Turtle darf also nicht springen.
+Ohne Erweiterungen des L-Systems entstehen hierbei immer zusammenhängende Strukturen, die an einem Stück gezeichnet werden müssen; die Turtle darf also nicht springen.
 Das heißt, Blätter, Äste oder Stängel sind nur schwer zu realisieren.
 
 
@@ -42,10 +42,10 @@ Damit die generierte Struktur zusammenhängend bleibt, wird die Position und akt
 Die Turtle kann sich nur fortbewegen ohne zu zeichnen, indem sie an eine vorherige Position zurückspringt.
 Die Menge der Terminalsymbole wird dabei um \texttt{[} für die \texttt{push} Operation und \texttt{]} für \texttt{pop} erweitert.
 Bei dem Lesen eines \texttt{[}, wird die aktuelle Position und Rotation der Turtle auf dem Stack gespeichert.
-Wenn ein \texttt{]} gelesen wird, dann wird die Turtle zu der Position und Rotation zurückgesetzt, die auf dem Stack als oberstes Element gespeichert worden war.
+Die Turtle wird zu der Position und Rotation zurückgesetzt, die auf dem Stack als oberstes Element gespeichert ist, wenn ein \texttt{]} gelesen wird.
 
 Mit dieser Erweiterung können insbesondere auch Äste von Bäumen oder Stängel von Blumen gezeichnet werden.
-Ein Beispiel für eine Art von Strauch kann mittels dieses L-Systems erzeugt werden:
+Ein Beispiel für eine Art von Strauch kann mittels des folgenden L-Systems erzeugt werden:
 \begin{itemize}
     \item Nicht-Terminalsymbole $N=\{F\}$
     \item Terminalsymbole $T=\{\texttt{+},\texttt{-},\texttt{[},\texttt{]}\}$
@@ -148,24 +148,24 @@ Es wurden 7 Ableitungsschritte durchgeführt und es wurde jeweils \ang{28} um di
 
 \begin{figure}[ht]
     \centering
-    % \resizebox{\linewidth-3cm}{!}{%
-    
-    % }
     \includegraphics[width=0.5\linewidth]{chapters/02_Grundlagen/L_System/L_System_3D_Tree.png}
     \caption{L-System 3D Baum}\label{fig:L-System 3D Unity}
 \end{figure}
 
 
 \subsection{Auswertung eines L-Systems}
-Die Auswertung eines L-Systems wird in diesem Abschnitt beschrieben.
-Der Algorithmus~\ref{alg:L-System Auswertung} umfasst die, ausgehend vom Startstring, durchgeführten $i$ Ableitungsschritte der Grammatik.
-Der Startstring wird Zeichen-für-Zeichen von links nach rechts durchlaufen und es wird für jede Iteration ein leerer String als Zwischenresultat angelegt.
-Für jedes gelesene Zeichen des Startstrings wird überprüft, ob es sich um ein Nicht-Terminalsymbol oder Terminalsymbol handelt.
+In diesem Abschnitt wird die Auswertung eines L-Systems beschrieben.
+Ausgehend vom Startstring $S$ werden $i$ Ableitungsschritte der Grammatik ausgeführt.
+Der Algorithmus~\ref{alg:L-System Auswertung} beschreibt dieses Vorgehen.
+Zunächst wird der Startstring $S$ in einem String $w$ gespeichert.
+Der String $w$ wird nun Zeichen-für-Zeichen von links nach rechts durchlaufen.
+Dabei wird einmal pro Iteration ein leerer String für das Zwischenresultat angelegt.
+Für jedes gelesene Zeichen des Strings $w$ wird überprüft, ob es sich um ein Nicht-Terminalsymbol oder Terminalsymbol handelt.
 Im Falle eines Nicht-Terminalsymbols wird die Ersetzung gemäß der entsprechenden Produktion an das Zwischenresultat angehangen.
 Ein Terminalsymbol wird einfach in das Zwischenresultat übernommen.
-In jeder Iteration wird der Startstring vollständig durchlaufen.
-Dadurch werden alle Nicht-Terminale des Startstrings der jeweiligen Iteration ersetzt.
-Am Ende der $n$-ten Iteration wird das Zwischenresultat als neuen Startstring für die $n+1$-te Iteration gesetzt und der Prozess wiederholt sich für die festgelegten $i$ Iterationen.
+In jeder Iteration wird der String $w$ vollständig durchlaufen.
+Dadurch werden pro Iteration alle Nicht-Terminale des Strings ersetzt.
+Am Ende der $n$-ten Iteration wird das Zwischenresultat als neuer String $w$ für die $n+1$-te Iteration gesetzt und der Prozess wiederholt sich für die festgelegten $i$ Iterationen.
 Für ein stochastisches L-System muss die Wahl der Ersetzung in Zeile 6 gemäß der Wahrscheinlichkeiten für das Nicht-Terminalsymbol erfolgen.
 
 \begin{algorithm}[H]

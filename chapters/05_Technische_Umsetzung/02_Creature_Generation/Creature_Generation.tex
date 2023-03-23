@@ -51,7 +51,7 @@ Die Glaubwürdigkeit und Variation der Kreaturen ist dadurch also stark von den 
 
 
 
-\subsubsection{L-System Creature}\label{L_System}
+\subsubsection{L-System Kreatur}\label{L_System}
 Der erste Ansatz zur Generierung von Kreaturen verwendet ein L-System, um die Struktur des Skelettes zu formalisieren.
 Dabei wird jede gezeichnete Strecke der Turtle als ein Knochen interpretiert.
 Hierdurch entsteht stets ein zusammenhängendes Skelett, da sich die Turtle nicht fortbewegen kann ohne zu zeichnen.
@@ -71,22 +71,28 @@ Der Entwurf der einzelnen Körperteile wird durch die Produktionen des L-Systems
 Das Skelett einer Kreatur die durch ein L-System erzeugt wurde, ist in Abbildung~\ref{skeletonlsystemex} dargestellt.
 Das L-System, aus dem diese Skelettstruktur entstanden ist, ist im Folgenden gegeben:
 \begin{itemize}
-    \item Startstring:
-	\begin{equation*}
-		S=[|C]+(90)[AH]-(180)[AH]+(90)T+(90)[G-(90)L]-(180)[G+(90)L]
-	\end{equation*}
+	\item Startstring:
+	      \begin{equation*}
+		      S=\texttt{[}\texttt{|}C\texttt{]}\texttt{+}(90)\texttt{[}AH\texttt{]}\texttt{-}(180)\texttt{[}AH\texttt{]}\texttt{+}(90)T\texttt{+}(90)\texttt{[}G\texttt{-}(90)L\texttt{]}\texttt{-}(180)\texttt{[}G\texttt{+}(90)L\texttt{]}
+	      \end{equation*}
 	\item Iterationen: 2
-    \item Produktionen:
-          \begin{align*}
-			A\rightarrow & ~F(0.25)F(0.25)&\text{Arme} \\
-              L\rightarrow & ~F(0.35)F(0.3)\texttt{\textasciicircum}V&\text{Beine} \\
-              T\rightarrow & ~F(0.4)F(0.4)&\text{Torso}\\
-              C\rightarrow & ~F(0.3)&\text{Kopf}\\
-              G\rightarrow & ~F(0.2)&\text{Hüfte}\\
-              V\rightarrow & ~F(0.2)&\text{Füße}\\
-              H\rightarrow & ~F(0.15)&\text{Hände}
-          \end{align*}
+	\item Produktionen:
+	      \begin{align*}
+		      A\rightarrow & ~F(0.25)F(0.25)                          & \text{Arme}  \\
+		      L\rightarrow & ~F(0.35)F(0.3)\texttt{\textasciicircum}V & \text{Beine} \\
+		      T\rightarrow & ~F(0.4)F(0.4)                            & \text{Torso} \\
+		      C\rightarrow & ~F(0.3)                                  & \text{Kopf}  \\
+		      G\rightarrow & ~F(0.2)                                  & \text{Hüfte} \\
+		      V\rightarrow & ~F(0.2)                                  & \text{Füße}  \\
+		      H\rightarrow & ~F(0.15)                                 & \text{Hände}
+	      \end{align*}
 \end{itemize}
+
+Die Werte in den Klammern hinter einigen Symbolen sind Argumente für die Fortbewegung und Drehung der Turtle.
+Bei dem Auswerten eines $F$ bewegt sich die Turtle normalerweise um eine Einheit in die aktuelle Richtung.
+Der Wert in den Klammern hinter dem $F$ überschreibt dies, sodass bspw. $F(0.2)$ die Turtle nur um $0.2$ Einheiten fortbewegen lässt.
+Ähnlich ist dies bei den Terminalsymbolen \texttt{+} und \texttt{-}, wo das Argument den Grad $\delta$ angibt, um wie viel sich die Turtle in der Ebene drehen soll.
+
 \begin{figure}[h]
 	\begin{center}
 		\includegraphics[width = 0.5\textwidth]{resources/img/skeletonlsystemex.png}
@@ -100,12 +106,12 @@ Die Turtle bewegt sich dabei im dreidimensionalen Raum, wie in Abschnitt~\ref{su
 Für jede Fortbewegung der Turtle wird jeweils ihre Startposition und die Endposition im dreidimensionalen Raum als ein Tupel gespeichert.
 Die Tupel können als Strecken interpretiert werden, die daraufhin als Knochen dargestellt werden.
 Am Ende bildet die Liste der Tupel von Start- und Endpunkten die Skelettstruktur.
-Um die Joints sinnvoll definieren zu können muss festgehalten werden, welche Produktion ein jeweiliges Tupel erzeugt hat.
+Um die Joints sinnvoll definieren zu können, muss festgehalten werden welche Produktion das jeweilige Tupel erzeugt hat.
 Dies ist notwendig, da die Produktionen die Kategorien der Körperteile definieren und die Joints dementsprechend angepasst generiert werden müssen.
 Ausgehend von dieser Liste werden die Knochen erstellt und mit den Joints zu einem vollständigen Skelett zusammengesetzt.
 
 \paragraph*{Skelett aus L-System generieren}\label{sec:lsystemskel}
-Ausgehend von einer Liste von Tupeln, die jeweils Start und Endpunkte einer von der Turtle gezeichneten Strecke enthalten wird das Skelett mit Unity Klassen generiert. Zunächst wird die Liste in eine Baumstruktur überführt. Dabei entspricht ein Knoten im Baum einem Knochen im Skelett. Zwei Knoten stehen in einer Eltern-Kind-Beziehung im Baum, wenn die zugehörigen Strecken sich schneiden. Dabei wird gefordert, dass der Endpunkt der zum Elternknoten gehörigen Strecke dem Startpunkt der zum Kindknoten gehörigen Strecke gleicht. Da angenommen wird, dass es zu jedem Startpunkt eines Tupels in der Liste ein weiteres Tupel gibt, dessen Endpunkt dem Startpunkt gleicht lässt sich der Baum so definieren. Der Baum wird traversiert und zu jedem Knoten wird ein GameObject erstellt.  Dieses wird mit einem Rigidbody, einem CapsuleCollider und einem primitiven Mesh versehen. Die Knochen werden in Kategorien, wie zum Beispiel Arm, Bein oder Kopf eingeteilt. Zwei Knochen werden mit einem Joint verbunden, wenn sie im Baum in einer Eltern-Kind-Beziehung stehen. Für die erlaubten Rotationen der Joints wurden Standardwerte je nach Kategorie festgelegt. Abbildung \ref{skeletonlsystemex} zeigt ein über ein L-System generiertes Skelett.
+Ausgehend von einer Liste von Tupeln, die jeweils Start und Endpunkte einer von der Turtle gezeichneten Strecke enthalten wird das Skelett mit Unity Klassen generiert. Zunächst wird die Liste in eine Baumstruktur überführt. Dabei entspricht ein Knoten im Baum einem Knochen im Skelett. Zwei Knoten stehen in einer Eltern-Kind-Beziehung im Baum, wenn die zugehörigen Strecken sich schneiden. Dabei wird gefordert, dass der Endpunkt der zum Elternknoten gehörigen Strecke dem Startpunkt der zum Kindknoten gehörigen Strecke gleicht. Da angenommen wird, dass es zu jedem Startpunkt eines Tupels in der Liste ein weiteres Tupel gibt, dessen Endpunkt dem Startpunkt gleicht, lässt sich der Baum so definieren. Der Baum wird traversiert und zu jedem Knoten wird ein GameObject erstellt.  Dieses wird mit einem Rigidbody, einem CapsuleCollider und einem primitiven Mesh versehen. Die Knochen werden in Kategorien, wie zum Beispiel Arm, Bein oder Kopf eingeteilt. Zwei Knochen werden mit einem Joint verbunden, wenn sie im Baum in einer Eltern-Kind-Beziehung stehen. Für die erlaubten Rotationen der Joints wurden Standardwerte je nach Kategorie festgelegt. Abbildung \ref{skeletonlsystemex} zeigt ein über ein L-System generiertes Skelett.
 
 
 
@@ -129,12 +135,12 @@ Unser Ansatz um dieses Problem zu umgehen ist es, die Anzahl der einzelnen Metab
 Um diese Form zu erzeugen muss lediglich die Funktion $r(\vec{x})$ zur Berechnung des Abstandes angepasst werden.
 Sei $s$ der Startpunkt, $e$ der Endpunkt, $a$ der Vektor $e-s$, $p$ ein Punkt, dessen Abstand berechnet werden soll, $u=p-s$ und $v=p-e$ (Siehe Abbildung \ref{metacapsule}). Die Distanz lässt sich dann folgendermaßen bestimmen:
 \[
-r(\vec{x})= 
-\begin{cases}
-||p-s||,& \text{falls } a\cdot u < 0\\
-||p-e||,& \text{falls } a\cdot v > 0\\
-\norm*{\frac{a\times u}{\norm{a}}},& \text{sonst}.
-\end{cases}
+	r(\vec{x})=
+	\begin{cases}
+		||p-s||,                            & \text{falls } a\cdot u < 0 \\
+		||p-e||,                            & \text{falls } a\cdot v > 0 \\
+		\norm*{\frac{a\times u}{\norm{a}}}, & \text{sonst}.
+	\end{cases}
 \]
 
 Es werden drei Fälle unterschieden. Liegt der Punkt $p$ im Falle von Abbildung \ref{metacapsule} links von $s$, beziehungsweise rechts von $e$, ist Die Distanz von $p$ zum Segment einfach der euklidische Abstand zum jeweiligen Punkt. Ob dies der Fall ist, lässt sich mit Hilfe der Skalarprodukte $a\cdot u$ beziehungsweise $a\cdot v$ überprüfen. Ansonsten berechnet man die Distanz von Punkt p zur Geraden, die durch $s$ und $e$ verläuft.\\
@@ -185,12 +191,12 @@ Ein Algorithmus, welcher die Gewichte alleine aus der Distanz der Knochen zu den
 Das Temperatur-Gleichgewicht des Volumens zu berechnen wäre sehr aufwändig und langsam, deswegen wird das Gleichgewicht nur über die Oberfläche des Meshes berechnet~\cite[S.~6]{bone_heat_paper}. Die Gewichte für Knochen $i$ werden berechnet durch:
 
 \begin{equation}
-\label{eq:bone_heat}
-\begin{aligned}
-&\frac{\partial\mathbf{w}^i}{\partial t} = \Delta\mathbf{w}^i+\mathbf{H}\left(\mathbf{p}^i-\mathbf{w}^i\right)=0 \\
-\iff &-\Delta\mathbf{w}^i+\mathbf{H}\mathbf{w}^i=\mathbf{H}\mathbf{p}^i \\
-\iff &\left(-\Delta+\mathbf{H}\right)\mathbf{w}^i=\mathbf{H}\mathbf{p}^i.
-\end{aligned}
+	\label{eq:bone_heat}
+	\begin{aligned}
+		     & \frac{\partial\mathbf{w}^i}{\partial t} = \Delta\mathbf{w}^i+\mathbf{H}\left(\mathbf{p}^i-\mathbf{w}^i\right)=0 \\
+		\iff & -\Delta\mathbf{w}^i+\mathbf{H}\mathbf{w}^i=\mathbf{H}\mathbf{p}^i                                               \\
+		\iff & \left(-\Delta+\mathbf{H}\right)\mathbf{w}^i=\mathbf{H}\mathbf{p}^i.
+	\end{aligned}
 \end{equation}
 
 Dabei ist $\Delta$ der diskrete Laplace-Beltrami Operator auf der Oberfläche des Meshes, welcher mit der Kotangens-Methode approximiert wird~\cite{laplace_beltrami_paper}. $\mathbf{p}^i$ ist ein Vektor mit $p^i_j=1$ wenn der nächste Knochen zum Vertex $j$ der Knochen $i$ ist. Sonst ist $p^i_j=0$. $\mathbf{H}$ ist eine Diagonalmatrix in der $H_{jj}$ die Hitze des nächstgelegenen Knochen von Vertex $j$ ist. Sei $d(j)$ die Distanz zum nächstgelegenen  Knochen von Vertex $j$, dann wird $H_{jj}=c/d(j)^2$ gesetzt. Allerdings nur wenn das Geradensegment von dem Vertex zu dem Knochen vollständig in dem Volumen des Modells enthalten ist. Wenn der Knochen von dem Vertex aus also nicht sichtbar ist, wird $H_{jj}=0$ gesetzt. Dies verhindert, dass beispielsweise Vertices des Arms an den Torso angehängt werden. Wenn mehrere Knochen nahezu die gleiche Distanz zu dem Vertex haben und sichtbar sind, werden ihre Anteile an der Temperaturverteilung gleich berücksichtigt. $p_j$ wird dann $1/k$ und $H_{jj} = kc/d(j)^2$.
@@ -209,24 +215,24 @@ Für die effiziente Lösung des Matrix-Systems in Formel \ref{eq:bone_heat} ist 
 \end{figure}
 
 \begin{equation}
-\label{eq:cotangent_weight}
-v(x_i,x_j) = 
-\begin{cases}
-\cot{\alpha_{ij}}+\cot{\alpha_{ji}}\ & \text{für innere Kanten} \\
-\cot{\alpha_{ij}} & \text{für äußere Kanten}
-\end{cases}
+	\label{eq:cotangent_weight}
+	v(x_i,x_j) =
+	\begin{cases}
+		\cot{\alpha_{ij}}+\cot{\alpha_{ji}}\  & \text{für innere Kanten} \\
+		\cot{\alpha_{ij}}                     & \text{für äußere Kanten}
+	\end{cases}
 \end{equation}
 
 Aus den Kotangens-Gewichten aus Gleichung~\ref{eq:cotangent_weight} kann nun in Formel~\ref{eq:laplace_beltrami} der Laplace-Beltrami Operator in seiner Matrix-Form berechnet werden \cite{spd_solver_paper,laplace_beltrami_paper}. Dabei bescheibt $N(x_i)$ die Menge der benachbarten Vertices von $x_i$. Da für das Lösen der Gleichung~\ref{eq:bone_heat} lediglich die Matrix $(-\Delta+\textbf{H})$ benötigt wird, kann diese in der Implementierung direkt als eine Matrix erstellt werden. Die Normalisierungsfaktoren aus~\cite{spd_solver_paper} entfallen für diese Anwendung.
 
 \begin{equation}
-\label{eq:laplace_beltrami}
-\Delta_{ij}=
-\begin{cases}
-0 & i \neq j, x_j \notin N(x_i) \\
-v(x_i,x_j) & i \neq j, x_j \in N(x_i) \\
--\sum_{x_j\in N(v_i)} v(x_i,x_j) & i = j\\
-\end{cases}
+	\label{eq:laplace_beltrami}
+	\Delta_{ij}=
+	\begin{cases}
+		0                                & i \neq j, x_j \notin N(x_i) \\
+		v(x_i,x_j)                       & i \neq j, x_j \in N(x_i)    \\
+		-\sum_{x_j\in N(v_i)} v(x_i,x_j) & i = j                       \\
+	\end{cases}
 \end{equation}
 
 Da die Matrix $\textbf{H}$ eine Diagonalmatrix ist und der Operator $\Delta$ eines Vertex durch seine direkten Nachbarn lokal definiert ist, ist die zu lösende Matrix extrem dünn besetzt. Durch die Euler-Charakteristik für Dreiecks-Netze ergeben sich nur ungefähr $7$ Einträge pro Reihe in der Matrix~\cite{spd_solver_paper}. Ein solches System lässt sich, wie in~\cite{spd_solver_paper} gezeigt, sehr effizient lösen, wenn es sich um eine SPD-Matrix (symmetrisch positiv definit) handelt. Die Matrix ist durch die Konstruktion in Gleichung~\ref{eq:laplace_beltrami} symmetrisch. Für die Lösung dieses Systems wurde in diesem Projekt die Bibliothek Eigen~\cite{eigen} verwendet, welche zahlreiche Methoden zur Matrix-Berechnung bereitstellt. Es wurde der Matrix-Solver \texttt{SparseLU} verwendet, welcher auf dünn besetzte SPD-Matrizen spezialisiert ist.
@@ -269,7 +275,7 @@ Der \texttt{Assets}-Ordner enthält lediglich Debug-Skripte, die nicht exportier
 
 \subsubsection{Konfiguration}
 Die Klassen \texttt{Creature\-Generator\-Settings} und \texttt{Parametric\-Creature\-Settings} enthalten alle Konfigurationsmöglichkeiten für den Generator.
-Sie sind der Hauptweg mit dem Nutzer mit dem Generator interagieren und bilden somit den Anfang der Tour. 
+Sie sind der Hauptweg mit dem Nutzer mit dem Generator interagieren und bilden somit den Anfang der Tour.
 
 Die Klasse \texttt{CreatureGeneratorSettings} enthält Einstellungen, die das Verhalten des Generators und der generierten Kreaturen bestimmen.
 Dazu gehören Einstellungen die zum Beispiel das generieren eines Meshes für die Kreatur abschalten, Einstellungen für das physikalische Verhalten der Kreature, sowie Einstellungen für Debug-Optionen.
@@ -294,9 +300,9 @@ So können humanoide Kreaturen beispielsweise in die typische T-Pose gebracht we
 
 Es gibt drei Gründe das lokale Koordinatensystem eines jeden Knochens explizit anzugeben:
 \begin{itemize}
-    \item Quellcode außerhalb der, später beschriebenen, paramatrischen Generatoren ist nicht durchsetzt mit Konventionen und Annahmen über Koordinatensysteme; Statdessen sind die gewählten Koordinatensysteme explizit.
-    \item es erlaubt die Wahl von semantisch bedeutungsvollen Koordinatenachsen (Proximal, Ventral, Lateral)
-    \item es erlaubt unterschiedlichen parametrischen Generatoren eigene Konventionen für ihre Koordinatensysteme zu wählen.
+	\item Quellcode außerhalb der, später beschriebenen, paramatrischen Generatoren ist nicht durchsetzt mit Konventionen und Annahmen über Koordinatensysteme; Statdessen sind die gewählten Koordinatensysteme explizit.
+	\item es erlaubt die Wahl von semantisch bedeutungsvollen Koordinatenachsen (Proximal, Ventral, Lateral)
+	\item es erlaubt unterschiedlichen parametrischen Generatoren eigene Konventionen für ihre Koordinatensysteme zu wählen.
 \end{itemize}
 
 \subsubsection{Parametrische Generatoren}\label{parametrsiche_generatoren}
@@ -325,9 +331,9 @@ Der \texttt{Skeleton\-Assembler} baut aus der \texttt{Skeleton\-Definition} eine
 
 In einem ersten Durchgang wird für jede \texttt{Bone\-Definition} des Baumes ein \texttt{Game\-Object} erstellt. Jedes dieser \texttt{GameObject}s wird mit mehreren Komponenten ausgestattet:
 \begin{itemize}
-    \item ein \texttt{Rigidbody}, damit physikalische Kräfte auf den Knochen wirken können
-    \item ein \texttt{Collider}, damit der Knochen mit anderen Objekten kollidieren kann. Die Form des \texttt{Colliders} hängt vom Typen des Knochen ab.
-    \item ein \texttt{Bone}, der Metadaten, wie z.B. Länge oder Kategorie des Knochens, enthält, aber auch die Farbe des Knochens für die spätere Darstellung im Spiel
+	\item ein \texttt{Rigidbody}, damit physikalische Kräfte auf den Knochen wirken können
+	\item ein \texttt{Collider}, damit der Knochen mit anderen Objekten kollidieren kann. Die Form des \texttt{Colliders} hängt vom Typen des Knochen ab.
+	\item ein \texttt{Bone}, der Metadaten, wie z.B. Länge oder Kategorie des Knochens, enthält, aber auch die Farbe des Knochens für die spätere Darstellung im Spiel
 \end{itemize}
 Die Farbe des Knochens wird zufällig im HSV Farbraum generiert und dann in das in der Computergrafik übliche RGB Format konvertiert.
 Der HSV Farbraum erleichtert es zufällig Farben in bestimmten Farbtönen und Helligkeiten zu generieren, in unserem Fall zombieartige Grüntöne.
@@ -357,7 +363,7 @@ Zuletzt wird noch der Wurzel-Knochen markiert und die von dem parametrischen Gen
 Die lineare Bewegung der Joints wird für fast alle Knochen vollständig gesperrt.
 Dazu werden die \texttt{xMotion}, \texttt{yMotion}, \texttt{zMotion} Felder auf \texttt{Locked} gesetzt.
 Die Joints halten nun, soweit physikalisch möglich, ihre Position relativ zum Eltern-Knochen.
-Lediglich für Knochen die im \texttt{BoneTree} direkt unterhalb eines Hüft- oder Bein-Knochens liegen wird eine lineare Bewegung entlang der der z-Achse (proximalen Achse) erlaubt und eine entsprechende Feder konfiguriert, um die zuvor beschriebenen Stoßdämpfer zu modellieren. 
+Lediglich für Knochen die im \texttt{BoneTree} direkt unterhalb eines Hüft- oder Bein-Knochens liegen wird eine lineare Bewegung entlang der der z-Achse (proximalen Achse) erlaubt und eine entsprechende Feder konfiguriert, um die zuvor beschriebenen Stoßdämpfer zu modellieren.
 
 Die Rotation der Joint wird entsprechend der \texttt{Limit\-Table} eingeschränkt.
 Die \texttt{angular\-XMotion}, \texttt{angular\-YMotion}, \texttt{angular\-ZMotion} Felder werden entsprechend auf \texttt{Locked} oder \texttt{Limited} gesetzt, und die dazugehörigen \texttt{angularLimits} werden ausgefüllt.
