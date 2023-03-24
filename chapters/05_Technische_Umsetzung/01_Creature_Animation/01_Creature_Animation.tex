@@ -1,21 +1,21 @@
 % !TeX spellcheck = de_DE
 
-\subsection{Fachliche Umsetzung}
+%\subsection{Fachliche Umsetzung}
+%
+%\subsubsection{Trainingsumgebung}
+%% Carsten
+%Als Grundlage für die eigene Trainingsumgebung diente die Trainingsumgebung des ML-Agent Walkers. Bei genauerer Betrachtung der Trainingsumgebung des ML-Agent Walkers stellte sich sehr schnell raus, dass diese für unsere Anforderungen zu statisch war, da es zum Beispiel nicht möglich war, die verwendete Kreatur einfach gegen eine andere Kreatur auszutauschen. Zudem mussten neue Arenen aufwendig per Hand erstellt werden und die Kreaturen konnten nur auf einer flachen Ebene trainiert werden. Daher wurde eine eigene dynamischere Trainingsumgebung erstellt, die vor allem die zuvor genannten Punkte umsetzt. Sowohl die Anzahl der Arenen als auch die Kreatur können in der neuen Trainingsumgebung einfach eingestellt werden. Somit können die Arenen vollständig zur Laufzeit generiert werden. Zudem besteht die Möglichkeit neben flachen Terrain auch unebenes Terrain zu verwenden.
+%
+%Zunächst wurde der ML-Agents Walker zum Testen der neuen Trainingsumgebung verwendet, damit die Kreatur als Fehlerquelle ausgeschlossen werden konnte. Nachdem die Tests mit dem ML-Agents Walker erfolgreich waren, wurde der ML-Agents Walker durch eine neue Kreatur ersetzt, welche mit Hilfe des L-Systems zuvor generiert wurde. Die neue Kreatur wurde ausgiebig in der neuen Trainingsumgebung getestet und mit dem ML-Agents Walker verglichen. Durch das dadurch gewonnene Feedback konnte die Creature Generator Gruppe Anpassungen und Verbesserungen an der Kreatur vornehmen.
+%
+%Trotz den vielen Änderungen an der Kreatur war es nicht möglich, die Kreatur aus dem L-System zum Laufen zu bringen. Aus diesem Grund ersetzte eine andere Methode, welche von Jona und Markus umgesetzt wurde, das L-System. Mit der neuen Methode wurde auch der Creature-Generator direkt in die Trainingsumgebung eingebunden. Dies ermöglichte es, schnell verschiedene Kreaturen zu testen. 
+%
+%\subsection{Technische Umsetzung}
 
-\subsubsection{Trainingsumgebung}
-% Carsten
-Als Grundlage für die eigene Trainingsumgebung diente die Trainingsumgebung des ML-Agent Walkers. Bei genauerer Betrachtung der Trainingsumgebung des ML-Agent Walkers stellte sich sehr schnell raus, dass diese für unsere Anforderungen zu statisch war, da es zum Beispiel nicht möglich war, die verwendete Kreatur einfach gegen eine andere Kreatur auszutauschen. Zudem mussten neue Arenen aufwendig per Hand erstellt werden und die Kreaturen konnten nur auf einer flachen Ebene trainiert werden. Daher wurde eine eigene dynamischere Trainingsumgebung erstellt, die vor allem die zuvor genannten Punkte umsetzt. Sowohl die Anzahl der Arenen als auch die Kreatur können in der neuen Trainingsumgebung einfach eingestellt werden. Somit können die Arenen vollständig zur Laufzeit generiert werden. Zudem besteht die Möglichkeit neben flachen Terrain auch unebenes Terrain zu verwenden.
-
-Zunächst wurde der ML-Agents Walker zum Testen der neuen Trainingsumgebung verwendet, damit die Kreatur als Fehlerquelle ausgeschlossen werden konnte. Nachdem die Tests mit dem ML-Agents Walker erfolgreich waren, wurde der ML-Agents Walker durch eine neue Kreatur ersetzt, welche mit Hilfe des L-Systems zuvor generiert wurde. Die neue Kreatur wurde ausgiebig in der neuen Trainingsumgebung getestet und mit dem ML-Agents Walker verglichen. Durch das dadurch gewonnene Feedback konnte die Creature Generator Gruppe Anpassungen und Verbesserungen an der Kreatur vornehmen.
-
-Trotz den vielen Änderungen an der Kreatur war es nicht möglich, die Kreatur aus dem L-System zum Laufen zu bringen. Aus diesem Grund ersetzte eine andere Methode, welche von Jona und Markus umgesetzt wurde, das L-System. Mit der neuen Methode wurde auch der Creature-Generator direkt in die Trainingsumgebung eingebunden. Dies ermöglichte es, schnell verschiedene Kreaturen zu testen. 
-
-\subsection{Technische Umsetzung}
-
-\subsubsection{Trainingsumgebung}
+\subsection{Trainingsumgebung}
 Im Folgenden soll der Aufbau der Trainingsumgebung beschrieben werden, welche es erlaubt verschiedenste Kreaturen ohne große Anpassungen zu trainieren. Im Laufe der Projektgruppe wurden drei unterschiedliche Versionen der Trainingsumgebung genutzt. 
 
-\paragraph{Vorherige Versionen}
+\subsubsection{Vorherige Versionen}
 Die erste Version ist eine leicht abgeänderte Form der ML-Agents-Beispielumgebung für den Walker. Dabei handelt es sich um eine Unity-Szene mit einer fest vorgebenden Anzahl an Arenen und Kreaturen, welche trainiert werden können.
 
 Da sich hier schnell Limitationen in Bezug auf die Anpassbarkeit herausstellten wurde die Umgebung geändert, so dass die Anzahl der Arenen dynamisch generiert werden und Kreaturen als Prefab und per Seed über den \texttt{CreatureGenerator} platziert werden können. 
@@ -34,7 +34,7 @@ Die  \texttt{DynamicEnviormentGenerator}-Umgebung ist dabei aus den folgenden Kl
 
 Da die Umgebung weiterhin als zusätzliche Szene in dem Projekt existiert\footnote{Es sei dabei angemerkt, dass die Szene nicht aktiv getestet wird und deswegen nicht garantiert werden kann, dass mit weiteren Änderungen die Funktionalität bestehen bleibt.} und die aktuelle Version der Trainingsumgebung auf dem \texttt{DynamicEnviormentGenerator} aufbaut, wird im Folgenden auf den Aufbaue des \texttt{DynamicEnviormentGenerator} sowie dessen Hilfsklassen eingegangen. Die Hilfsklassen sind der \texttt{TerrainGenerator}, \texttt{GenericConfig} und dessen Implementierungen sowie das \texttt{DebugScript}. Erstere ist verantwortlich für die Generierung des Terrains, die Config-Dateien laden dynamisch die Einstellungen aus einer Datei und das letzte Skript beinhaltet hilfreiche Debug-Einstellungen. Die grundsätzliche Idee der Trainingsumgebung stammt von dem ML-Agents-Walker. Da an diesem keine Versuche mit Unterschiedlichen Umgebungen und Kreaturen durchgeführt wurden, ist der Aufbau des Projekts nicht dynamisch genug. 
 
-\paragraph{Dynamic Enviorment Generator}
+\subsubsection{Dynamic Enviorment Generator}
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\linewidth]{resources/img/DEGArenen}
@@ -79,7 +79,7 @@ Im Fall, dass das Spiel ohne Editor gestartet wird, was meist beim Training der 
 	\label{bspDEGOptionen}
 \end{figure}
 
-\paragraph{Aktuelle Version -- Advanced Environment Generator}
+\subsubsection{Aktuelle Version -- Advanced Environment Generator}
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\linewidth]{resources/img/AEGArena.png}
@@ -94,7 +94,7 @@ Die neue Umgebung wird im folgenden als \texttt{AdvancedEnvironmentGenerator} be
 Die Generator-Klasse selbst konnte deutlich gekürzt werden, da eine Generierung von Arenen nicht mehr benötigt wird. Zu dem Zeitpunkt der Erstellung existierte bereits der \texttt{TerrainGenerator} für das finale Spiel, welche ab dieser Version für die Trainingsumgebung verwendet wird. Weiterhin ermöglichte dies eine Entfernung von vielen Einstellungen für das Terrain aus dem Generator-Objekt.
 
 In der Abbildung \ref{bspAEGArena} ist das Endergebnis des \texttt{AdvancedEnvironmentGenerator} dargestellt. Da es im realen Spiel zu Kollisionen zwischen verschiedenen Kreaturen kommen kann, wurde für die Trainingsumgebung nur eine zusammenhängende Arena verwendet. Insgesamt stimmen die Bedingungen für das Lernen und dem Spiel somit überein, da wie im Spiel kleine Korridore und Arenen mit ggf. mehreren Kreaturen genutzt werden.
-\subsubsection{Erweiterung der Agent-Klasse}
+\subsection{Erweiterung der Agent-Klasse}
 
 \begin{figure}
 	\includegraphics[width=\textwidth, trim={0cm 6.5cm 0cm 0cm}, clip]{resources/img/PG_Agent.drawio.pdf}
@@ -104,31 +104,31 @@ In der Abbildung \ref{bspAEGArena} ist das Endergebnis des \texttt{AdvancedEnvir
 
 Als eine Erweiterung der \texttt{Agent}-Klasse von ML-Agents stellt die \texttt{GenericAgent}-Klasse das Verbindungsst"uck zwischen dem ML-Framework und der Unity-Engine dar. Im Folgenden wird der Aufbau der Klasse \texttt{GenericAgent} sowie derer Hilfsklassen \texttt{JointDrive\-Controller}, \texttt{BodyPart}, \texttt{OrientationCubeController} und \texttt{WalkTargetScript} erläutert und die Funktionalität dieser Klassen erklärt. Zur Veranschaulichung befindet sich in Abbildung \ref{fig:umlAgent} ein UML-Diagram. Der Aufbau dieser Klassen orientiert sich dabei sehr stark an der Implementierung des ML-Agents Walker.
 
-\paragraph{GenericAgent}
+\subsubsection{GenericAgent}
 
 Die kontrollierende Instanz einer konkreten Trainingsumgebung ist die \texttt{GenericAgent}-Klasse. Diese ist dazu in der Lage, mit dem Modell des ML-Frameworks zu interagieren, also sowohl Beobachtungen der Trainingsumgebung weiterzugeben also auch die Ausgaben des Modells anzunehmen (und zu verarbeiten). Außerdem ist die Klasse f"ur die Instandhaltung der Trainingsumgebung verantwortlich, indem sie Events der Umgebung verarbeitet (z.B. das Erreichen des Targets oder das Verlassen des zugänglichen Bereiches) und ggf. spezifizierte Routinen wie das Zur"ucksetzen der Umgebung durchf"uhrt.
 Schließlich muss die \texttt{GenericAgent}-Klasse noch die Rewards f"ur die Trainingsumgebung verteilen. Zu diesem Zweck ist die Klasse als \textit{abstract} definiert, da diese Rewardfunktionen stark von der Aufgabe des Agents abhängig sind. So benötigt zum Beispiel ein Agent, welcher ein bestimmtes Ziel möglichst schnell erreichen soll eine andere Reward-Funktion als ein Agent, welcher sich möglichst gut vor dem Spieler verstecken soll. Verschiedene Agents können so ohne Redundanz einfach als eine Erweiterung der \texttt{GenericAgent}-Klasse implementiert werden. In Abschnitt \ref{sec:konkretAgents} findet sich eine Auswahl von konkreten Erweiterungen dieser abstrakten Klasse, welche wir im Laufe des Projekts verwendet haben.
 
-\paragraph{JointDriveController und BodyPart}
+\subsubsection{JointDriveController und BodyPart}
 
 Um die Ingame-Repräsentation (also die generierte Creature) des Agents zu kontrollieren, besitzt der \texttt{GenericAgent} einen \texttt{JointDriveController}. Bei der Initialisierung der Trainingsumgebung wrappt der \texttt{JointDrive\-Controller} die verschiedenen Unity-Transforms der Creature in Instanzen der Hilfsklasse \texttt{BodyPart}. Die Klasse \texttt{BodyPart} gibt uns leichten Zugang zu häufig benötigten Funktionalitäten, wie zum Beispiel das Zur"ucksetzen oder Steuern des Transform. Auch besitzt ein \texttt{BodyPart} n"utzliche Informationen "uber das jeweilige Transform, welche dem ML-Modell weitergegeben werden können. Nach der Initialisierung stellt der \texttt{JointDriveController} nur noch das Verbindungsst"uck zwischen der \texttt{GenericAgent}-Klasse und der verschiedenen \texttt{BodyPart}-Instanzen dar. 
 
 
-\paragraph{OrientationCubeController}
+\subsubsection{OrientationCubeController}
 
 Da sich das Target des Agenten potentiell "uberall innerhalb einer großen (und weitgehend unbekannten) Ingame-Umgebung befinden kann, ist es hilfreich, die gezielte Laufrichtung des Agenten an eine einheitliche Position zu platzieren. Hierf"ur besitzt jeder Agent einen sogenannten \textit{OrientationCube}, welcher an einer festen Position relativ zum Agenten steht und sich lediglich in die Richtung des Targets dreht. So kann der Agent (und infolgedessen das ML-Modell) einfach den OrientationCube referenzieren, um die Laufrichtung zu bestimmen. Der \texttt{OrientationCubeController} stellt daf"ur die Reorientierungsfunktion des OrientationCubes bereit.
 
 
-\paragraph{WalkTargetScript}
+\subsubsection{WalkTargetScript}
 
 Größtenteils unabhängig vom Agenten agiert das Target mithilfe des \texttt{WalkTargetScript}. Die Hauptaufgabe des Scripts ist es, das Target zu steuern (sowohl Neuplatzierung bei einem Reset, als auch normale Bewegungen innerhalb einer Episode) und beim Eintreten eines CollisionEvents zwischen dem Target und dem Agenten den Agenten zu notifizieren. Da zurzeit das Target nur aus einer Kugel besteht, ist komplizierteres Verhalten nicht notwendig.
 
-\subsubsection{Konkrete Implementationen der Agents}
+\subsection{Konkrete Implementationen der Agents}
 \label{sec:konkretAgents}
 
 Um eine bessere Vorstellung von den tatsächlich benutzten Agents zu bekommen, wird in diesem Abschnitt eine Auswahl solcher Agents vorgestellt. 
 
-\paragraph{AgentWalker}
+\subsubsection{AgentWalker}
 
 Der \texttt{AgentWalker} stellt den Startpunkt unserer Entwicklung eigener Agents dar. Die Aufgabe dieses Agents ist es, in die Richtung eines \texttt{Targets} zu laufen, am besten aufrecht auf zwei Beinen. Zu diesem Zweck besteht die Reward-Funktion grundsätzlich aus zwei Teilen: Einerseits sollte der Agent (beispielhaft repräsentiert durch sein Torso-Element) möglichst gut in Richtung des Targets orientiert sein. Andererseits sollte der Agent nat"urlich auch vorwärts laufen. Wenn der Agent beide diese Aufgaben zusammen bewältigen kann, bewegt der Agent sich auf einer geraden Linie in Richtung des Targets. Entsprechen wird eine Belohnung bestehend aus dem Produkt dieser beiden Teilbelohnungen vergeben.
 
@@ -136,7 +136,7 @@ Basierend auf dieser Reward-Funktion lassen sich kleine Anpassungen vornehmen, u
 
 Ein offensichtliche Limitation dieses Ansatzes ist es, dass der Agent sich nur in einer geraden Linie zum Target bewegen kann. Sollten sich Hindernisse auf diesem Weg befinden, kann der Agent damit erst einmal nicht umgehen, da ihm Informationen "uber solche Aspekte der Umgebung fehlen.
 
-\paragraph{AgentNavMesh mit Varianten}
+\subsubsection{AgentNavMesh mit Varianten}
 \label{subsubsec:agentnavmesh}
 
 Anstatt dem Agent mehr Informationen "uber die Umgebungen zu geben, ist es auch möglich, eine Reihe von Targets f"ur den Agenten zu erstellen, sodass es immer einen geraden Weg ohne Hindernisse von einem dieser Targets (bzw. dem Agent) zum nächsten gibt. Das letzte Target dieser Reihe soll dann das urspr"ungliche Target sein. Eine solche Reihe von Targets l"asst sich gut mit \enquote{NavMeshes} berechnen. Alle weiteren Eigenschaften "ubernimmt der \texttt{AgentNavMesh} vom \texttt{AgentWalker}.
@@ -183,57 +183,56 @@ $r_{thr}$ bezeichnet den Reward für die Höhe des obersten Knochens in der Hier
 $r_{trr}$ bezeichnet den Reward für die Rotation des obersten Knochens in der Hierachie des Skeletts des Agents. Dieser wird analog zum Reward für die Höhe des Knochens $r_{thr}$ berechnet. Die aktuelle Abweichung der Rotation $\delta_{tr}$ betrachtet die Rotation des Knochens entlang der $x$ und $z$ Achsen, die $y$ Achse wird ignoriert, da diese die Blickrichtung kodiert. Die Abweichung entlang der $x$ und $z$ Achse zwischen aktueller Rotation $tr_n$ und Startrotation $tr_s$ wird jeweils auf den Bereich von 0 bis 360 Grad skaliert. Der Reward wird nur verteilt, wenn die aktuelle Rotation geringer ist, als die minimale Rotation der aktuellen Episode $\delta_{trmin}$, oder die Rotation nah an der Ausgangsrotation ist.
 Durch die beiden Reward für den Rückenknochen des Skeletts wird der Agent dazu motiviert, seine aufrechte Ausgangssituation wiederherzustellen. Indem die Rewards jeweils nur dann verteilt werden, wenn eine Verbesserung im Vergleich zum Minimum der aktuellen Episode entsteht, oder der Ausgangszustand annähernd erreicht ist, wird verhindert, dass für wiederholtes Heben und Senken des Rückenknochens ein großer Reward verteilt wird. Dadurch wird ein stabiles Halten der Ausgangsposition ermutigt, sobald diese wieder erreicht wurde.
 
-\subsubsection{RL-Framework}
+\subsection{RL-Framework}
 % Jannik
 Zum Trainieren der Kreaturen wird ein RL-Framework verwendet, welches mit den für die Kreaturen defininerten Agenten interagiert. Das Projekt in Unity gebaut wird und somit stehen verschiedene Frameworks zur Verfügung, die sich in implementierten Algorithmen und Trainingsoptionen unterscheiden. Da sich zu Beginn des Projekt bereits auf die Verwendung des Proximal Policy Optimization (PPO) Algorithmus geeinigt wurde, sind zwei Frameworks in die engere Auswahl gekommen.
 
-\paragraph{ml-Agents} \label{mlAgentsFramework}
-\noindent Das Unity Machine Learning Agents Toolkit \cite{juliani2020}, kurz ml-Agents, ist ein von Unity entwickeltes Projekt zum Trainineren von Agenten und stellt, wie in diesem Projekt benötigt, unter anderem eine Implementierung von PPO zur Verfügung.
+\paragraph{ML-Agents} \label{mlAgentsFramework}
+\noindent Das Unity Machine Learning Agents Toolkit \cite{juliani2020}, kurz ML-Agents, ist ein von Unity entwickeltes Projekt zum Trainineren von Agenten und stellt, wie in diesem Projekt benötigt, unter anderem eine Implementierung von PPO zur Verfügung.
 Zusätzlich definiert das Toolkit auch eine Python API, die verwendet werden kann um eigene Agenten mit den zur Verfügung gestellten Algorithmen trainieren zu lassen.
-Dabei unterstützt die API neben Diskreten und Kontinuierlichen Aktions- und Beobachtungsräumen auch das Platzieren mehreren Agenten in einer Unity Szene.\\
+Dabei unterstützt die API neben Diskreten und Kontinuierlichen Aktions- und Beobachtungsräumen auch das Platzieren mehreren Agenten in einer Unity Szene.
 
-\noindent Während der Trainings angelegte Checkpoints und der finale Zustand des Netzwerks werden als onnx Dateien gespeichert, die dann geladen werden können, um das trainierte Netzwerk zu verwenden.\\
-Zum Analysieren und Bewerten des Trainings erhebt ml-Agents verschiedene Daten, wie den durchschnittlichen Reward und die Loss Werte der verschiedenen Netzwerke und speichert diese in einem Tensorboard. 
+Während der Trainings angelegte Checkpoints und der finale Zustand des Netzwerks werden als onnx Dateien gespeichert, die dann geladen werden können, um das trainierte Netzwerk zu verwenden.
+Zum Analysieren und Bewerten des Trainings erhebt ML-Agents verschiedene Daten, wie den durchschnittlichen Reward und die Loss Werte der verschiedenen Netzwerke und speichert diese in einem Tensorboard. 
 
 \paragraph{neroRL} \label{neroRLFramework}
-\noindent Bei neroRL \cite{neroRL} handelt es sich um ein Reinforment Learning Framework, das seinen Fokus auf verschiedene Varianten des Proximal Policy Optimization (PPO) Algorithmuses legt.\\
-Der Agent kann dabei entweder mit geteilten oder getrennten Netzwerken und Gradienten für den Aktor und den Kritiker trainiert werden. \\
-Dabei unterstützt es zum Trainieren neben openAIGym Umgebungen auch solche, die mit der Python API von ml-Agents erstellt wurden.\\
+Bei neroRL \cite{neroRL} handelt es sich um ein Reinforment Learning Framework, das seinen Fokus auf verschiedene Varianten des Proximal Policy Optimization (PPO) Algorithmuses legt.
+Der Agent kann dabei entweder mit geteilten oder getrennten Netzwerken und Gradienten für den Aktor und den Kritiker trainiert werden.
+Dabei unterstützt es zum Trainieren neben openAIGym Umgebungen auch solche, die mit der Python API von ML-Agents erstellt wurden.
 Die Beobachtungsräume in diesem Umgebungen dürfen jedoch nur Vektor und Visuelle Beobachtungen enthalten und für die Aktionräume werden nur Diskrete und Multidiskrete Formate unterstützt.
-Des Weiteren kann in jeder Szene nur ein Agent platziert werden und zur Beschleunigung des Trainings müssen stattdessen mehrere Instanzen der Szene gleichzeitig trainiert werden.\\
+Des Weiteren kann in jeder Szene nur ein Agent platziert werden und zur Beschleunigung des Trainings müssen stattdessen mehrere Instanzen der Szene gleichzeitig trainiert werden.
 
-\noindent Während der Trainings angelegte Checkpoints und der finale Zustand des Netzwerks werden als pt Dateien abgespeichert und können als solche nicht direkt in eine Unity Umgebung geladen werden.\\
+Während der Trainings angelegte Checkpoints und der finale Zustand des Netzwerks werden als pt Dateien abgespeichert und können als solche nicht direkt in eine Unity Umgebung geladen werden.
 Zum Analysieren und Bewerten erhebt neroRL während des Trainings verschiedene Kenndaten, wie den durchschnittlichen Reward und die Loss Werte der verschiedenen Netzwerke, und speichert diese in einem Tensorboard.
 
-\paragraph{Auswahl des Frameworks}\fup
+\subsubsection{Auswahl des Frameworks}
 
 Beide vorgestellten Frameworks verfügen im Hinblick auf dieses Projekt über Vor- und Nachteile.
 
-\paragraph{ml-Agents}
-\noindent Ml-Agents unterstützt bereits von sich aus kontinuierliche Aktionsräume, welche zum Bewegen der Kreaturen benötigt werden. Außerdem erlaubt es mehrere Agenten in einer Szene zu platzieren, im folgenden als Multi-Agent-Szene bezeichnet, und so das Training zu beschleunigen. Die vorherigen Tests mit der Walker Testumgebung in Unity \cite{walkerEnv} haben gezeigt, dass selbst eine zum Laufen optimierte zweibeinige Kreatur recht lange braucht, bis sie stabil und ohne umfallen laufen kann.
+Ml-Agents unterstützt bereits von sich aus kontinuierliche Aktionsräume, welche zum Bewegen der Kreaturen benötigt werden. Außerdem erlaubt es mehrere Agenten in einer Szene zu platzieren, im folgenden als Multi-Agent-Szene bezeichnet, und so das Training zu beschleunigen. Die vorherigen Tests mit der Walker Testumgebung in Unity \cite{walkerEnv} haben gezeigt, dass selbst eine zum Laufen optimierte zweibeinige Kreatur recht lange braucht, bis sie stabil und ohne umfallen laufen kann.
 Bei einer prozedural generierten Kreatur ist zu erwarten, dass der Prozess länger dauert und darum sollten alle Möglichkeiten das Training zu beschleunigen verwendet werden.
-Ein Problem mit ml-Agents liegt in der Auswertung der Ergebnisse des Trainings. Im Rahmen dieser Ausarbeitung ist es notwendig sich kritisch mit den Ergebnissen auseinander zu setzten und für den Teil der CreatureAnimation sind vor allem die Statistiken des Trainings relevant. Ml-Agents erhebt zwar im Rahmen des Trainingsvorgangs Statistiken und speichert diese in einem Tensorboard ab, allerdings werden nur wenige Statistiken erhoben. Zusätzlich speichert das Framework nicht direkt die erhobenen Werte ab, sondern in jedem Schritt nur den Durchschnitt der Werte. Für eine Analyse würde dies bedeuten, dass die verwendeten Daten bereits Durchschnitte sind und daher am Ende der Durchschnitt des Durchschnittes betrachtet wird, was keine guten Ergebnisse liefert. 
-Ein weiterer Punkt ist, dass in der Konfiguration von ml-Agents eine maximale Anzahl von Checkpoints angegeben werden muss. Sollten im Laufe des Trainings mehr angelegt werden als dieses Limit erlaubt, überschreibt das Programm stattdessen die ältesten.
-Der im Zweifel wichtigste Nachteil von ml-Agents ist jedoch, dass es sich bei dem Toolkit um ein sehr großes Projekt handelt, welches aus vielen einzelnen Modulen besteht. Aufgrund der Komplexität des Projekts wäre es sehr schwierig die zuvor genannten Nachteile zu beseitigen und es so an die Bedürfnisse der Projektgruppe anzupassen.\\
-\paragraph{neroRL}
-\noindent Die Vorteile von neroRL sind zum einen, dass es mehr Informationen in das Tensorboard schreibt und die direkten Werte dort einträgt, ohne diese vorher zu verarbeiten. Außerdem verlangt die neroRL Konfiguration nur den Abstand zwischen Checkpoints und legt dann so viele Checkpoints an, wie nötig. Im Gegensatz zu ml-Agents gibt es keine maximale Anzahl und somit werden keine Checkpoints überschrieben. 
+Ein Problem mit ML-Agents liegt in der Auswertung der Ergebnisse des Trainings. Im Rahmen dieser Ausarbeitung ist es notwendig sich kritisch mit den Ergebnissen auseinander zu setzten und für den Teil der CreatureAnimation sind vor allem die Statistiken des Trainings relevant. ML-Agents erhebt zwar im Rahmen des Trainingsvorgangs Statistiken und speichert diese in einem Tensorboard ab, allerdings werden nur wenige Statistiken erhoben. Zusätzlich speichert das Framework nicht direkt die erhobenen Werte ab, sondern in jedem Schritt nur den Durchschnitt der Werte. Für eine Analyse würde dies bedeuten, dass die verwendeten Daten bereits Durchschnitte sind und daher am Ende der Durchschnitt des Durchschnittes betrachtet wird, was keine guten Ergebnisse liefert. 
+Ein weiterer Punkt ist, dass in der Konfiguration von ML-Agents eine maximale Anzahl von Checkpoints angegeben werden muss. Sollten im Laufe des Trainings mehr angelegt werden als dieses Limit erlaubt, überschreibt das Programm stattdessen die ältesten.
+Der im Zweifel wichtigste Nachteil von ML-Agents ist jedoch, dass es sich bei dem Toolkit um ein sehr großes Projekt handelt, welches aus vielen einzelnen Modulen besteht. Aufgrund der Komplexität des Projekts wäre es sehr schwierig die zuvor genannten Nachteile zu beseitigen und es so an die Bedürfnisse der Projektgruppe anzupassen.
+
+Die Vorteile von neroRL sind zum einen, dass es mehr Informationen in das Tensorboard schreibt und die direkten Werte dort einträgt, ohne diese vorher zu verarbeiten. Außerdem verlangt die neroRL Konfiguration nur den Abstand zwischen Checkpoints und legt dann so viele Checkpoints an, wie nötig. Im Gegensatz zu ML-Agents gibt es keine maximale Anzahl und somit werden keine Checkpoints überschrieben. 
 Zudem bietet neroRL eine Auswertungsfunktion, die nach dem Ende des Trainings verwendet werden kann, um bessere Daten zum Verlauf des Trainings zu erhalten.
 Dabei wird jeder angelegte Checkpoint des Netzes für eine festgelegte Anzahl an Episoden verwendet, um den Verlauf des Trainings und die Qualitätsunterschiede zwischen den Checkpoints darzustellen.
-Die Nachteile von neroRL sind, dass nur Diskrete und Multidiskrete Aktionsräume unterstützt werden, welche zum Animieren der Kreaturen, nach vorläufigen Tests nicht ausreichen. Außerdem erlaubt es nicht mehrere Agenten in einer Szene zu platzieren. Für das Training skaliert es aber am besten, wenn mehrere Agenten pro Szene in Kombination mit mehreren parallelen Instanzen der Szene verwendet werden. Im Folgenden wird jeweils eine zum Trainieren verwendete Instanz der Szene als Build bezeichnet, da dies der Unity Terminologie entspricht. Eine Instanz einer Multi-Agent Szene ist entsprechend ein Multi-Agent Build.\\
-\paragraph{Entscheidung}\fup
-\noindent Es ist also eindeutig, dass unabhängig davon welches Framework gewählt wird dieses noch angepasst werden muss, bevor es im Projekt verwendet werden kann. Die endgültige Endscheidung war es das neroRL Framework zu verwenden. Dieses auf kontinuierliche Aktionen und Umgebungen mit mehren Agenten zu erweitern erschien einfacher, als in ml-Agents das Anlegen der Statistiken und Checkpoints so zu ändern, dass es für die notwendigen Analysen geeignet ist. 
-Ein weiterer Einfluss auf diese Entscheidung war, dass Marco Pleines, der Entwickler von neroRL, als Betreuer in der Projektgruppe mitwirkt. Bei Fragen oder Problemen während der Anpassung können also deutlich schneller Feedback und Hilfestellungen gegeben werden, als dies bei Fragen zu ml-Agents der Fall wäre.
+Die Nachteile von neroRL sind, dass nur Diskrete und Multidiskrete Aktionsräume unterstützt werden, welche zum Animieren der Kreaturen, nach vorläufigen Tests nicht ausreichen. Außerdem erlaubt es nicht mehrere Agenten in einer Szene zu platzieren. Für das Training skaliert es aber am besten, wenn mehrere Agenten pro Szene in Kombination mit mehreren parallelen Instanzen der Szene verwendet werden. Im Folgenden wird jeweils eine zum Trainieren verwendete Instanz der Szene als Build bezeichnet, da dies der Unity Terminologie entspricht. Eine Instanz einer Multi-Agent Szene ist entsprechend ein Multi-Agent Build.
 
-\paragraph{Anpassung an neroRL} \label{neroAnpassungKonzept} \fup
+Es ist also eindeutig, dass unabhängig davon welches Framework gewählt wird dieses noch angepasst werden muss, bevor es im Projekt verwendet werden kann. Die endgültige Endscheidung war es das neroRL Framework zu verwenden. Dieses auf kontinuierliche Aktionen und Umgebungen mit mehren Agenten zu erweitern erschien einfacher, als in ML-Agents das Anlegen der Statistiken und Checkpoints so zu ändern, dass es für die notwendigen Analysen geeignet ist. 
+Ein weiterer Einfluss auf diese Entscheidung war, dass Marco Pleines, der Entwickler von neroRL, als Betreuer in der Projektgruppe mitwirkt. Bei Fragen oder Problemen während der Anpassung können also deutlich schneller Feedback und Hilfestellungen gegeben werden, als dies bei Fragen zu ML-Agents der Fall wäre.
+
+\subsubsection{Anpassung an neroRL} \label{neroAnpassungKonzept}
 
 Bevor neroRL zum Trainieren verwendet werden kann müssen zunächst die zuvor aufgezählten Probleme mit dem Framework beseitigt werden.\\
 
 \paragraph{Kontinuierliche Aktionsräumen}
-\noindent Zunächst muss die Implementierung so erweitert werden, dass sie auch Umgebungen mit kontinuierlichen Aktionsräumen unterstützt. 
+Zunächst muss die Implementierung so erweitert werden, dass sie auch Umgebungen mit kontinuierlichen Aktionsräumen unterstützt. 
 Um die Implementierung so einfach und übersichtlich wie möglich zu halten wurde entschieden, in diesem Schritt die Optionen für Diskrete und Multidiskrete Aktionsräume komplett aus der Implementierung zu entfernen. Da im Rahmen dieser Projektgruppe nur kontinuierliche Aktionsräume benötigt werden, genügt auch ein Framework, welches nur diese unterstützt. Zum Umsetzten der kontinuierlichen Aktionsräume muss die Ausgabe des Aktor Netzwerkes angepasst werden und diese wird in der \texttt{ContinuousActionPolicy} Klasse definiert. Diese implementiert einen Head (Kopf) für das neuronale Netzwerk, der kontinuierliche Aktionen umsetzt. Für jede Aktion des zugrundeliegenden Aktionsraumes werden $\mu$ (der Mittelwert) und $\sigma$ (die Standardabweichung) gelernt. Daraus wird eine Normalverteilung generiert, aus der dann ein tatsächliches Aktionstupel gesammelt werden kann. Als Verteilung wird die \texttt{Normal} Implementierung einer Gaußschen Normalverteilung aus PyTorch verwendet.
 
 \paragraph{Multi-Agent Builds}
-\noindent In dem nächsten Schritt muss die Implementierung so erweitert werden, dass neroRL auch Multi-Agent Szenen unterstützt und nicht das Trainieren mit nur parallelen Builds.
+In dem nächsten Schritt muss die Implementierung so erweitert werden, dass neroRL auch Multi-Agent Szenen unterstützt und nicht das Trainieren mit nur parallelen Builds.
 Abhängig von den verfügbaren Rechenressourcen lassen sich höchstens 16 Builds parallel ausführen (LiDo3 cgpu01 Knoten mit 2 Intel Xeon E5-2640v4 und 2 NVIDIA Tesla K40). 
 Es wurde entschieden, dass vorhandene Verhalten mit mehreren parallelen Builds zu erweitert, sodass es parallele Multi-Agent Builds unterstützt. 
 Die resultierende Implementierung sollte also in der Lage sein besser zu skalieren, da nicht nur die Anzahl der Agenten in jeder Szene erhöht werden kann, sondern auch die Anzahl an Instanzen der Szene die parallel zum Trainieren verwendet werden. Diese Steigerung an Effizienz sollte mehr als ausreichend sein, um den zeitlichen Overhead durch das Verarbeiten mehrerer Agenten pro Umgebung auszugleichen.
@@ -250,7 +249,7 @@ Ein vorläufiger Test mit der angepassten Implementierung und verschiedenen Komb
 \end{figure}
 Diese zeigen, dass das Hinzufügen von Agenten und Builds den Samplingprozess stärker beschleunigt, als nur die Anzahl von einem der beiden zu erhöhen. Außerdem scheint es eine Sättigung zu geben ab der das Hinzufügen weiterer Agenten und Builds das Sammeln eines Batches wieder verlangsamt.
 \paragraph{Optimierung der Trainingsqualität}
-\noindent In einem letzten Schritt muss noch die Implementierung und Optimierung des verwendeten PPO Algorithmus betrachtet werden. Die aktuelle Implementierung ist für Diskrete Aktionen bestimmt und das Netzwerk kann daher nur aus einer stark begrenzten Anzahl an Aktionen auswählen. Bei einem kontinuierlichen Raum der für die Aktionen nur eine Ober- und Untergrenze festlegt gibt es deutlich mehr mögliche Aktionen. Daher kann es sein, dass die aktuelle Implementierung von PPO nicht genügt, um nach dem Training zufriedenstellende Ergebnisse zu liefern. Erste Tests belegten diese Befürchtung und lieferten unzureichende Ergebnisse. Beim Training der ml-Agent Walker Umgebung mit ml-Agents wurde nach ca. 30 Millionen Schritten ein durchschnittlicher Reward von ca. 2000 erreicht. Nach einem Test dieser Umgebung mit neroRL wurde auch nach über 150 Millionen Schritten nur ein Reward von ca. 220 erreicht.
+In einem letzten Schritt muss noch die Implementierung und Optimierung des verwendeten PPO Algorithmus betrachtet werden. Die aktuelle Implementierung ist für Diskrete Aktionen bestimmt und das Netzwerk kann daher nur aus einer stark begrenzten Anzahl an Aktionen auswählen. Bei einem kontinuierlichen Raum der für die Aktionen nur eine Ober- und Untergrenze festlegt gibt es deutlich mehr mögliche Aktionen. Daher kann es sein, dass die aktuelle Implementierung von PPO nicht genügt, um nach dem Training zufriedenstellende Ergebnisse zu liefern. Erste Tests belegten diese Befürchtung und lieferten unzureichende Ergebnisse. Beim Training der ml-Agent Walker Umgebung mit ML-Agents wurde nach ca. 30 Millionen Schritten ein durchschnittlicher Reward von ca. 2000 erreicht. Nach einem Test dieser Umgebung mit neroRL wurde auch nach über 150 Millionen Schritten nur ein Reward von ca. 220 erreicht.
 Eine qualitative visuelle Bewertung des gelernten Verhaltens zeigt, dass der Walker sich zwar gezielt auf die erste Position des Ziels zubewegt, allerdings nach dem Verschieben des Ziels nicht in der Lage ist, sich umzudrehen. 
 Um die Qualität des Trainings mit neroRL zu steigern, wurden verschiedene Optimierungen implementiert:
 
@@ -259,9 +258,9 @@ Um die Qualität des Trainings mit neroRL zu steigern, wurden verschiedene Optim
 	\item \textbf{Squashing:} Grundsätzlich können die aus dem Netzwerk gesampleten kontinuierlichen Aktionen im Intervall $[-\infty;\infty]$ liegen. Auf Unity liegen die Aktionen im Intervall $[-1;1]$ und werden dementsprechend abgeschnitten. In einigen Fällen hat sich Tanh-Squashing als eine Methode erwiesen, um die Trainingsqualität mit kontinuierlichen Aktionen zu steigern und die Aktionen auf das Intervall $[-1;1]$ zu projizieren, anstatt diese abzuschneiden (vgl. \cite{shengyi2022the37implementation}). Unsere Implementierung von Tanh-Squashing wurde jedoch verworfen, da diese konsistent das Exploding-Gradients-Problem ausgelöst hat und das Training somit fehlgeschlagen ist. 
 \end{itemize}
 
-\subsubsection{LiDO3}
+\subsection{LiDO3}
 % Nils
-Für die Trainingsdurchläufe wird das HPC-Cluster der TU-Dortmund genutzt. Zuänge hierfür wurden von unseren Projektgruppenbetreuern zur Verfügung gestellt. Um auf LiDO3 zu arbeiten wird mithilfe eines Gatewayservers auf das Cluster zugegriffen. Der Zugriff ist ausschließlich über das TU Dortmund Netzwerk möglich. Über den Gatewayserver kann ein Zugriff auf die Rechenressourcen direkt über die Shell oder über Skripte angefordert werden. Da die Shell-Methode einen dauerhaften Login erfordern würde, wird mit Skripten gearbeitet. Diese bestehen aus Konfigurationen für LiDO3 und den eigentlich Programmteil, welcher ausgeführt werden soll. LiDO3 nutzt als Jobmanager Slurm, weshalb die Skripte die Slurm-Syntax nutzen. Eine ausführliche Beschreibung die LiDO3 Konfiguration findet sich im Benutzerhandbuch\cite{lido};
+Für die Trainingsdurchläufe wird das HPC-Cluster der TU-Dortmund genutzt. Zugänge hierfür wurden von unseren Projektgruppenbetreuern zur Verfügung gestellt. Um auf LiDO3 zu arbeiten wird mithilfe eines Gatewayservers auf das Cluster zugegriffen. Der Zugriff ist ausschließlich über das TU Dortmund Netzwerk möglich. Über den Gatewayserver kann ein Zugriff auf die Rechenressourcen direkt über die Shell oder über Skripte angefordert werden. Da die Shell-Methode einen dauerhaften Login erfordern würde, wird mit Skripten gearbeitet. Diese bestehen aus Konfigurationen für LiDO3 und den eigentlich Programmteil, welcher ausgeführt werden soll. LiDO3 nutzt als Jobmanager Slurm, weshalb die Skripte die Slurm-Syntax nutzen. Eine ausführliche Beschreibung die LiDO3 Konfiguration findet sich im Benutzerhandbuch\cite{lido}.
 \begin{listing}
 	\begin{minted}[linenos,tabsize=2,breaklines]{shell}
 #!/bin/bash -l
@@ -293,7 +292,7 @@ srun mlagents-learn /work/smnidunk/games/config/Walker.yaml --run-id=$GAME_NAME 
 
 In dem Beispielskript \ref{prog:lidoSkript} sind Anweisungen an die LiDO-Umgebung jeweils mit einem Kommentarzeichen gefolgt von \emph{SBATCH} gekennzeichnet. Die Konfiguration wird so gewählt, dass eine maximale Laufzeit mit exklusiven Ressourcenrechten auf den Rechenknoten besteht. Zusätzlich muss sichergestellt werden, dass eine Grafikkarte zur Verfügung steht. Diese stehen auf den \emph{cgpu01}-Rechenknoten mit jeweils 20 CPU-Kernen und 48 Gigabyte RAM zur Verfügung. Die maximale Laufzeit des Prozesses ist bei den GPU-Knoten auf \emph{long} begrenzt, was 48 Stunden entspricht. Es wird jeweils ein Log mitgeschrieben, aus dem der Trainingsfortschritt gelesen werden kann und bei besonderen Ereignissen eine Mail geschickt, um sofort benachrichtigt zu werden, falls der Job fertig ist oder fehlschlägt.
 
-\paragraph{Kompatibilitätsprobleme}
+\subsubsection{Kompatibilitätsprobleme}
 Um das beschriebene Skript auszuführen, muss auf LiDO3 eine ML-Agents-Umgebung installiert werden. Dabei handelt es sich um ein Python Umgebung, mit PyTorch und CUDA. In dem Slurm-Skript \ref{prog:lidoUmgebung} ist die Einrichtung einer funktionierenden Umgebung dargestellt. 
 
 \begin{listing}
@@ -314,7 +313,7 @@ Für die Python-Installation wurde auf Anaconda\footnote{https://www.anaconda.co
 
 Problematisch ist die Installation von PyTorch, da ab Version 1.5 die Installationsbinärdateien keine Unterstützung für die von LiDO3 genutzten NVIDIA Tesla K40 Grafikarten bietet. Es besteht die Möglichkeit PyTorch zu bauen um die Unterstürzung zu erhalten. Dies musste für unsere Arbeitsumgebung nicht gemacht werden, da die PG-Betreuer ein Paket mit einer für LiDO funktionierenden PyTorch-Version von einer vorherigen PG zur Verfügung stellen konnten. Wie in \ref{prog:lidoUmgebung} dargestellt müssen zuerst die Abhängigkeiten von PyTorch, dann ML-Agents und zuletzt die spezielle PyTorch Version installiert werden, da sonst die Abhängigkeiten Probleme bereiten.
 
-\paragraph{NeroRL-Anpassungen}
+\subsubsection{NeroRL-Anpassungen}
 \begin{listing}
 	\begin{minted}[linenos,tabsize=2,breaklines]{shell}
 GAME_NAME="GameMNSNero"
