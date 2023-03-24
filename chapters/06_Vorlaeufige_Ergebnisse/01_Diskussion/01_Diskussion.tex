@@ -14,6 +14,120 @@ Allgemein ist es möglich die Größe der Welt, die Anzahl an Räumen und die An
 Der Schwierigkeitsgrad lässt sich durch kleinere Räume mit mehr Spawn-Punkten erhöhen.
 
 \paragraph{Generierung der Monster}
+Von Anfang an wurden bei der Generierung der Monster viele methodische Freiheiten gelassen. Damit konnten Beschränkungen bezüglich der Körperausprägungen vermieden werden. Während der Ausarbeitung sind dann die Zwei- und Vierbeiner in den Vordergrund gerückt, da diese auch für das Training bekannte und einfach erweiterbare Ansätze ermöglicht haben. Gleichzeitig ist schnell ersichtlich gewesen, dass die Auswahl der Körperteile eingeschränkt werden sollte, sodass die Komplexität der Kreaturen auf ein Minimum beschränkt wird und möglichst wenig Freiheitsgrade für das Training und Animieren der Kreaturen notwendig sind. Trotzdem ist es möglich, die entstandene parametrische Methode von Jona Heinrichs so zu erweitern, dass mit möglichst wenig Aufwand, Kreaturen mit einem noch größer variierenden Körperbau (z.B. Flügel, noch mehr Gliedmaßen, Acht-Füßler, etc.) entstehen können. Bei der parametrischen Methode ist es weiterhin wichtig, dass die Wertebereiche der Parameter passend zu der erwartenden Anatomie eines Zwei- und/oder Vierbeiners gewählt werden und dieser sich physikalisch korrekt animieren lässt.
+
+Somit sind die Ziele, dass die Kreaturen-Erstellung Algorithmen-basiert ist und die innerhalb von Unity bereitgestellten Frameworks (z.B. Joints) verwendet werden sollten, erreicht worden. Für das Erreichen dieser Ziele, wurde sich ebenfalls so wie Anfangs angeschnitten, erfolgreich an dem Unity-ML-Agents-Walker orientiert.
+
+Die folgenden Darstellungen in \ref{fig:finished_CG_2} \& \ref{fig:finished_CG_4} repräsentieren das fertige Ergebnis der Creature-Generator.
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering        
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering        
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_3}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_4}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering        
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_5}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_6}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_7}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_8}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_9}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_10}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_11}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_2/creature_12}
+    \end{subfigure}
+    \caption{Der fertige Creature-Generator Stand: Beispiele für Zweibeiner}
+    \label{fig:finished_CG_2}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering        
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering        
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_3}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_4}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering        
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_5}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_6}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_7}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_8}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_9}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_10}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_11}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.2\textwidth}
+        \centering
+        \includegraphics[width=\textwidth, height=\textwidth]{resources/img/Finished_Creatures_4/creature_12}
+    \end{subfigure}
+    \caption{Der fertige Creature-Generator Stand: Beispiele für Vierbeiner}
+    \label{fig:finished_CG_4}
+\end{figure}
+
 
 \paragraph{Fortbewegung der Monster} \fup
 
