@@ -185,11 +185,9 @@ Durch die beiden Reward für den Rückenknochen des Skeletts wird der Agent dazu
 
 \subsubsection{RL-Framework}
 % Jannik
-
-\paragraph{Vorstellung des Frameworks} \fup
 Zum Trainieren der Kreaturen wird ein RL-Framework verwendet, welches mit den für die Kreaturen defininerten Agenten interagiert. Das Projekt in Unity gebaut wird und somit stehen verschiedene Frameworks zur Verfügung, die sich in implementierten Algorithmen und Trainingsoptionen unterscheiden. Da sich zu Beginn des Projekt bereits auf die Verwendung des Proximal Policy Optimization (PPO) Algorithmus geeinigt wurde, sind zwei Frameworks in die engere Auswahl gekommen.
 
-\paragraph{ml-Agents}\fup \label{mlAgentsFramework}
+\paragraph{ml-Agents} \label{mlAgentsFramework}
 \noindent Das Unity Machine Learning Agents Toolkit \cite{juliani2020}, kurz ml-Agents, ist ein von Unity entwickeltes Projekt zum Trainineren von Agenten und stellt, wie in diesem Projekt benötigt, unter anderem eine Implementierung von PPO zur Verfügung.
 Zusätzlich definiert das Toolkit auch eine Python API, die verwendet werden kann um eigene Agenten mit den zur Verfügung gestellten Algorithmen trainieren zu lassen.
 Dabei unterstützt die API neben Diskreten und Kontinuierlichen Aktions- und Beobachtungsräumen auch das Platzieren mehreren Agenten in einer Unity Szene.\\
@@ -197,7 +195,7 @@ Dabei unterstützt die API neben Diskreten und Kontinuierlichen Aktions- und Beo
 \noindent Während der Trainings angelegte Checkpoints und der finale Zustand des Netzwerks werden als onnx Dateien gespeichert, die dann geladen werden können, um das trainierte Netzwerk zu verwenden.\\
 Zum Analysieren und Bewerten des Trainings erhebt ml-Agents verschiedene Daten, wie den durchschnittlichen Reward und die Loss Werte der verschiedenen Netzwerke und speichert diese in einem Tensorboard. 
 
-\paragraph{neroRL}\fup \label{neroRLFramework}
+\paragraph{neroRL} \label{neroRLFramework}
 \noindent Bei neroRL \cite{neroRL} handelt es sich um ein Reinforment Learning Framework, das seinen Fokus auf verschiedene Varianten des Proximal Policy Optimization (PPO) Algorithmuses legt.\\
 Der Agent kann dabei entweder mit geteilten oder getrennten Netzwerken und Gradienten für den Aktor und den Kritiker trainiert werden. \\
 Dabei unterstützt es zum Trainieren neben openAIGym Umgebungen auch solche, die mit der Python API von ml-Agents erstellt wurden.\\
@@ -207,17 +205,17 @@ Des Weiteren kann in jeder Szene nur ein Agent platziert werden und zur Beschleu
 \noindent Während der Trainings angelegte Checkpoints und der finale Zustand des Netzwerks werden als pt Dateien abgespeichert und können als solche nicht direkt in eine Unity Umgebung geladen werden.\\
 Zum Analysieren und Bewerten erhebt neroRL während des Trainings verschiedene Kenndaten, wie den durchschnittlichen Reward und die Loss Werte der verschiedenen Netzwerke, und speichert diese in einem Tensorboard.
 
-\paragraph{Auswahl des Frameworks} \fup
+\paragraph{Auswahl des Frameworks}\fup
 
 Beide vorgestellten Frameworks verfügen im Hinblick auf dieses Projekt über Vor- und Nachteile.
 
-\paragraph{ml-Agents}\fup
+\paragraph{ml-Agents}
 \noindent Ml-Agents unterstützt bereits von sich aus kontinuierliche Aktionsräume, welche zum Bewegen der Kreaturen benötigt werden. Außerdem erlaubt es mehrere Agenten in einer Szene zu platzieren, im folgenden als Multi-Agent-Szene bezeichnet, und so das Training zu beschleunigen. Die vorherigen Tests mit der Walker Testumgebung in Unity \cite{walkerEnv} haben gezeigt, dass selbst eine zum Laufen optimierte zweibeinige Kreatur recht lange braucht, bis sie stabil und ohne umfallen laufen kann.
 Bei einer prozedural generierten Kreatur ist zu erwarten, dass der Prozess länger dauert und darum sollten alle Möglichkeiten das Training zu beschleunigen verwendet werden.
 Ein Problem mit ml-Agents liegt in der Auswertung der Ergebnisse des Trainings. Im Rahmen dieser Ausarbeitung ist es notwendig sich kritisch mit den Ergebnissen auseinander zu setzten und für den Teil der CreatureAnimation sind vor allem die Statistiken des Trainings relevant. Ml-Agents erhebt zwar im Rahmen des Trainingsvorgangs Statistiken und speichert diese in einem Tensorboard ab, allerdings werden nur wenige Statistiken erhoben. Zusätzlich speichert das Framework nicht direkt die erhobenen Werte ab, sondern in jedem Schritt nur den Durchschnitt der Werte. Für eine Analyse würde dies bedeuten, dass die verwendeten Daten bereits Durchschnitte sind und daher am Ende der Durchschnitt des Durchschnittes betrachtet wird, was keine guten Ergebnisse liefert. 
 Ein weiterer Punkt ist, dass in der Konfiguration von ml-Agents eine maximale Anzahl von Checkpoints angegeben werden muss. Sollten im Laufe des Trainings mehr angelegt werden als dieses Limit erlaubt, überschreibt das Programm stattdessen die ältesten.
 Der im Zweifel wichtigste Nachteil von ml-Agents ist jedoch, dass es sich bei dem Toolkit um ein sehr großes Projekt handelt, welches aus vielen einzelnen Modulen besteht. Aufgrund der Komplexität des Projekts wäre es sehr schwierig die zuvor genannten Nachteile zu beseitigen und es so an die Bedürfnisse der Projektgruppe anzupassen.\\
-\paragraph{neroRL}\fup
+\paragraph{neroRL}
 \noindent Die Vorteile von neroRL sind zum einen, dass es mehr Informationen in das Tensorboard schreibt und die direkten Werte dort einträgt, ohne diese vorher zu verarbeiten. Außerdem verlangt die neroRL Konfiguration nur den Abstand zwischen Checkpoints und legt dann so viele Checkpoints an, wie nötig. Im Gegensatz zu ml-Agents gibt es keine maximale Anzahl und somit werden keine Checkpoints überschrieben. 
 Zudem bietet neroRL eine Auswertungsfunktion, die nach dem Ende des Trainings verwendet werden kann, um bessere Daten zum Verlauf des Trainings zu erhalten.
 Dabei wird jeder angelegte Checkpoint des Netzes für eine festgelegte Anzahl an Episoden verwendet, um den Verlauf des Trainings und die Qualitätsunterschiede zwischen den Checkpoints darzustellen.
@@ -227,13 +225,14 @@ Die Nachteile von neroRL sind, dass nur Diskrete und Multidiskrete Aktionsräume
 Ein weiterer Einfluss auf diese Entscheidung war, dass Marco Pleines, der Entwickler von neroRL, als Betreuer in der Projektgruppe mitwirkt. Bei Fragen oder Problemen während der Anpassung können also deutlich schneller Feedback und Hilfestellungen gegeben werden, als dies bei Fragen zu ml-Agents der Fall wäre.
 
 \paragraph{Anpassung an neroRL} \label{neroAnpassungKonzept} \fup
+
 Bevor neroRL zum Trainieren verwendet werden kann müssen zunächst die zuvor aufgezählten Probleme mit dem Framework beseitigt werden.\\
 
-\paragraph{Kontinuierliche Aktionsräumen} \fup
+\paragraph{Kontinuierliche Aktionsräumen}
 \noindent Zunächst muss die Implementierung so erweitert werden, dass sie auch Umgebungen mit kontinuierlichen Aktionsräumen unterstützt. 
 Um die Implementierung so einfach und übersichtlich wie möglich zu halten wurde entschieden, in diesem Schritt die Optionen für Diskrete und Multidiskrete Aktionsräume komplett aus der Implementierung zu entfernen. Da im Rahmen dieser Projektgruppe nur kontinuierliche Aktionsräume benötigt werden, genügt auch ein Framework, welches nur diese unterstützt. Zum Umsetzten der kontinuierlichen Aktionsräume muss die Ausgabe des Aktor Netzwerkes angepasst werden und diese wird in der \texttt{ContinuousActionPolicy} Klasse definiert. Diese implementiert einen Head (Kopf) für das neuronale Netzwerk, der kontinuierliche Aktionen umsetzt. Für jede Aktion des zugrundeliegenden Aktionsraumes werden $\mu$ (der Mittelwert) und $\sigma$ (die Standardabweichung) gelernt. Daraus wird eine Normalverteilung generiert, aus der dann ein tatsächliches Aktionstupel gesammelt werden kann. Als Verteilung wird die \texttt{Normal} Implementierung einer Gaußschen Normalverteilung aus PyTorch verwendet.
 
-\paragraph{Multi-Agent Builds} \fup
+\paragraph{Multi-Agent Builds}
 \noindent In dem nächsten Schritt muss die Implementierung so erweitert werden, dass neroRL auch Multi-Agent Szenen unterstützt und nicht das Trainieren mit nur parallelen Builds.
 Abhängig von den verfügbaren Rechenressourcen lassen sich höchstens 16 Builds parallel ausführen (LiDo3 cgpu01 Knoten mit 2 Intel Xeon E5-2640v4 und 2 NVIDIA Tesla K40). 
 Es wurde entschieden, dass vorhandene Verhalten mit mehreren parallelen Builds zu erweitert, sodass es parallele Multi-Agent Builds unterstützt. 
@@ -250,7 +249,7 @@ Ein vorläufiger Test mit der angepassten Implementierung und verschiedenen Komb
 	\label{fig:build-agent-time}
 \end{figure}
 Diese zeigen, dass das Hinzufügen von Agenten und Builds den Samplingprozess stärker beschleunigt, als nur die Anzahl von einem der beiden zu erhöhen. Außerdem scheint es eine Sättigung zu geben ab der das Hinzufügen weiterer Agenten und Builds das Sammeln eines Batches wieder verlangsamt.
-\paragraph{Optimierung der Trainingsqualität} \fup
+\paragraph{Optimierung der Trainingsqualität}
 \noindent In einem letzten Schritt muss noch die Implementierung und Optimierung des verwendeten PPO Algorithmus betrachtet werden. Die aktuelle Implementierung ist für Diskrete Aktionen bestimmt und das Netzwerk kann daher nur aus einer stark begrenzten Anzahl an Aktionen auswählen. Bei einem kontinuierlichen Raum der für die Aktionen nur eine Ober- und Untergrenze festlegt gibt es deutlich mehr mögliche Aktionen. Daher kann es sein, dass die aktuelle Implementierung von PPO nicht genügt, um nach dem Training zufriedenstellende Ergebnisse zu liefern. Erste Tests belegten diese Befürchtung und lieferten unzureichende Ergebnisse. Beim Training der ml-Agent Walker Umgebung mit ml-Agents wurde nach ca. 30 Millionen Schritten ein durchschnittlicher Reward von ca. 2000 erreicht. Nach einem Test dieser Umgebung mit neroRL wurde auch nach über 150 Millionen Schritten nur ein Reward von ca. 220 erreicht.
 Eine qualitative visuelle Bewertung des gelernten Verhaltens zeigt, dass der Walker sich zwar gezielt auf die erste Position des Ziels zubewegt, allerdings nach dem Verschieben des Ziels nicht in der Lage ist, sich umzudrehen. 
 Um die Qualität des Trainings mit neroRL zu steigern, wurden verschiedene Optimierungen implementiert:
