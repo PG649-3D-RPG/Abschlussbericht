@@ -33,26 +33,170 @@ Bei der Wahl der Parameter für das Generieren des Vierbeiners war es wichtig, d
 \end{figure}
 
 \paragraph{Zweibeiner-Einstellungen}
-Da die Zweibeinerkreatuen am meisten Probleme bei der Stabilität haben, gab es keine genauen Erfahrungen zum Aufbau der Kreatur. Durch den symmetrischen Generierungsprozess und Vorüberlegungen der Kreaturen-Ersteller sollten möglichst alle generierbaren Zweibeiner im Gleichgewicht sein. Der Einstellungsprozess für die Beispielfigur reduziert sich daher auf das Reduzieren der Größe. Hierfür wurden Menschen im Raum als Vorlage genutzt, um Möglichst die Proportionen in dem Generator nachzuahmen. Die daraus resultierende Figur bestätigte sich in mehreren Vortest und wurde deshalb auch für die finale Abgabe verwendet
+Da die Zweibeinerkreatuen am meisten Probleme bei der Stabilität haben, gab es keine genauen Erfahrungen zum Aufbau der Kreatur. Durch den symmetrischen Generierungsprozess und Vorüberlegungen der Kreaturen-Ersteller sollten möglichst alle generierbaren Zweibeiner im Gleichgewicht sein. Der Einstellungsprozess für die Beispielfigur reduziert sich daher auf das Reduzieren der Größe. Hierfür wurden Menschen im Raum als Vorlage genutzt, um möglichst die Proportionen in dem Generator nachzuahmen. Die daraus resultierende Figur bestätigte sich in mehreren Vortest und wurde deshalb auch für die finale Abgabe verwendet
 
 \subsection{Konfiguration der Trainingsdurchläufe}
-Die Erfahrung während der Entwicklungsphase der Projektgruppe hat gezeigt, dass die verwendete PPO Implementierung weitestgehend robust gegenüber der verwendeten Hyperparameter ist, solange eine ausreichend große Batchgröße verwendet wird. Aufgrund der limitierten Rechenressourcen wurde deswegen auf eine Hyperparameteroptimierung verzichtet und es werden die Hyperparameter aus der Konfigurationsdatei des Walkers von ml-Agents verwendet. Abbildung \ref{fig:evaluation_config} zeigt die für die Evaluation verwendete neroRL Konfigurationsdatei. 
-Für die Trainingsdurchläufe werden Unity Builds mit 16 Agenten verwendet, die auf 8 parallelen Workern ausgeführt werden. Dementsprechend werden die Daten parallel von 128 Agenten gesammelt. Jeder Agent führt bei jeder fünften Aktualisierung der Physikengine eine Aktion aus. Für das Training wird eine Batchgröße von 102400 verwendet, somit entsprechen 10 Updates etwa 1 Mio Schritten in der Umgebung.
+Listing \ref{fig:evaluation_config_environment_sampler} zeigt die neroRL Konfiguration der Umgebung und des Samplers. Für die Trainingsdurchläufe werden Unity Builds mit 16 Agenten verwendet, die auf 8 parallelen Workern ausgeführt werden. Dementsprechend werden die Daten parallel von 128 Agenten gesammelt. Jeder Agent führt bei jeder fünften Aktualisierung der Physikengine eine Aktion aus. Für das Training wird eine Batchgröße von 102400 verwendet, somit entsprechen 10 Updates etwa 1 Mio Schritten in der Umgebung.
+Die Konfiguration des Modells und der Hyperparameter des Trainingsalgorithmus sind in Listing \ref{fig:evaluation_config_model_trainer} abgebildet. Die Erfahrung während der Entwicklungsphase der Projektgruppe hat gezeigt, dass die verwendete PPO Implementierung weitestgehend robust gegenüber der verwendeten Hyperparameter ist, solange eine ausreichend große Batchgröße verwendet wird. Aufgrund der limitierten Rechenressourcen wird deswegen auf eine Hyperparameteroptimierung verzichtet und die Hyperparameter werden analog zur Konfigurationsdatei des Walkers von ml-Agents eingestellt.
+Als Modell werden jeweils ein neuronales Netzwerk für Policy und Value verwendet. Die Netze haben eine Eingabeschicht mit 512 Neuronen, drei innere Schichten mit jeweils 512 Neuronen, und eine Ausgabeschicht für die Policy bzw. die Value-Schätzung. Für das Policy Netzwerk wird die Swish Aktivierungsfunktion verwendet und für das Value Netzwerk die ReLU Aktivierungsfunktion
+
 Die in Tabelle \ref{tab:rewardfunctions} beschriebenen Reward-Funktionen für das Aufstehen und Laufen werden jeweils zwei Mal für die Vierbeinige und zwei Mal für die Zweibeinige Kreatur trainiert. Dabei werden alle 100 Updates die Policies zwischengespeichert und zum Sammeln der Evaluationsdaten verwendet. Für die Evaluation werden mit den gespeicherten Policies jeweils 128 zufällige Episoden ausgeführt und dabei Reward und Episodenlänge gesammelt.
 
-\begin{figure}
-	\centering
-	\begin{subfigure}[b]{0.4\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{resources/img/konfig_1.png}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.4\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{resources/img/konfig_2.png}
-	\end{subfigure}
-    \caption{neroRL Konfigurationsdatei für die Evaluation}\label{fig:evaluation_config}
-\end{figure}
+\begin{listing}
+	\begin{minted}[linenos,tabsize=2,breaklines]{yaml}
+environment:
+    type: "Unity"
+    name: "" #overridden in execution script
+    frame_skip: 1 #DecisionRequester in Unity environment requests decisions every 5 steps
+
+sampler:
+    type: "TrajectorySampler"
+    n_workers: 8
+    buffer_size: 900 
+    batch_size: 102400
+		\end{minted}
+	\caption{neroRL Konfiguration Environment und Sampler}
+	\label{fig:evaluation_config_environment_sampler}
+\end{listing}
+
+\begin{listing}
+	% Full config
+	% \begin{minted}[linenos,tabsize=2,breaklines]{shell}
+	% 	environment:
+	% 	  type: "Unity"
+	% 	  name: "" #overridden in execution script
+	% 	  frame_skip: 1
+	% 	  last_action_to_obs: False
+	% 	  last_reward_to_obs: False
+	% 	  obs_stacks: 1
+	% 	  grayscale: False
+	% 	  resize_vis_obs: [84, 84]
+	% 	  reset_params:
+	% 		start-seed: 0
+	% 		num-seeds: 100
+	% 		view-size: 3
+		
+	% 	### MODEL CONFIG ###
+	% 	model:
+	% 	  load_model: False
+	% 	  model_path: ""
+	% 	  checkpoint_interval: 100
+	% 	  policy_activation: "swish"
+	% 	  value_activation: "relu"
+	% 	  vis_encoder: "cnn"
+	% 	  vec_encoder: "linear"
+	% 	  num_vec_encoder_units: 512
+	% 	  hidden_layer: "default"
+	% 	  num_hidden_layers: 2
+	% 	  num_hidden_units: 512
+	% 	  num_hidden_pre_head: 512
+	% 	  tanh_squashing: False
+	% 	  normalize_observations: True
+		
+	% 	### EVALUATION CONFIG ###
+	% 	evaluation:
+	% 	  evaluate: False
+	% 	  n_workers: 1
+	% 	  seeds: [1001, 1002] #, 1003, 1004, 1005]
+	% 	  interval: 50
+		
+	% 	### SAMPLER CONFIG
+	% 	sampler:
+	% 	  type: "TrajectorySampler"
+	% 	  n_workers: 8
+	% 	  worker_steps: 1024
+	% 	  buffer_size: 900 #buffer size should be greater than batchsize/(n_workers*n_agents) 
+	% 	  batch_size: 102400
+		
+	% 	### TRAINER CONFIG ###
+	% 	trainer:
+	% 	  algorithm: "PPO"
+	% 	  resume_at: 0
+	% 	  gamma: 0.995
+	% 	  lamda: 0.95
+	% 	  updates: 10000
+	% 	  epochs: 3
+	% 	  refresh_buffer_epoch: -1
+	% 	  n_mini_batches: 16
+	% 	  value_coefficient: 0.5
+	% 	  max_grad_norm: 0.5
+	% 	  share_parameters: False
+	% 	  normalize_advantage: "none"
+	% 	  learning_rate_schedule:
+	% 		initial: 3.0e-4
+	% 		final: 6.0e-6
+	% 		power: 1.0
+	% 		max_decay_steps: 10000
+	% 	  beta_schedule:
+	% 		initial: 0.005
+	% 		final: 0.005
+	% 		power: 1.0
+	% 		max_decay_steps: 10000
+	% 	  clip_range_schedule:
+	% 		initial: 0.2
+	% 		final: 0.2
+	% 		power: 1.0
+	% 		max_decay_steps: 10000
+	% \end{minted}
+	%
+	%Shortened Config (only relevant entries)
+	\begin{minted}[linenos,tabsize=2,breaklines]{yaml}
+model:
+    policy_activation: "swish"
+    value_activation: "relu"
+    vec_encoder: "linear"
+    num_vec_encoder_units: 512
+    num_hidden_layers: 2
+    num_hidden_units: 512
+    num_hidden_pre_head: 512
+    tanh_squashing: False
+    normalize_observations: True
+
+trainer:
+    algorithm: "PPO"
+    gamma: 0.995
+    lamda: 0.95
+    updates: 10000
+    epochs: 3
+    refresh_buffer_epoch: -1
+    n_mini_batches: 16
+    value_coefficient: 0.5
+    max_grad_norm: 0.5
+    share_parameters: False
+    normalize_advantage: "none"
+    learning_rate_schedule:
+        initial: 3.0e-4
+        final: 6.0e-6
+        power: 1.0
+        max_decay_steps: 10000
+    beta_schedule:
+        initial: 0.005
+        final: 0.005
+        power: 1.0
+        max_decay_steps: 10000
+    clip_range_schedule:
+        initial: 0.2
+        final: 0.2
+        power: 1.0
+        max_decay_steps: 10000
+		\end{minted}
+	\caption{neroRL Konfiguration Modell und Trainer}
+	\label{fig:evaluation_config_model_trainer}
+\end{listing}
+
+% \begin{figure}
+% 	\centering
+% 	\begin{subfigure}[b]{0.4\textwidth}
+% 		\centering
+% 		\includegraphics[width=\textwidth]{resources/img/konfig_1.png}
+% 	\end{subfigure}
+% 	\hfill
+% 	\begin{subfigure}[b]{0.4\textwidth}
+% 		\centering
+% 		\includegraphics[width=\textwidth]{resources/img/konfig_2.png}
+% 	\end{subfigure}
+%     \caption{neroRL Konfigurationsdatei für die Evaluation}\label{fig:evaluation_config}
+% \end{figure}
 
 \section{Ergebnisse}
 \label{ErgebnisseTraining}
