@@ -3,7 +3,7 @@
 
 Dieser Abschnitt diskutiert die zuvor beschriebenen Ergebnisse der Projektgruppe im Bezug zur initialen Zielsetzung \ref{Zielsetzung_und_Vorgehensweise}.
 
-\paragraph{Die Generierung von Spielleveln}
+\subsubsection{Die Generierung von Spielleveln}
 Die Ziele bezüglich der Generierung von Spielleveln wurden erfolgreich umgesetzt.
 Das Layout des Spiellevels wird prozedural mittels Space-Partitioning generiert und anschließend durch Terrain Transformationen in eine natürlich wirkende Welt verwandelt.
 Die Welt besteht aus Räumen und Korridoren, die durch Gebirge voneinander getrennt werden.
@@ -13,7 +13,7 @@ Die Hindernisse bestehen aus Pflanzen, die zur Laufzeit aus L-Systemen erzeugt w
 Allgemein ist es möglich die Größe der Welt, die Anzahl an Räumen und die Anzahl an Spawn-Punkten für Hindernisse und Kreaturen einzustellen.
 Der Schwierigkeitsgrad lässt sich durch kleinere Räume mit mehr Spawn-Punkten erhöhen.
 
-\paragraph{Generierung der Monster}
+\subsubsection{Generierung der Monster}
 Von Anfang an wurden bei der Generierung der Monster viele methodische Freiheiten gelassen. Damit konnten Beschränkungen bezüglich der Körperausprägungen vermieden werden. Während der Ausarbeitung sind dann die Zwei- und Vierbeiner in den Vordergrund gerückt, da diese auch für das Training bekannte und einfach erweiterbare Ansätze ermöglicht haben. Gleichzeitig ist schnell ersichtlich gewesen, dass die Auswahl der Körperteile eingeschränkt werden sollte, sodass die Komplexität der Kreaturen auf ein Minimum beschränkt wird und möglichst wenig Freiheitsgrade für das Training und Animieren der Kreaturen notwendig sind. Trotzdem ist es möglich, die entstandene parametrische Methode von Jona Heinrichs so zu erweitern, dass mit möglichst wenig Aufwand, Kreaturen mit einem noch größer variierenden Körperbau (z.B. Flügel, noch mehr Gliedmaßen, Acht-Füßler, etc.) entstehen können. Bei der parametrischen Methode ist es weiterhin wichtig, dass die Wertebereiche der Parameter passend zu der erwartenden Anatomie eines Zwei- und/oder Vierbeiners gewählt werden und dieser sich physikalisch korrekt animieren lässt.
 
 Somit sind die Ziele, dass die Kreaturen-Erstellung Algorithmen-basiert ist und die innerhalb von Unity bereitgestellten Frameworks (z.B. Joints) verwendet werden sollten, erreicht worden. Für das Erreichen dieser Ziele, wurde sich ebenfalls so wie Anfangs angeschnitten, erfolgreich an dem Unity-ML-Agents-Walker orientiert.
@@ -129,7 +129,7 @@ Die folgenden Darstellungen in \ref{fig:finished_CG_2} \& \ref{fig:finished_CG_4
 \end{figure}
 
 
-\paragraph{Fortbewegung der Monster} \fup
+\subsubsection{Fortbewegung der Monster}
 
 Das festgelegte Minimalziel für die Fortbewegung der Monster war, dass die Animationen nicht manuell erstellt werden sollen. 
 Stattdessen sollte mit Deep Reinforcement Learning ein Agent trainiert werden, der lernt die Monster zu bewegen, indem er Kräfte auf deren Joints ausübt.
@@ -149,7 +149,7 @@ Abschließend lässt sich also sagen, dass das zu Beginn festgelegte Minimalziel
 Die Umsetzung der weiterführenden Ideen ist allerdings zum größten Teil gescheitert. 
 Insbesondere die Ansätze zur Diversifikation der Generierung, ein Agent der allen Kreaturen beibringen kann zu laufen, und zur Generalisierung des Trainings, ein Modell welches von allen Kreaturen mit ähnlichen Skeletten zum laufen verwendet wird, konnten nicht umgesetzt werden.
 
-\paragraph{Handlungsempfehlungen}
+\subsubsection{Handlungsempfehlungen}
 Die Ergebnisse der Projektgruppe zeigen, dass das Generieren von Bewegungsanimationen für prozedural generierte Skelette durch Reinforcement Learning möglich ist. Für die Zwei- und Vierbeiner Kreaturen werden vielversprechende Eregbnisse erzielt, wobei insbesondere die Ergebnisse der Vierbeiner ohne größere Einschränkungen im entwickelten Spiel einsetzbar sind.
 Allerdings unterliegen die Ergebnisse diversen Einschränkungen, die in den vorherigen Abschnitten detailliert beschrieben wurden. Diese Einschränkungen stehen teilweise im Widerspruch zu den initialen Erwartungen, dass Reinforcement Learning basierte Methoden genereller und mit geringerem Aufwand einsetzbar sind, als traditionelle Keyframe Methoden zur Charakteranimation. Der Aufbau einer Umgebung, die die Anwendung von Reinforcement Learning erlaubt, ist mit großem Aufwand verbunden. Die Umgebung muss die Zielumgebung (d.h. das tatsächliche Spielumfeld der Kreaturen) so modellieren, dass die gelernten Bewegungsanimationen auch im fertigen Spiel einsetzbar sind. Um realistische Animationen zu trainieren, die an die Bewegung echter Lebewesen erinnern, müssen entsprechende Einschränkungen in die Rewardfunktion integriert werden. Die Modellierung dieser Einschränkungen erfordert tiefgehendes Wissen über die zu trainierenden Kreaturen, um beispielsweise auf Positionen der Knochen zuzugreifen. Außerdem ist die Entwicklung einer funktionierenden Rewardfunktion nicht trivial, da die tatsächlichen Effekte der einzelnen Rewards nicht eindeutig sind. Somit vereinfacht die hier beschriebene Anwendung von Reinforcement Learning zur Charakteranimation diese nur bedingt.
 Sind die Einschränkungen und initialen Hindernisse überwunden und es existieren eine Modellumgebung, die für das Training verwendet werden kann, sowie Rewardfunktionen für die gewünschten Bewegungen, können durch Reinforcement Learning relativ schnell Animationen für zusätzliche Charaktere generiert werden. Je nach Komplexität der Umgebung und der Skelette, und abhängig von der verfügbaren Hardware, dauert ein Trainingsprozess trotzdem mehrere Tage, sodass potenziell auch Keyframe Animationen mit ähnlichem Zeitaufwand erstellt werden könnten. Die Generierung von Animationen für neue Kreaturen in Echtzeit ist nicht möglich. Es ist außerdem nicht garantiert, dass neu generierte Kreaturen mit den definierten Rewardfunktionen einen vergleichbaren Lernerfolg haben. Selbst mit den starken Einschränkungen bei der Generierung neuer Kreaturen im Rahmen der Projektgruppe, erzielt nicht jede Kreatur einen vergleichbaren Lernerfolg. Um das Problem der Laufzeit der Trainingsdurchläufe zu umgehen und verschiedenartige Kreaturen zu unterstützen, bietet sich ein generalisiertes Training an, dass Bewegungsanimationen für verschiedenartige Kreaturen lernt. Damit könnten sogar in Echtzeit neue Kreaturen generiert und animiert werden. Die Versuche zur Generalisierung während dieser Projektgruppe führten aufgrund der hohen Komplexität jedoch nicht zu erfolgreichen Ergebnissen.
