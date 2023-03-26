@@ -20,10 +20,10 @@ Die erste Version ist eine leicht abgeänderte Form der ML-Agents-Beispielumgebu
 
 Da sich hier schnell Limitationen in Bezug auf die Anpassbarkeit herausstellten wurde die Umgebung geändert, so dass die Anzahl der Arenen dynamisch generiert werden und Kreaturen als Prefab und per Seed über den \texttt{CreatureGenerator} platziert werden können. 
 
-Die  \texttt{DynamicEnviormentGenerator}-Umgebung ist dabei aus den folgenden Klassen aufgebaut:
+Die  \texttt{DynamicEnvironmentGenerator}-Umgebung ist dabei aus den folgenden Klassen aufgebaut:
 
 \begin{itemize}
-	\item \texttt{DynamicEnviormentGenerator}
+	\item \texttt{DynamicEnvironmentGenerator}
 	\begin{itemize}
 		\item \texttt{TerrainGenerator} %Todo change when replaced by package
 		\item Verschiedenen Konfigurationsdateien
@@ -32,9 +32,9 @@ Die  \texttt{DynamicEnviormentGenerator}-Umgebung ist dabei aus den folgenden Kl
 	\item großteils alle modifizierten ML-Agents Skripten
 \end{itemize} 
 
-Da die Umgebung weiterhin als zusätzliche Szene in dem Projekt existiert\footnote{Es sei dabei angemerkt, dass die Szene nicht aktiv getestet wird und deswegen nicht garantiert werden kann, dass mit weiteren Änderungen die Funktionalität bestehen bleibt.} und die aktuelle Version der Trainingsumgebung auf dem \texttt{DynamicEnviormentGenerator} aufbaut, wird im Folgenden auf den Aufbaue des \texttt{DynamicEnviormentGenerator} sowie dessen Hilfsklassen eingegangen. Die Hilfsklassen sind der \texttt{TerrainGenerator}, \texttt{GenericConfig} und dessen Implementierungen sowie das \texttt{DebugScript}. Erstere ist verantwortlich für die Generierung des Terrains, die Config-Dateien laden dynamisch die Einstellungen aus einer Datei und das letzte Skript beinhaltet hilfreiche Debug-Einstellungen. Die grundsätzliche Idee der Trainingsumgebung stammt von dem ML-Agents-Walker. Da an diesem keine Versuche mit Unterschiedlichen Umgebungen und Kreaturen durchgeführt wurden, ist der Aufbau des Projekts nicht dynamisch genug. 
+Da die Umgebung weiterhin als zusätzliche Szene in dem Projekt existiert\footnote{Es sei dabei angemerkt, dass die Szene nicht aktiv getestet wird und deswegen nicht garantiert werden kann, dass mit weiteren Änderungen die Funktionalität bestehen bleibt.} und die aktuelle Version der Trainingsumgebung auf dem \texttt{DynamicEnvironmentGenerator} aufbaut, wird im Folgenden auf den Aufbaue des \texttt{DynamicEnvironmentGenerator} sowie dessen Hilfsklassen eingegangen. Die Hilfsklassen sind der \texttt{TerrainGenerator}, \texttt{GenericConfig} und dessen Implementierungen sowie das \texttt{DebugScript}. Erstere ist verantwortlich für die Generierung des Terrains, die Config-Dateien laden dynamisch die Einstellungen aus einer Datei und das letzte Skript beinhaltet hilfreiche Debug-Einstellungen. Die grundsätzliche Idee der Trainingsumgebung stammt von dem ML-Agents-Walker. Da an diesem keine Versuche mit Unterschiedlichen Umgebungen und Kreaturen durchgeführt wurden, ist der Aufbau des Projekts nicht dynamisch genug. 
 
-\subsubsection{Dynamic Enviorment Generator}
+\subsubsection{Dynamic Environment Generator}
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\linewidth]{resources/img/DEGArenen}
@@ -68,14 +68,14 @@ In Schritt 2. der Arenagenerierung muss beachtet werden, dass nach dem Erstellen
 Da ein typisches Spieleterrain im Gegensatz zum ML-Agents-Walker-Terrain nicht flach ist, wurde ein neues Objekt erstellt, welches sowohl die Generierung von Hindernissen, als auch eines unebenen Bodens erlaubt. Um ein möglichst natürlich erscheinendes Terrain zu erzeugen wird ein Perlin-Noise verwendet. Dieses spiegelt jeweils die Höhe des Terrains an einen spezifischen Punkt wider. Im späteren Projektverlauf wurde dieses Skript durch den Terraingenerator des dazugehörigen Teams ersetzt.
 
 \paragraph{Konfigurationsobjekte}
-Da sich die statische Konfiguration des ML-Agents-Walker als problematisch erwies, wurde die Konfiguration über die Laufzeit des Projekts dynamischer gestaltet. Zuerst wurden alle Konfigurationen im \texttt{DynamicEnviormentGenerator} gespeichert. Was unübersichtlich war und zu ständigen neubauen des Projektes führte. Deshalb wurde eine \texttt{GenericConfig} Klasse eingeführt, welche die im Editor eingestellten Optionen für die einzelnen Teilbereiche Terrain, Arena und ML-Agent in Json-Format in den Streaming-Asset-Ordner speichert. Da dieser Ordner beim bauen des Projekts in das fertige Spiel übertragen wird, sind diese Konfigurationen automatisiert dort vorhanden. 
+Da sich die statische Konfiguration des ML-Agents-Walker als problematisch erwies, wurde die Konfiguration über die Laufzeit des Projekts dynamischer gestaltet. Zuerst wurden alle Konfigurationen im \texttt{DynamicEnvironmentGenerator} gespeichert. Was unübersichtlich war und zu ständigen neubauen des Projektes führte. Deshalb wurde eine \texttt{GenericConfig} Klasse eingeführt, welche die im Editor eingestellten Optionen für die einzelnen Teilbereiche Terrain, Arena und ML-Agent in Json-Format in den Streaming-Asset-Ordner speichert. Da dieser Ordner beim Bauen des Projekts in das fertige Spiel übertragen wird, sind diese Konfigurationen automatisiert dort vorhanden. 
 
 Im Fall, dass das Spiel ohne Editor gestartet wird, was meist beim Training der Fall ist, lädt das generische Objekt aus den Json-Dateien die Einstellungen und ersetzt die Editorkonfiguration damit. Hierdurch ist ein ändern der Konfiguration des Spiels ohne neu-erstellen der Binärdateien ermöglicht. Diese Konfigurationsart fügt Abhängigkeiten zu dem Unity eigenen JsonUtility\footnote{https://docs.unity3d.com/ScriptReference/JsonUtility.html} hinzu. Die Konfigurationsmöglichkeiten sind in der Grafik \ref{bspDEGOptionen} zu sehen.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.5\linewidth]{resources/img/DEGConfig}
-	\caption[Konfigurationsmöglichkeiten des \texttt{DynamicEnviormentGenerator}]{Konfigurationsmöglichkeiten des \texttt{DynamicEnviormentGenerator} im Unity-Editor.} 
+	\caption[Konfigurationsmöglichkeiten des \texttt{DynamicEnvironmentGenerator}]{Konfigurationsmöglichkeiten des \texttt{DynamicEnvironmentGenerator} im Unity-Editor.} 
 	\label{bspDEGOptionen}
 \end{figure}
 
@@ -83,13 +83,13 @@ Im Fall, dass das Spiel ohne Editor gestartet wird, was meist beim Training der 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.7\linewidth]{resources/img/AEGArena.png}
-	\caption[Konfigurationsmöglichkeiten des \texttt{AdvancedEnviormentGenerator}]{Ansicht der generierten Arena durch den \texttt{AdvancedEnvironmentGenerator}.} 
+	\caption[Konfigurationsmöglichkeiten des \texttt{AdvancedEnvironmentGenerator}]{Ansicht der generierten Arena durch den \texttt{AdvancedEnvironmentGenerator}.} 
 	\label{bspAEGArena}
 \end{figure}
 
 Über den Produktzyklus des \texttt{DynamicEnvironmentGenerator} sind insbesondere gegen Ende der Projektgruppe mehre Probleme aufgefallen. Da durch häufige Updates die Codequalität nachlässt und einige zuvor bedachte Optionen durch Zeitmangel nicht mehr relevant waren wurde entschieden, die Umgebung durch eine neue zu ersetzen. Dabei wurde insbesondere auf eine starke nähe zum Spiel geachtet, damit nur wenige Modifikationen für dieses erstellt werden müssen.
 
-Die neue Umgebung wird im folgenden als \texttt{AdvancedEnvironmentGenerator} bezeichnet und befindet sich in einer neuen Szene mit den Namen \enquote{AdvancedMovementScene}. Bedingt durch die konzeptionelle Weiterentwicklung der vorherigen Versionen mussten in den restlichen Skripten kaum Anpassungen durchgeführt werden. Eine Hauptänderung ist die geringere Anzahl an Verweise auf den neuen Generator. Da der \texttt{DynamicEnvironmentGenerator} in seinen ersten Versionen eine Art Gottklasse war, verwiesen die meisten andere Skripte darauf. Dies führte schnell zu unübersichtlichen Abhängigkeiten.
+Die neue Umgebung wird im folgenden als \texttt{AdvancedEnvironmentGenerator} bezeichnet und befindet sich in einer neuen Szene mit den Namen \enquote{AdvancedMovementScene}. Bedingt durch die konzeptionelle Weiterentwicklung der vorherigen Versionen mussten in den restlichen Skripten kaum Anpassungen durchgeführt werden. Eine Hauptänderung ist die geringere Anzahl an Verweisen auf den neuen Generator. Da der \texttt{DynamicEnvironmentGenerator} in seinen ersten Versionen eine Art Gottklasse war, verwiesen die meisten andere Skripte darauf. Dies führte schnell zu unübersichtlichen Abhängigkeiten.
 
 Die Generator-Klasse selbst konnte deutlich gekürzt werden, da eine Generierung von Arenen nicht mehr benötigt wird. Zu dem Zeitpunkt der Erstellung existierte bereits der \texttt{TerrainGenerator} für das finale Spiel, welche ab dieser Version für die Trainingsumgebung verwendet wird. Weiterhin ermöglichte dies eine Entfernung von vielen Einstellungen für das Terrain aus dem Generator-Objekt.
 
@@ -180,8 +180,8 @@ Die Standup Reward-Funktion wird verwendet, um das Aufstehen aus einer liegenden
 $r_{hhr}$ bezeichnet den Reward für die Kopfhöhe (HeadHeight). Dieser ergibt sich aus der Differenz der aktuellen Kopfhöhe $hh_n$ und der Kopfhöhe im stehenden Ausgangszustand $hh_s$. Der Reward wird nur vergeben, wenn die aktuelle Kopfhöhe größer ist als die maximale Kopfhöhe der aktuellen Episode $hh_{max}$, oder die aktuelle Kopfhöhe nah an der stehenden Kopfhöhe ist. Dadurch wird sichergestellt, dass durch wiederholtes Heben und Senken des Kopfes im nicht-stehenden Zustand kein hoher Reward verteilt wird.
 $r_{hhp}$ bezeichnet eine Bestrafung (negativer Reward) von $-0.1$ für die Kopfhöhe. Diese wird verteilt, wenn die aktuelle Kopfhöhe $hh_n$ die Kopfhöhe des vorherigen Zeitschritts $hh_{n-1}$ unterschreitet und die aktuelle Kopfhöhe nicht nah an der stehenden Kopfhöhe ist. Dies motiviert den Agenten, den Kopf nicht zu senken und stabil zu stehen. 
 $r_{thr}$ bezeichnet den Reward für die Höhe des obersten Knochens in der Hierarchie des Skeletts des Agents (TopTransform, Rücken). Dieser ergibt sich aus der Skalierung der Abweichung $\delta_{th}$ der aktuellen Höhe des Knochens $th_n$ von dessen Startzustand $th_s$. Der Reward wird nur verteilt, wenn die aktuelle Differenz kleiner ist, als die minimale Differenz in der aktuellen Episode $\delta_{thmin}$, oder die aktuelle Differenz sehr gering ist, der Knochen also nah der Ausgangshöhe ist.
-$r_{trr}$ bezeichnet den Reward für die Rotation des obersten Knochens in der Hierachie des Skeletts des Agents. Dieser wird analog zum Reward für die Höhe des Knochens $r_{thr}$ berechnet. Die aktuelle Abweichung der Rotation $\delta_{tr}$ betrachtet die Rotation des Knochens entlang der $x$ und $z$ Achsen, die $y$ Achse wird ignoriert, da diese die Blickrichtung kodiert. Die Abweichung entlang der $x$ und $z$ Achse zwischen aktueller Rotation $tr_n$ und Startrotation $tr_s$ wird jeweils auf den Bereich von 0 bis 360 Grad skaliert. Der Reward wird nur verteilt, wenn die aktuelle Rotation geringer ist, als die minimale Rotation der aktuellen Episode $\delta_{trmin}$, oder die Rotation nah an der Ausgangsrotation ist.
-Durch die beiden Reward für den Rückenknochen des Skeletts wird der Agent dazu motiviert, seine aufrechte Ausgangssituation wiederherzustellen. Indem die Rewards jeweils nur dann verteilt werden, wenn eine Verbesserung im Vergleich zum Minimum der aktuellen Episode entsteht, oder der Ausgangszustand annähernd erreicht ist, wird verhindert, dass für wiederholtes Heben und Senken des Rückenknochens ein großer Reward verteilt wird. Dadurch wird ein stabiles Halten der Ausgangsposition ermutigt, sobald diese wieder erreicht wurde.
+$r_{trr}$ bezeichnet den Reward für die Rotation des obersten Knochens in der Hierachie des Skeletts des Agents. Dieser wird analog zum Reward für die Höhe des Knochens $r_{thr}$ berechnet. Die aktuelle Abweichung der Rotation $\delta_{tr}$ betrachtet die Rotation des Knochens entlang der $x$- und $z$- Achsen, die $y$ Achse wird ignoriert, da diese die Blickrichtung kodiert. Die Abweichung entlang der $x$- und $z$- Achse zwischen aktueller Rotation $tr_n$ und Startrotation $tr_s$ wird jeweils auf den Bereich von 0 bis 360 Grad skaliert. Der Reward wird nur verteilt, wenn die aktuelle Rotation geringer ist, als die minimale Rotation der aktuellen Episode $\delta_{trmin}$, oder die Rotation nah an der Ausgangsrotation ist.
+Durch die beiden Rewards für den Rückenknochen des Skeletts wird der Agent dazu motiviert, seine aufrechte Ausgangssituation wiederherzustellen. Indem die Rewards jeweils nur dann verteilt werden, wenn eine Verbesserung im Vergleich zum Minimum der aktuellen Episode entsteht, oder der Ausgangszustand annähernd erreicht ist, wird verhindert, dass für wiederholtes Heben und Senken des Rückenknochens ein großer Reward verteilt wird. Dadurch wird ein stabiles Halten der Ausgangsposition ermutigt, sobald diese wieder erreicht wurde.
 
 \subsection{RL-Framework}
 % Jannik
