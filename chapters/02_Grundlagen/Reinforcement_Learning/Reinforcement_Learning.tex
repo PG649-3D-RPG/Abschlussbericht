@@ -1,17 +1,16 @@
 \section{Reinforcement Learning}
-Mit Reinforcement Learning (RL, deutsch: verstärkendes Lernen) werden bestimmte Varianten des maschinellen Lernens bezeichnet. Allgemein lernt beim Reinforcement Learning ein Agent (d.h. ein kontrollierbarer Akteur) eine Policy (deutsch: Strategie), um in einer Umgebung ein Problem zu lösen, das sequentielle Entscheidungen umfasst. Reinforcement Learning ist ein breites Forschungsgebiet. In diesem Grundlagenkapitel werden nur die Grundlagen des Reinforcement Learning beschrieben, die im Rahmen der Projektgruppe relevant sind. Eine Übersicht über weitere Varianten des Reinforcement Learning findet sich z.B. in den Büchern von \citeauthor{FoundationsDeepRL} und \citeauthor{deepRL-2020}.
+Mit Reinforcement Learning (RL, deutsch: verstärkendes Lernen) werden bestimmte Varianten des maschinellen Lernens bezeichnet. Allgemein lernt beim Reinforcement Learning ein Agent (d.h. ein kontrollierbarer Akteur) eine Policy (deutsch: Strategie), um in einer Umgebung ein Problem zu lösen, das sequentielle Entscheidungen umfasst. Reinforcement Learning ist ein breites Forschungsgebiet. In diesem Grundlagenkapitel werden nur die Grundlagen des Reinforcement Learning beschrieben, die im Rahmen der Projektgruppe relevant sind. Eine Übersicht über weitere Varianten des Reinforcement Learning findet sich z.B. in den Büchern von \citeauthor{FoundationsDeepRL} (\citeyear{FoundationsDeepRL}) und \citeauthor{deepRL-2020} (\citeyear{deepRL-2020}) .
 
 \subsection{Begriffe des Reinforcement Learning}
 
 \subsubsection{Agent und Umgebung}
+Abbildung \ref{fig:rl_control_loop} stellt den allgemeinen Markov Entscheidungsprozess (MDP) eines Reinforcement Learning Prozesses dar. Der Agent ist in einer Umgebung (Environment) aktiv. In regelmäßigen Schritten sammelt der Agent in der Umgebung Observationen, bestehend aus einem aktuellen Zustand (State) $s_t$, sowie einer Belohnung (Reward) $r_t$, die entweder Null (d.h. keine Belohnung im aktuellen Schritt), oder ein positiver oder negativer Wert sein kann. Die durch den Agent gelernte Policy bildet den State auf eine Aktion $a_t$ ab. Die Aktion wird in der Umgebung ausgeführt. Danach übergibt die Umgebung den neuen State $s_{t+1}$ und die neue Belohnung $r_{t+1}$ an den Agenten \cite{FoundationsDeepRL}.
 \begin{figure}
     \centering
-    \includegraphics{resources/img/Reinforcement_Learning/RL Control Loop.png}
+    \includegraphics[width=0.89\linewidth]{resources/img/Reinforcement_Learning/RL_Loop.png}
     \caption{Reinforcement Learning Kontrollfluss \cite{FoundationsDeepRL}}
     \label{fig:rl_control_loop}
 \end{figure}
-
-Abbildung \ref{fig:rl_control_loop} stellt den allgemeinen Markov Entscheidungsprozess (MDP) eines Reinforcement Learning Prozesses dar. Der Agent ist in einer Umgebung (Environment) aktiv. In regelmäßigen Schritten sammelt der Agent in der Umgebung Observationen, bestehend aus einem aktuellen Zustand (State) $s_t$, sowie einer Belohnung (Reward) $r_t$, die entweder Null (d.h. keine Belohnung im aktuellen Schritt), oder ein positiver oder negativer Wert sein kann. Die durch den Agent gelernte Policy bildet den State auf eine Aktion $a_t$ ab. Die Aktion wird in der Umgebung ausgeführt. Danach übergibt die Umgebung den neuen State $s_{t+1}$ und die neue Belohnung $r_{t+1}$ an den Agenten \cite{FoundationsDeepRL}.
 
 \subsubsection{Episoden und Trajektorien}
 Eine Episode beschreibt die Zeitspanne von der Initialisierung bis zur Terminierung der Umgebung. Eine Trajektorie beschreibt eine Reihe von Tupeln aus State, Aktion und Reward aus den einzelnen Schritten einer Episode. Die Gleichung \ref{eq:trajectory} stellt die mathematische Schreibweise einer Trajektorie dar. Eine Trajektorie enthält durch die Zeitschritte $[0;t]$ indizierte Tupel. Jedes Tupel beinhaltet den Ausgangszustand $s_t$, die ausgeführte Aktion $a_t$ und den dadurch erhaltenen Reward $r_t$ zum Zeitpunkt $t$. Gleichung \ref{eq:return} zeigt die Definition des Returns einer Trajektorie. Der Return ist der summierte Reward der Trajektorie. Auf Basis gesammelter Trajektorien kann der Agent einen Lernvorgang durchführen und die Policy aktualisieren \cite{FoundationsDeepRL}.
@@ -24,10 +23,8 @@ Eine Episode beschreibt die Zeitspanne von der Initialisierung bis zur Terminier
     R(\tau)=\sum_{0}^{t} r_t
     \label{eq:return}
 \end{equation}
-
-
 \subsection{Policy-basierte \& Value-basierte Algorithmen}
-Grundsätzlich wird im Reinforcement Learning zwischen Policy-basierten und Value-basierten Algorithmen unterschieden. Diese werden in den folgenden Abschnitten genauer beschrieben. Beide Verfahren haben das grundlegende Ziel, die maximale kumulative Belohnung (Return) zu erhalten.
+Grundsätzlich wird im Reinforcement Learning zwischen Policy-basierten und Value-basierten Algorithmen unterschieden. Diese werden in den folgenden Abschnitten genauer beschrieben. Beide Verfahren haben das grundlegende Ziel, die kumulative Belohnung (Return) zu maximieren.
 Es existieren weitere Unterscheidungen zwischen RL-Methoden. Dazu gehört unter anderem die Unterscheidung zwischen modellbasiertem RL und RL ohne Modell. Bei komplexen Umgebungen eignet sich primär das RL ohne Modell, wobei der Agent keine Kenntnisse über Zustandstransitions- und Belohnungsfunktion besitzt, da die Erstellung eines präzisen Modells zu komplex ist. Im Folgenden wird deswegen von modellfreiem RL ausgegangen \cite{deepRL-2020}.
 
 \subsubsection{Value-basierte Algorithmen}\label{sec:value}
@@ -43,11 +40,11 @@ Bei Value-basierten Algorithmen wird eine Funktion zum Schätzen der Wertung ein
 \end{equation}
 Die V-Funktion (''Value-Function'', siehe Gleichung \ref{eq:v_function}) schätzt den Wert eines Zustandes anhand der diskontierten kumulativen Belohnung einer in diesem Zustand startenden Trajektorie, unter der Annahme, dass der aktuellen Policy gefolgt wird. 
 Die Q-Funktion (''Action-Value-Function'', siehe Gleichung \ref{eq:q_function}) schätzt den Wert eines Zustandes unter Durchführung einer Aktion anhand der diskontierten Rewards einer in diesem Zustand startenden Trajektorie, die zuerst die gewählte Aktion durchführt. 
-Bei reinen Value-basierten Algorithmen, wird bevorzugt die Action-Value-Funktion $Q^\pi$ verwendet, da sich diese leichter in eine Policy umwandeln lässt \cite{FoundationsDeepRL}. Bei der intuitiven Umwandlung verwendet der Agent als nächste Aktion die Aktion mit dem maximalen Wert der Action-Value-Funktion. Die Berechnung des maximalen Wertes der Action-Value-Funktion ist in kontinuierlichen Aktionsräumen sehr aufwändig, sodass 
-Value-basierte Algorithmen sind Proben-effizienter als Policy-based Algorithmen und haben eine niedrigere Varianz. Allerdings kann eine Konvergenz zu einem lokalen Optimum nicht garantiert werden und die Berechnung des maximalen Wertes der Action-Value-Funktion ist bei kontinuierlichen Aktionsräumen sehr aufwändig, sodass Value-basierte Algorithmen bei kontinuierlichen Aktionsräumen schlechter geeignet sind \cite{grokking}.
+Bei reinen Value-basierten Algorithmen wird bevorzugt die Action-Value-Funktion $Q^\pi$ verwendet, da sich diese leichter in eine Policy umwandeln lässt \cite{FoundationsDeepRL}. Bei der intuitiven Umwandlung verwendet der Agent als nächste Aktion die Aktion mit dem maximalen Wert der Action-Value-Funktion. Die Berechnung des maximalen Wertes der Action-Value-Funktion ist in kontinuierlichen Aktionsräumen sehr aufwändig, sodass 
+Value-basierte Algorithmen sind bezüglich der Proben effizienter als Policy-basierte Algorithmen und haben eine niedrigere Varianz. Allerdings kann eine Konvergenz zu einem lokalen Optimum nicht garantiert werden und die Berechnung des maximalen Wertes der Action-Value-Funktion ist bei kontinuierlichen Aktionsräumen sehr aufwändig, sodass Value-basierte Algorithmen bei kontinuierlichen Aktionsräumen schlechter geeignet sind \cite{grokking}.
 
 \subsubsection{Policy-basierte Algorithmen}\label{sec:policy_gradient}
-Bei Policy-basierten Algorithmen wählt eine Policy ($\pi$) die nächste Aktion ($a \sim \pi(s)$) aus, die in der Umgebung umgesetzt wird. Diese Policy bzw. ihre Parameter werden direkt durch den Algorithmus gelernt. Es können zwei Arten von Policies verwendet werden. Eine deterministische Policy bildet deterministisch einen Zustand $s$ auf eine Aktion $a$ ab (siehe Gleichung \ref{eq:deterministic_policy}). \cite{FoundationsDeepRL}
+Bei Policy-basierten Algorithmen wählt eine Policy ($\pi$) die nächste Aktion ($a \sim \pi(s)$) aus, die in der Umgebung umgesetzt wird. Die Parameter dieser Policy werden direkt durch den Algorithmus gelernt. Es können zwei Arten von Policies verwendet werden. Eine deterministische Policy bildet deterministisch einen Zustand $s$ auf eine Aktion $a$ ab (siehe Gleichung \ref{eq:deterministic_policy}). \cite{FoundationsDeepRL}
 \begin{equation}
     \pi(s) = a
     \label{eq:deterministic_policy}
@@ -57,10 +54,10 @@ In der Praxis werden fast ausschließlich stochastische Policies (siehe Gleichun
     \pi(a\vert s) = \mathbb{P}_{\pi}\left[ A=a \vert S=s \right]
     \label{eq:stochastic_policy}
 \end{equation}
-Eine stochastische Policy ordnet für jede Aktion $a$ eine Wahrscheinlichkeit unter Bedingung des Zustands $s$ zu. Aus der entstehenden Verteilung wird dann die Aktion $a$ gesamplet. Policy-basierte Algorithmen lernen die Funktion $\pi$, sodass das Objective maximiert wird.
-Policy-basierte Algorithmen können grundsätzlich auf beliebige Aktionstypen angewendet werden, kontinuierliche Aktionsräume sind möglich. Policy-basierte Algorithmen konvergieren garantiert zu einer lokalen, optimalen Policy. Allerdings sind Policy-basierte Algorithmen Proben-ineffizient und haben eine hohe Varianz. \cite{deepRL-2020}
+Eine stochastische Policy ordnet für jede Aktion $a$ eine Wahrscheinlichkeit unter Bedingung des Zustands $s$ zu. Aus der entstehenden Verteilung wird dann die Aktion $a$ gezogen. Policy-basierte Algorithmen lernen die Funktion $\pi$, sodass das Objective (d.h. die Zielfunktion) maximiert wird.
+Policy-basierte Algorithmen können grundsätzlich auf beliebige Aktionstypen angewendet werden, kontinuierliche Aktionsräume sind möglich. Policy-basierte Algorithmen konvergieren garantiert zu einer lokalen, optimalen Policy. Allerdings sind Policy-basierte Algorithmen bezüglich der Proben ineffizient und haben eine hohe Varianz. \cite{deepRL-2020}
 
-\paragraph{REINFORCE}
+\paragraph{REINFORCE}\fup
 Ein Beispiel für einen Policy-basierten Algorithmus ist REINFORCE. Der REINFORCE Algorithmus wird hier verwendet, um die Grundlagen der Policy Optimierung per Policy Gradient einzuführen.
 \begin{equation}
     \vartheta \leftarrow \vartheta + \alpha \nabla_\vartheta J(\pi_\vartheta)
@@ -89,7 +86,7 @@ Durch die Verwendung der Advantage-Funktion ändert sich die Formel für den Gra
     \nabla_\vartheta J(\pi_\vartheta) = \mathbb{E}_t\left[ A_t^\pi (s_t,a_t) \nabla_\vartheta log(\pi_\vartheta(a_t\vert s_t))\right]
     \label{eq:a2c_gradient}
 \end{equation}
-Für die Berechnung der Advantage-Funktion werden $V^\pi$ und $Q^\pi$ benötigt. Da es sehr ineffizient ist, sowohl $Q^\pi$, als auch $V^\pi$ zu lernen, lernt der Critic nur $V^\pi$ und schätzt auf dieser Grundlage dann $Q^\pi$. Für die Schätzung kann z.B. Generalized-Advantage-Estimation verwendet werden. \cite{FoundationsDeepRL}
+Für die Berechnung der Advantage-Funktion werden $V^\pi$ und $Q^\pi$ benötigt. Da es sehr ineffizient ist, sowohl $Q^\pi$ als auch $V^\pi$ zu lernen, lernt der Critic nur $V^\pi$ und schätzt auf dieser Grundlage dann $Q^\pi$. Für die Schätzung kann z.B. Generalized-Advantage-Estimation verwendet werden. \cite{FoundationsDeepRL}
 
 \subsubsection{Generalized-Advantage-Estimation (GAE)}
 Generalized-Advantage-Estimation (GAE) ist eine Methode, den Advantage anhand einer gelernten $V^\pi$ Funktion zu schätzen. GAE verwendet einen exponentiell gewichteten Durchschnitt von n-step Forward Return Advantages.
@@ -97,13 +94,13 @@ Generalized-Advantage-Estimation (GAE) ist eine Methode, den Advantage anhand ei
     A^\pi_{NSTEP} = \left[ (\sum_{i=0}^n \gamma^i r_{t+i}) + \gamma^{n+1} V^\pi (s_{t+n+1}) \right] - V^\pi(s_t)
     \label{eq:nstep}
 \end{equation}
-Gleichung \ref{eq:nstep} stellt die Berechnung von n-step Forward Return Advantages dar. Dabei werden $n$ Schritte an tatsächlichen Rewards gewertet. Ab dem $n+1$ Schritt wird mit einer gelernten $V^\pi$ Funktion geschätzt. Die tatsächlichen Rewards sorgen für eine hohe Varianz und haben dafür kein Bias, da sie direkt aus der Umgebung gesamplet werden. Die $V^\pi$ Funktion stellt eine Erwartung über alle möglichen Trajektorien dar und weist damit eine geringe Varianz auf. Da die $V^\pi$ Funktion gelernt wurde, entsteht dabei Bias. Mit kleinen Werten für $n$ haben n-step Forward Return Advantages eine geringe Varianz bei hohem Bias, mit großen Werten für $n$ haben n-step Forward Return Advantages eine hohe Varianz bei geringem Bias (Bias-Variance Trade-Off). Allgemeine Aussagen über die Wahl des $n$ Parameters sind schwierig.\\
+Gleichung \ref{eq:nstep} stellt die Berechnung von n-step Forward Return Advantages dar. Dabei werden $n$ Schritte an tatsächlichen Rewards gewertet. Ab dem $n+1$ Schritt wird mit einer gelernten $V^\pi$ Funktion geschätzt. Die tatsächlichen Rewards sorgen für eine hohe Varianz und haben dafür kein Bias, da sie direkt aus der Umgebung gesammelt werden. Die $V^\pi$ Funktion stellt eine Erwartung über alle möglichen Trajektorien dar und weist damit eine geringe Varianz auf. Da die $V^\pi$ Funktion gelernt wurde, entsteht dabei Bias. Mit kleinen Werten für $n$ haben n-step Forward Return Advantages eine geringe Varianz bei hohem Bias, mit großen Werten für $n$ haben n-step Forward Return Advantages eine hohe Varianz bei geringem Bias (Bias-Variance Trade-Off). Allgemeine Aussagen über die Wahl des $n$ Parameters sind schwierig.\\
 Generalized Advantage Estimation hebt die explizite Wahl von $n$ aus, indem n-step Forward Return Advantages für verschiedene $n$ Werte gewichtet. kombiniert werden.
 \begin{equation}
     A^\pi_{GAE(\gamma,\lambda)} (s_t,a_t) = \sum_{l=0}^\infty (\gamma\lambda)^l \delta_{t+l} ;\; \delta_t = r_t + \gamma V^\pi (s_{t+1}) - V^\pi(s_t)
     \label{eq:gae}
 \end{equation}
-Die allgemeine Formel für GAE ist in Gleichung \ref{eq:gae} abgebildet. Die Gewichtung wird durch die Decay-Rate $\gamma \in [0;1]$ und den Discount-Factor $\lambda \in [0;1]$ parametrisiert.
+Die allgemeine Formel für GAE ist in Gleichung \ref{eq:gae} abgebildet. Die Gewichtung wird durch den Discount-Factor $\gamma \in [0;1]$ und die Decay-Rate $\lambda \in [0;1]$ parametrisiert.
 In der Praxis wird statt der unendlichen Summe eine Summe bis zum Ende der verfügbaren Trajektorie verwendet. \cite{gaePaper}
 
 
@@ -128,7 +125,7 @@ Die zweite PPO Variante nutzt ein Clipped Surrogate Objective.
     J^{CLIP}(\vartheta) = \mathbb{E}_t\left[ \min(r_t(\vartheta)A_t,clip(r_t(\vartheta),1-\epsilon,1+\epsilon)A_t \right]
     \label{eq:clipped_surrogate_objective}
 \end{equation}
-Die Gleichung \ref{eq:clipped_surrogate_objective} zeigt das Clipped Surrogate Objective, das vom PPO Algorithmus maximiert wird. Eine Veränderung außerhalb des Bereichs $[1-\epsilon; 1+\epsilon]$ wird dabei geclippt (abgeschnitten) und somit die Schrittgröße eingeschränkt.
+Die Gleichung \ref{eq:clipped_surrogate_objective} zeigt das Clipped Surrogate Objective, das vom PPO Algorithmus maximiert wird. Eine Veränderung außerhalb des Bereichs $[1-\epsilon; 1+\epsilon]$ wird dabei geclippt (abgeschnitten) und somit die Schrittgröße eingeschränkt. Das Verhältnis der Wahrscheinlichkeiten zwischen neuer und alter Policy ist definiert als $r_t(\vartheta)=\frac{\pi_\vartheta(a_t\vert s_t)}{\pi_{\vartheta_{old}}(a_t\vert s_t)}$.
 \begin{equation}
     J^{CLIP+VF+S}(\vartheta) = \mathbb{E}_t \left[ J_t^{CLIP} - c_1L_t^{VF} + c_2S[\pi_\vartheta(s_t)] \right]
     \label{eq:ppo_objective}
@@ -138,7 +135,7 @@ Die für die Clipped Surrogate Objective Variante des PPO Algorithmus verwendete
 \paragraph{Algorithmus}
 
 \begin{algorithm}
-\begin{lstlisting}[mathescape=true, numbers=left]
+\begin{lstlisting}[mathescape=true, numbers=left, basicstyle=\normalsize]
 for episode=0...MAX do
     for actor=1...N do
         Sample Trajectory for T time steps with $\pi_{\vartheta_{old}}$
@@ -153,5 +150,5 @@ for episode=0...MAX do
 \label{alg:ppo}
 \end{algorithm}
 
-Algorithmus \ref{alg:ppo} zeigt den Pseudocode des PPO Algorithmus. Für jede Episode wird zuerst pro Actor eine Trajektorie in der Umgebung gesamplet. Dabei werden die Aktionen jeweils durch die aktuelle Policy $\pi_{\vartheta_{old}}$ bestimmt. Für diese Trajektorie werden die zugehörigen Advantages mit GAE berechnet. 
-Mit den gesampleten Trajektorien wird die Policy in Epochen trainiert. In jeder Epoche werden Minibatches aus dem gesampleten Batch generiert. Mit den Daten der Minibatches wird das Clipped Surrogate Objective optimiert.
+Algorithmus \ref{alg:ppo} zeigt den Pseudocode des PPO Algorithmus. Für jede Episode wird zuerst pro Actor eine Trajektorie in der Umgebung gesammelt (Sampling). Dabei werden die Aktionen jeweils durch die aktuelle Policy $\pi_{\vartheta_{old}}$ bestimmt. Für diese Trajektorie werden die zugehörigen Advantages mit GAE berechnet. 
+Mit den gesammelten Trajektorien wird die Policy in Epochen trainiert. In jeder Epoche werden Minibatches aus dem gesammelten Batch generiert. Mit den Daten der Minibatches wird das Clipped Surrogate Objective optimiert.
