@@ -88,12 +88,12 @@ Im Fall, dass das Spiel ohne Editor gestartet wird, was meist beim Training der 
 \end{figure}
 
 Über den Produktzyklus des \texttt{DynamicEnvironmentGenerator} sind insbesondere gegen Ende der Projektgruppe mehre Probleme aufgefallen. Da durch häufige Updates die Codequalität nachlässt und einige zuvor bedachte Optionen durch Zeitmangel nicht mehr relevant waren wurde entschieden, die Umgebung durch eine neue zu ersetzen. Dabei wurde insbesondere auf eine starke nähe zum Spiel geachtet, damit nur wenige Modifikationen für dieses erstellt werden müssen.
-
-Die neue Umgebung wird im folgenden als \texttt{AdvancedEnvironmentGenerator} bezeichnet und befindet sich in einer neuen Szene mit den Namen \enquote{AdvancedMovementScene}. Bedingt durch die konzeptionelle Weiterentwicklung der vorherigen Versionen mussten in den restlichen Skripten kaum Anpassungen durchgeführt werden. Eine Hauptänderung ist die geringere Anzahl an Verweisen auf den neuen Generator. Da der \texttt{DynamicEnvironmentGenerator} in seinen ersten Versionen eine Art Gottklasse war, verwiesen die meisten andere Skripte darauf. Dies führte schnell zu unübersichtlichen Abhängigkeiten.
-
+\begin{sloppypar}
+Die neue Umgebung wird im folgenden als \texttt{Advanced\-Environment\-Generator} bezeichnet und befindet sich in einer neuen Szene mit den Namen \enquote{AdvancedMovementScene}. Bedingt durch die konzeptionelle Weiterentwicklung der vorherigen Versionen mussten in den restlichen Skripten kaum Anpassungen durchgeführt werden. Eine Hauptänderung ist die geringere Anzahl an Verweisen auf den neuen Generator. Da der \texttt{DynamicEnvironmentGenerator} in seinen ersten Versionen eine Art Gottklasse war, verwiesen die meisten andere Skripte darauf. Dies führte schnell zu unübersichtlichen Abhängigkeiten.
+\end{sloppypar}
 Die Generator-Klasse selbst konnte deutlich gekürzt werden, da eine Generierung von Arenen nicht mehr benötigt wird. Zu dem Zeitpunkt der Erstellung existierte bereits der \texttt{TerrainGenerator} für das finale Spiel, welche ab dieser Version für die Trainingsumgebung verwendet wird. Weiterhin ermöglichte dies eine Entfernung von vielen Einstellungen für das Terrain aus dem Generator-Objekt.
 
-In der Abbildung \ref{bspAEGArena} ist das Endergebnis des \texttt{AdvancedEnvironmentGenerator} dargestellt. Da es im realen Spiel zu Kollisionen zwischen verschiedenen Kreaturen kommen kann, wurde für die Trainingsumgebung nur eine zusammenhängende Arena verwendet. Insgesamt stimmen die Bedingungen für das Lernen und dem Spiel somit überein, da wie im Spiel kleine Korridore und Arenen mit ggf. mehreren Kreaturen genutzt werden.
+In der Abbildung \ref{bspAEGArena} ist das Endergebnis des \texttt{Advanced\-Environment\-Generator} dargestellt. Da es im realen Spiel zu Kollisionen zwischen verschiedenen Kreaturen kommen kann, wurde für die Trainingsumgebung nur eine zusammenhängende Arena verwendet. Insgesamt stimmen die Bedingungen für das Lernen und dem Spiel somit überein, da wie im Spiel kleine Korridore und Arenen mit ggf. mehreren Kreaturen genutzt werden.
 \subsection{Erweiterung der Agent-Klasse}
 
 \begin{figure}
@@ -303,14 +303,16 @@ source <anaconda3-path>/bin/activate
 conda activate <env_to_install>
 conda install torchvision torchaudio cudatoolkit=11.1 -c pytorch
 python -m pip install mlagents==0.29.0 --force-reinstall
-python -m pip install /work/mmarplei/grudelpg649/torch-1.10.0a0+git3c15822-cp39-cp39-linux_x86_64.whl --no-deps --force-reinstall 
+python -m pip install /work/mmarplei/grudelpg649
+    /torch-1.10.0a0+git3c15822-cp39-cp39-linux_x86_64.whl
+         --no-deps --force-reinstall 
 	\end{minted}
 	\caption{Installationsskript für Python und ML-Agents auf LIDO3.}
 	\label{prog:lidoUmgebung}
 \end{listing}
-
+\begin{sloppypar}
 Für die Python-Installation wurde auf Anaconda\footnote{https://www.anaconda.com/} zurückgegriffen. Die installierte Anaconda-Arbeitsumgebung kann für die folgenden Schritte genutzt werden, indem die Slurm-Skripte diese am Anfang laden. CUDA kann als Kernelmodul in verschiedenen Versionen geladen werden oder per Anaconda installiert werden.
-
+\end{sloppypar}
 Problematisch ist die Installation von PyTorch, da ab Version 1.5 die Installationsbinärdateien keine Unterstützung für die von LiDO3 genutzten NVIDIA Tesla K40 Grafikarten bietet. Es besteht die Möglichkeit PyTorch zu bauen um die Unterstürzung zu erhalten. Dies musste für unsere Arbeitsumgebung nicht gemacht werden, da die PG-Betreuer ein Paket mit einer für LiDO funktionierenden PyTorch-Version von einer vorherigen PG zur Verfügung stellen konnten. Wie in \ref{prog:lidoUmgebung} dargestellt müssen zuerst die Abhängigkeiten von PyTorch, dann ML-Agents und zuletzt die spezielle PyTorch Version installiert werden, da sonst die Abhängigkeiten Probleme bereiten.
 
 \subsubsection{NeroRL-Anpassungen}

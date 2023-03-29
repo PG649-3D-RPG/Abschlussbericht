@@ -306,6 +306,7 @@ Es gibt drei Gründe das lokale Koordinatensystem eines jeden Knochens explizit 
 \end{itemize}
 
 \subsubsection{Parametrische Generatoren}\label{parametrsiche_generatoren}
+\begin{sloppypar}
 Parametrische Generatoren haben die Aufgabe anhand der \texttt{Parametric\-Creature\-Settings} \texttt{Bone\-Definition}-Bäume zu generieren.
 Das Package enthält momentan Generatoren für zwei verschiedene Typen von Kreaturen: \texttt{BipedGenerator} und \texttt{QuadrupedGenerator}.
 Einstiegspunkte in die Generatoren sind jeweils die \texttt{BuildCreature} Methoden.
@@ -319,6 +320,7 @@ Um die Kreaturen später trainieren zu können, müssen sie mehrfach generierbar
 Beide Generatoren akzeptieren deshalb einen Seed für den Zufallsgenerator. Dabei ist zu beachten, dass der selbe Seed in der selben Version des Packages die selbe Kreatur erzeugen wird. Der Aufwand die Stabilitäts-Garantie auch über Package Versionen hinweg zu garantieren, wurde für nicht nötig gehalten und wurde nicht betrieben.
 
 Nachdem die Parameter der Knochen finalisiert wurden, konstruieren beide Generatoren einen Baum aus \texttt{BoneDefinition}s, wie in Kapitel \ref{sec:parametricGeneration} beschrieben.
+\end{sloppypar}
 
 \subsubsection{Skeleton Definition}
 Die Ausgabe der Parametrischen-Generatoren ist eine \texttt{Skeleton\-Definition}, bestehend aus dem \texttt{Bone\-Definition}-Baum, der Einstellungs-Instanz, und einem \texttt{Limit\-Table}.
@@ -340,7 +342,7 @@ Der HSV Farbraum erleichtert es zufällig Farben in bestimmten Farbtönen und He
 
 Die Masseberechnung für den Rigidbody verdient ebenfalls besonderes Augenmerk.
 Der \texttt{SkeletonAssembler} berechnet die Masse des \texttt{Rigidbodies} grundsätzlich aus dem Volumen des an dem ihm angebrachten \texttt{Colliders} und der Dichte des Knochens, die der \texttt{SkeletonAssembler} einem \texttt{DensityTable} entnimmt.
-In der Praxis führen zu große Unterschiede in der Masse von zwei durch einen \texttt{ConfigurableJoint} verbundenen \texttt{Rigidbodies} zu numerischer Instabilität in der Physiksimulation, weshalb der \texttt{SkeletonAssembler} optional in jedem \texttt{Rigidbody} die selbe fixe Masse setzen kann.
+In der Praxis führen zu große Unterschiede in der Masse von zwei durch einen \texttt{ConfigurableJoint} verbundenen \texttt{Rigidbodies} zu numerischer Instabilität in der Physiksimulation, weshalb der \texttt{Skeleton\-Assembler} optional in jedem \texttt{Rigidbody} die selbe fixe Masse setzen kann.
 
 Der Wurzel-Knochen wird zusätzlich mit einer \texttt{Skeleton}-Komponente ausgestattet, die weitere Metadaten über das Skelett als ganzes enthält und einfaches iterieren über alle Knochen erlaubt.
 
